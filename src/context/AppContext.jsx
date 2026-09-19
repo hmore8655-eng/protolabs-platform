@@ -71,20 +71,21 @@ export const AppProvider = ({ children }) => {
   // Auth
   const loginAdmin = async (password) => {
     try {
-      const res = await api.login(password);
-      if (res.token) {
+      const res = await api.login(password, 'protolabs26@gmail.com');
+      if (res && res.token) {
         setIsAdminLoggedIn(true);
         setIsAdminView(true);
-        showToast('Authenticated! Welcome to ProtoLabs Admin Panel.');
-        fetchBackendData();
+        localStorage.setItem('protolabs_token', res.token);
+        showToast('Authenticated! Welcome Harsh More (Admin).');
+        await fetchBackendData();
         return true;
       }
     } catch (err) {
-      // Local password fallback
       if (password === 'PROTOLABS@123') {
+        localStorage.setItem('protolabs_token', 'admin_offline_token');
         setIsAdminLoggedIn(true);
         setIsAdminView(true);
-        showToast('Welcome back, Admin! (Offline Mode)');
+        showToast('Authenticated as Admin.');
         return true;
       }
     }
@@ -117,21 +118,30 @@ export const AppProvider = ({ children }) => {
     showToast('All platform data reset to factory demo values.');
   };
 
-  // Projects CRUD
+  // Projects CRUD with double persistence (API + Local Storage)
   const addProject = async (project) => {
     try {
       const newProj = await api.createProject(project);
-      setData(prev => ({ ...prev, projects: [newProj, ...prev.projects] }));
-      showToast(`Project "${project.title}" created & saved to database.`);
+      setData(prev => {
+        const nextProjects = [newProj, ...prev.projects];
+        const nextData = { ...prev, projects: nextProjects };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+        return nextData;
+      });
+      showToast(`Project "${project.title}" created & saved.`);
     } catch (err) {
-      // Fallback
       const newProject = {
         ...project,
         id: `proj-${Date.now()}`,
         order: data.projects.length + 1,
         createdAt: new Date().toISOString().split('T')[0]
       };
-      setData(prev => ({ ...prev, projects: [newProject, ...prev.projects] }));
+      setData(prev => {
+        const nextProjects = [newProject, ...prev.projects];
+        const nextData = { ...prev, projects: nextProjects };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+        return nextData;
+      });
       showToast(`Project "${project.title}" created.`);
     }
   };
@@ -139,29 +149,44 @@ export const AppProvider = ({ children }) => {
   const updateProject = async (id, updatedFields) => {
     try {
       const updated = await api.updateProject(id, updatedFields);
-      setData(prev => ({
-        ...prev,
-        projects: prev.projects.map(p => p.id === id ? updated : p)
-      }));
+      setData(prev => {
+        const nextProjects = prev.projects.map(p => p.id === id ? (updated || { ...p, ...updatedFields }) : p);
+        const nextData = { ...prev, projects: nextProjects };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+        return nextData;
+      });
+      showToast('Project updated & saved permanently.');
     } catch (err) {
-      setData(prev => ({
-        ...prev,
-        projects: prev.projects.map(p => p.id === id ? { ...p, ...updatedFields } : p)
-      }));
+      console.warn('API update failed, saving locally:', err);
+      setData(prev => {
+        const nextProjects = prev.projects.map(p => p.id === id ? { ...p, ...updatedFields } : p);
+        const nextData = { ...prev, projects: nextProjects };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+        return nextData;
+      });
+      showToast('Project updated.');
     }
-    showToast('Project updated.');
   };
 
   const deleteProject = async (id) => {
     try {
       await api.deleteProject(id);
     } catch (e) {}
-    setData(prev => ({ ...prev, projects: prev.projects.filter(p => p.id !== id) }));
+    setData(prev => {
+      const nextProjects = prev.projects.filter(p => p.id !== id);
+      const nextData = { ...prev, projects: nextProjects };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+      return nextData;
+    });
     showToast('Project deleted.', 'info');
   };
 
   const reorderProjects = async (reorderedList) => {
-    setData(prev => ({ ...prev, projects: reorderedList }));
+    setData(prev => {
+      const nextData = { ...prev, projects: reorderedList };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+      return nextData;
+    });
     try {
       await api.reorderProjects(reorderedList);
     } catch (e) {}
@@ -172,7 +197,12 @@ export const AppProvider = ({ children }) => {
     try {
       await api.bulkImportProjects(newProjects);
     } catch (e) {}
-    setData(prev => ({ ...prev, projects: [...newProjects, ...prev.projects] }));
+    setData(prev => {
+      const nextProjects = [...newProjects, ...prev.projects];
+      const nextData = { ...prev, projects: nextProjects };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(nextData));
+      return nextData;
+    });
     showToast(`Successfully imported ${newProjects.length} projects.`);
   };
 

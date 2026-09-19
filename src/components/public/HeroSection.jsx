@@ -85,7 +85,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
               </button>
             </div>
 
-            {/* Trust Signals & Admin Note */}
+            {/* Trust Signals */}
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -95,7 +95,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                 <CheckCircleIcon size={18} color="var(--accent-orange)" />
-                <span>Admin Customizable Pricing</span>
+                <span>Verified Hardware Tested</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
                 <CheckCircleIcon size={18} color="var(--accent-orange)" />
@@ -134,7 +134,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
                   </span>
                 </div>
                 <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-light)', backgroundColor: 'var(--secondary-bg)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
-                  ADMIN_STATION_READY
+                  HARDWARE_LAB_ACTIVE
                 </span>
               </div>
 
@@ -155,14 +155,14 @@ export const HeroSection = ({ onOpenAuthModal }) => {
                 <g transform="translate(30, 85)">
                   <rect width="60" height="50" rx="8" fill="#1A1A1A" />
                   <text x="30" y="27" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">PROJECTS</text>
-                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">ADMIN EDIT</text>
+                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">PROTOTYPES</text>
                 </g>
 
                 {/* Node 2: Pricing */}
                 <g transform="translate(310, 85)">
                   <rect width="60" height="50" rx="8" fill="#FF9500" />
-                  <text x="30" y="27" fill="#FFFFFF" fontSize="9" fontWeight="bold" textAnchor="middle">PRICING</text>
-                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">DYNAMIC</text>
+                  <text x="30" y="27" fill="#FFFFFF" fontSize="9" fontWeight="bold" textAnchor="middle">SOLUTIONS</text>
+                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">CUSTOM BOM</text>
                 </g>
 
                 {/* Signal Pulses */}

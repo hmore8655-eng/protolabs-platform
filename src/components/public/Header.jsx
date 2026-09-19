@@ -48,25 +48,7 @@ export const Header = () => {
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          {/* Admin Switch (Only visible if Admin is already authenticated) */}
-          {isAdminLoggedIn && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <button 
-                onClick={toggleView}
-                className="btn btn-primary"
-                style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', gap: '0.4rem' }}
-              >
-                <LockIcon size={15} />
-                <span>{isAdminView ? 'View Public Site' : 'Admin Panel'}</span>
-              </button>
-              <button 
-                onClick={logoutAdmin}
-                style={{ fontSize: '0.8rem', color: '#EF4444', fontWeight: 700, padding: '0.4rem 0.6rem' }}
-              >
-                Logout
-              </button>
-            </div>
-          )}
+
 
           <button 
             onClick={() => scrollToSection('contact')}

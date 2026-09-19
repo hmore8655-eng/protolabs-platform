@@ -9,9 +9,10 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = loginAdmin(password);
+    setError('');
+    const success = await loginAdmin(password);
     if (success) {
       onClose();
     } else {
@@ -54,7 +55,7 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
             border: '1px solid var(--border-color)'
           }}>
             <div style={{ fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.2rem' }}>Admin Identity</div>
-            <div>Email: <strong style={{ color: 'var(--accent-dark-orange)' }}>hmore8655@gmail.com</strong></div>
+            <div>Authorized Lead: <strong style={{ color: 'var(--accent-dark-orange)' }}>protolabs26@gmail.com</strong></div>
           </div>
 
           <div className="form-group">

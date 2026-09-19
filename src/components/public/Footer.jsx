@@ -98,24 +98,9 @@ export const Footer = ({ onOpenAuthModal }) => {
               <span>Payment accepted via Google Pay, PhonePe, Paytm, or direct Bank Transfer.</span>
             </div>
 
-            <button
-              onClick={onOpenAuthModal}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.825rem',
-                color: '#FFFFFF',
-                padding: '0.55rem 0.95rem',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--accent-orange)',
-                backgroundColor: 'rgba(255, 149, 0, 0.15)',
-                fontWeight: 600
-              }}
-            >
-              <LockIcon size={14} color="var(--accent-orange)" />
-              <span>Admin Access</span>
-            </button>
+            <div style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>
+              All project hardware designs, schematics, and simulation models are verified for physical fabrication.
+            </div>
           </div>
         </div>
 
@@ -131,7 +116,11 @@ export const Footer = ({ onOpenAuthModal }) => {
           fontSize: '0.85rem',
           color: '#6B7280'
         }}>
-          <div>
+          <div 
+            onDoubleClick={onOpenAuthModal}
+            title="ProtoLabs Verified Platform"
+            style={{ cursor: 'default', userSelect: 'none' }}
+          >
             © {new Date().getFullYear()} Harsh More — ProtoLabs Engineering. All rights reserved.
           </div>
           <div style={{ display: 'flex', gap: '1.5rem' }}>

@@ -64,45 +64,13 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
         <div style={{ textAlign: 'center', maxWidth: '750px', margin: '0 auto 2.5rem auto' }}>
           <div className="badge badge-orange" style={{ marginBottom: '0.75rem', gap: '0.4rem' }}>
             <ProtoLabsIcon size={16} />
-            <span>ProtoLabs Admin-Customizable Catalog</span>
+            <span>Industry-Grade Hardware & Telecom Portfolio</span>
           </div>
           <h2 style={{ fontSize: '2.25rem', marginBottom: '1rem' }}>Engineering Projects & Solutions Catalog</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
-            Explore verified hardware schematics, firmware code, and CST/HFSS RF antenna files. As Admin, you have 100% control to add new projects and update pricing.
+            Explore verified hardware schematics, firmware code, and CST/HFSS RF antenna simulations. Production-ready prototypes built with complete engineering documentation.
           </p>
         </div>
-
-        {/* Admin Management Toolbar (Only shown when logged in) */}
-        {isAdminLoggedIn && (
-          <div style={{
-            backgroundColor: 'var(--accent-light-orange)',
-            borderRadius: 'var(--radius-md)',
-            padding: '1rem 1.5rem',
-            marginBottom: '2.5rem',
-            border: '1px solid var(--accent-soft-orange)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <LockIcon size={20} color="var(--accent-dark-orange)" />
-              <div>
-                <div style={{ fontWeight: 700, color: 'var(--text-dark)', fontSize: '0.95rem' }}>
-                  Admin Management Active
-                </div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  You are logged in as Admin. Switch to the Admin Dashboard to manage projects, edit pricing, or view inquiries.
-                </div>
-              </div>
-            </div>
-
-            <button onClick={toggleView} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-              <PlusIcon size={16} />
-              <span>Go to Admin Dashboard</span>
-            </button>
-          </div>
-        )}
 
         {/* Filter & Search Bar */}
         <div style={{
@@ -225,9 +193,6 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
 
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
                         <span className="badge badge-orange">{proj.category}</span>
-                        {!proj.published && (
-                          <span className="badge badge-gray" style={{ fontSize: '0.7rem' }}>DRAFT (Admin Only)</span>
-                        )}
                         {proj.featured && (
                           <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--accent-dark-orange)', letterSpacing: '0.5px' }}>FEATURED</span>
                         )}
@@ -273,17 +238,6 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      {isAdminLoggedIn && (
-                        <button
-                          onClick={toggleView}
-                          className="btn btn-secondary"
-                          style={{ padding: '0.5rem', fontSize: '0.8rem' }}
-                          title="Edit in Admin"
-                        >
-                          <EditIcon size={16} />
-                        </button>
-                      )}
-
                       <button
                         onClick={() => handleQuickStart(proj)}
                         className="btn btn-primary"

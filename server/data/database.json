@@ -187,16 +187,26 @@
       "category": "Telecom & RF",
       "client": "AeroTech Labs",
       "outcome": "Achieved 12km Line-of-Sight transmission with zero frame loss.",
-      "techStack": ["STM32H7", "RFM95W", "OSD Chip", "Custom 4-Layer PCB"],
+      "techStack": [
+        "STM32H7",
+        "RFM95W",
+        "OSD Chip",
+        "Custom 4-Layer PCB"
+      ],
       "image": "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80"
     },
     {
       "id": "port-2",
       "title": "Autonomous Warehouse RFID Inventory Scanner",
-      category": "IoT & Automation",
+      "category": "IoT & Automation",
       "client": "LogiSmart Logistics",
       "outcome": "Scans 500+ RFID tags per second with 99.8% accuracy.",
-      "techStack": ["UHF RFID Impinj", "ESP32", "MQTT", "Python Backend"],
+      "techStack": [
+        "UHF RFID Impinj",
+        "ESP32",
+        "MQTT",
+        "Python Backend"
+      ],
       "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"
     }
   ],
