@@ -14,4 +14,4 @@ services:
       - key: ADMIN_PASSWORD
         value: PROTOLABS@123
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://protolabs26_db_user:nzPpm8XB6R687Ot3@cluster0.7hkrpyd.mongodb.net/protolabs_platform?retryWrites=true&w=majority&appName=Cluster0
