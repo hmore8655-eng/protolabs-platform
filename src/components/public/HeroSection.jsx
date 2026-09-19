@@ -1,7 +1,163 @@
-import React from 'react';
-import { ArrowRightIcon, CheckCircleIcon, SparklesIcon, LockIcon, PlusIcon } from '../common/Icons';
+import React, { useState } from 'react';
+import { ArrowRightIcon, CheckCircleIcon, SparklesIcon } from '../common/Icons';
 import { ProtoLabsIcon } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
+
+const HeroVisualShowcase = () => {
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+    const glareX = (x / rect.width) * 100;
+    const glareY = (y / rect.height) * 100;
+    setTilt({ x: rotateX, y: rotateY, glareX, glareY, isHovered: true });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
+  };
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        width: '100%',
+        maxWidth: '540px',
+        perspective: '1000px',
+        cursor: 'pointer'
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#0F172A',
+          borderRadius: 'var(--radius-lg)',
+          padding: '1.25rem',
+          boxShadow: tilt.isHovered 
+            ? '0 30px 60px -15px rgba(255, 149, 0, 0.4), 0 0 0 2px var(--accent-orange)' 
+            : '0 20px 45px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+          position: 'relative',
+          overflow: 'hidden',
+          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${tilt.isHovered ? 1.02 : 1}, ${tilt.isHovered ? 1.02 : 1}, 1)`,
+          transition: tilt.isHovered ? 'transform 0.1s ease-out, box-shadow 0.2s ease-out' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease-out',
+          transformStyle: 'preserve-3d'
+        }}
+      >
+        {/* Dynamic Specular Glare Layer */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 200, 100, 0.25) 0%, rgba(255, 149, 0, 0.1) 40%, transparent 75%)`,
+            pointerEvents: 'none',
+            zIndex: 10,
+            borderRadius: 'inherit'
+          }}
+        />
+
+        {/* Top Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '0 0.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <ProtoLabsIcon size={24} />
+            <span style={{ fontWeight: 800, fontSize: '1rem', color: '#FFFFFF' }}>
+              Proto<span style={{ color: 'var(--accent-orange)' }}>Labs</span>
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(16, 185, 129, 0.15)', padding: '0.2rem 0.6rem', borderRadius: '999px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+            <span className="animate-pulse-radar" style={{ width: '8px', height: '8px', backgroundColor: '#10B981', borderRadius: '50%' }} />
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#10B981', letterSpacing: '0.5px' }}>
+              LAB ACTIVE • 28GHz RF
+            </span>
+          </div>
+        </div>
+
+        {/* Image Showcase Container with zoom on hover */}
+        <div style={{
+          position: 'relative',
+          borderRadius: 'var(--radius-md)',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 149, 0, 0.3)',
+          backgroundColor: '#000000'
+        }}>
+          <img
+            src="/images/hero-hardware.jpg"
+            alt="ProtoLabs Engineering Hardware Prototype"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '340px',
+              objectFit: 'cover',
+              display: 'block',
+              transform: tilt.isHovered ? 'scale(1.05)' : 'scale(1)',
+              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          />
+
+          {/* Floating HUD Telemetry Overlay */}
+          <div style={{
+            position: 'absolute',
+            bottom: '12px',
+            left: '12px',
+            right: '12px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '0.5rem',
+            zIndex: 5
+          }}>
+            <div style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 149, 0, 0.4)',
+              borderRadius: '8px',
+              padding: '0.35rem 0.65rem',
+              color: '#FFFFFF',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem'
+            }}>
+              <span style={{ color: 'var(--accent-orange)' }}>⚡</span>
+              <span>STM32 + LoRaWAN</span>
+            </div>
+
+            <div style={{
+              backgroundColor: 'rgba(15, 23, 42, 0.85)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 149, 0, 0.4)',
+              borderRadius: '8px',
+              padding: '0.35rem 0.65rem',
+              color: '#FFFFFF',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem'
+            }}>
+              <span style={{ color: 'var(--accent-orange)' }}>📡</span>
+              <span>KiCAD 8 4-Layer Stackup</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem' }}>
+          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Interactive 3D Hardware Telemetry</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: 600 }}>Hover & Move Cursor to Inspect</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const HeroSection = ({ onOpenAuthModal }) => {
   const { data, isAdminLoggedIn, toggleView } = useApp();
@@ -108,74 +264,14 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             </div>
           </div>
 
-          {/* Right Hero Visual - ProtoLabs Circuit Interactive Shield */}
+          {/* Right Hero Visual - 3D Interactive Telemetry Device Showcase */}
           <div style={{
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            <div className="card-hover" style={{
-              width: '100%',
-              maxWidth: '520px',
-              backgroundColor: '#FFFFFF',
-              borderRadius: 'var(--radius-lg)',
-              padding: '2.25rem 2rem',
-              boxShadow: 'var(--shadow-lg)',
-              border: '1px solid var(--border-color)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <ProtoLabsIcon size={28} />
-                  <span style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.3px' }}>
-                    Proto<span style={{ color: 'var(--accent-orange)' }}>Labs</span>
-                  </span>
-                </div>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-light)', backgroundColor: 'var(--secondary-bg)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
-                  HARDWARE_LAB_ACTIVE
-                </span>
-              </div>
-
-              {/* Hardware & Circuit Schematic SVG */}
-              <svg viewBox="0 0 400 220" style={{ width: '100%', height: 'auto' }}>
-                {/* Circuit Traces */}
-                <path d="M 60 110 L 140 110 M 180 110 L 260 110 M 300 110 L 340 110" stroke="#FF9500" strokeWidth="3" strokeDasharray="6,4" />
-                <path d="M 160 70 L 160 150 M 280 70 L 280 150" stroke="#E0E0E0" strokeWidth="2" />
-                
-                {/* Central ProtoLabs Hub */}
-                <circle cx="200" cy="110" r="32" fill="#FFF3E0" stroke="#FF9500" strokeWidth="3" />
-                <circle cx="200" cy="110" r="12" fill="#FF9500" />
-                <line x1="200" y1="110" x2="200" y2="85" stroke="#FFFFFF" strokeWidth="3" />
-                <line x1="200" y1="110" x2="218" y2="120" stroke="#FFFFFF" strokeWidth="3" />
-                <line x1="200" y1="110" x2="182" y2="120" stroke="#FFFFFF" strokeWidth="3" />
-
-                {/* Node 1: Custom Projects */}
-                <g transform="translate(30, 85)">
-                  <rect width="60" height="50" rx="8" fill="#1A1A1A" />
-                  <text x="30" y="27" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">PROJECTS</text>
-                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">PROTOTYPES</text>
-                </g>
-
-                {/* Node 2: Pricing */}
-                <g transform="translate(310, 85)">
-                  <rect width="60" height="50" rx="8" fill="#FF9500" />
-                  <text x="30" y="27" fill="#FFFFFF" fontSize="9" fontWeight="bold" textAnchor="middle">SOLUTIONS</text>
-                  <text x="30" y="40" fill="#FFFFFF" fontSize="7" textAnchor="middle">CUSTOM BOM</text>
-                </g>
-
-                {/* Signal Pulses */}
-                <circle cx="100" cy="110" r="4" fill="#FF7F00">
-                  <animate attributeName="cx" values="60;168" dur="2s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="270" cy="110" r="4" fill="#FF9500">
-                  <animate attributeName="cx" values="232;310" dur="1.8s" repeatCount="indefinite" />
-                </circle>
-              </svg>
-
-
-            </div>
+            <HeroVisualShowcase />
           </div>
         </div>
       </div>

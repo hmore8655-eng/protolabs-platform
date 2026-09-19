@@ -19,6 +19,16 @@ const MainAppContent = () => {
   const { isAdminView, isAdminLoggedIn, toggleView, logoutAdmin } = useApp();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState('');
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+
+  // Smooth ambient pointer glow
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // Discrete Admin Access: Shortcut (Ctrl+Shift+A or Alt+A) & URL hash (#admin)
   useEffect(() => {
@@ -70,7 +80,22 @@ const MainAppContent = () => {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Ambient Mouse Pointer Glow Follower */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          pointerEvents: 'none',
+          zIndex: 9999,
+          background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 149, 0, 0.065) 0%, transparent 75%)`,
+          transition: 'background 0.1s ease-out'
+        }}
+      />
+
       {/* Floating Discrete Admin Bar (Only visible when Harsh is actively logged in) */}
       {isAdminLoggedIn && (
         <div style={{
