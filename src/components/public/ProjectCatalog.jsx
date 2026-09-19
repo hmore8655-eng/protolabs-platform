@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { SearchIcon, CheckIcon, ArrowRightIcon, CpuIcon, RadioIcon, AntennaIcon, ServerIcon, LayersIcon, ZapIcon, LockIcon, PlusIcon, EditIcon } from '../common/Icons';
+import { SearchIcon, CheckIcon, ArrowRightIcon, CpuIcon, RadioIcon, AntennaIcon, ServerIcon, LayersIcon, ZapIcon } from '../common/Icons';
 import { ProtoLabsIcon } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
 
@@ -14,30 +14,9 @@ const getIconComponent = (iconName) => {
   }
 };
 
-const getProjectImage = (proj, index) => {
-  if (proj.image && proj.image.startsWith('http')) return proj.image;
-  const category = (proj.category || '').toLowerCase();
-  const title = (proj.title || '').toLowerCase();
-  if (category.includes('telecom') || category.includes('rf') || title.includes('5g') || title.includes('antenna')) {
-    return '/images/rf-antenna.jpg';
-  }
-  if (category.includes('pcb') || title.includes('kicad') || title.includes('audio') || title.includes('stm32')) {
-    return '/images/kicad-pcb.jpg';
-  }
-  if (category.includes('iot') || category.includes('embedded') || title.includes('lora') || title.includes('sensor')) {
-    return '/images/iot-lora.jpg';
-  }
-  if (category.includes('fpga') || title.includes('fpga') || title.includes('ethernet')) {
-    return '/images/hero-hardware.jpg';
-  }
-  const images = ['/images/iot-lora.jpg', '/images/rf-antenna.jpg', '/images/kicad-pcb.jpg', '/images/hero-hardware.jpg'];
-  return images[index % images.length];
-};
-
-const ProjectCard = ({ proj, idx, onQuickStart, isAdminLoggedIn }) => {
+const ProjectCard = ({ proj, idx, onQuickStart }) => {
   const IconComp = getIconComponent(proj.icon);
   const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
-  const imgSrc = getProjectImage(proj, idx);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -62,7 +41,7 @@ const ProjectCard = ({ proj, idx, onQuickStart, isAdminLoggedIn }) => {
       style={{
         backgroundColor: '#FFFFFF',
         borderRadius: 'var(--radius-md)',
-        padding: '1.25rem',
+        padding: '1.75rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -70,18 +49,18 @@ const ProjectCard = ({ proj, idx, onQuickStart, isAdminLoggedIn }) => {
         animationDelay: `${Math.min(idx * 70, 420)}ms`,
         animationFillMode: 'both',
         transform: tilt.isHovered 
-          ? `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-8px) scale(1.015)` 
-          : 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)',
+          ? `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-8px) scale(1.015)` 
+          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)',
         transition: tilt.isHovered 
           ? 'transform 0.1s ease-out, box-shadow 0.25s ease-out' 
           : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease-out',
         boxShadow: tilt.isHovered 
-          ? '0 22px 42px -10px rgba(255, 149, 0, 0.25), 0 0 0 1.5px var(--accent-orange)' 
+          ? '0 20px 40px -10px rgba(255, 149, 0, 0.22), 0 0 0 1.5px var(--accent-orange)' 
           : '0 4px 16px rgba(0, 0, 0, 0.05), 0 0 0 1px var(--border-color)',
         overflow: 'hidden'
       }}
     >
-      {/* Specular glare reflection on mouse move */}
+      {/* Dynamic specular light reflection that smoothly tracks cursor */}
       {tilt.isHovered && (
         <div
           style={{
@@ -90,96 +69,57 @@ const ProjectCard = ({ proj, idx, onQuickStart, isAdminLoggedIn }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 200, 100, 0.15) 0%, transparent 60%)`,
+            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 149, 0, 0.09) 0%, transparent 65%)`,
             pointerEvents: 'none',
-            zIndex: 10
+            zIndex: 1
           }}
         />
       )}
 
-      <div>
-        {/* Color-Matched Image Showcase Header */}
-        <div style={{
-          position: 'relative',
-          height: '190px',
-          borderRadius: 'calc(var(--radius-md) - 4px)',
-          overflow: 'hidden',
-          marginBottom: '1.25rem',
-          backgroundColor: '#0F172A'
-        }}>
-          <img
-            src={imgSrc}
-            alt={proj.title}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-              transform: tilt.isHovered ? 'scale(1.08)' : 'scale(1)',
-              transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          />
-
-          {/* Category Badge Floating on Image */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
           <div style={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
+            width: '52px',
+            height: '52px',
+            borderRadius: 'var(--radius-sm)',
+            backgroundColor: 'var(--accent-light-orange)',
+            color: 'var(--accent-dark-orange)',
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            gap: '0.25rem',
-            zIndex: 2
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(255, 149, 0, 0.15)',
+            transform: tilt.isHovered ? 'scale(1.08) rotate(3deg)' : 'scale(1) rotate(0deg)',
+            transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
-            <span className="badge badge-orange" style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(255, 243, 224, 0.95)' }}>
-              {proj.category}
-            </span>
+            <IconComp size={26} />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
+            <span className="badge badge-orange">{proj.category}</span>
             {proj.featured && (
-              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: '#FFFFFF', backgroundColor: 'var(--accent-orange)', padding: '0.15rem 0.5rem', borderRadius: '4px', letterSpacing: '0.5px' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--accent-dark-orange)', letterSpacing: '0.5px' }}>
                 FEATURED
               </span>
             )}
           </div>
-
-          {/* Bottom Left Hardware Tag */}
-          <div style={{
-            position: 'absolute',
-            bottom: '10px',
-            left: '10px',
-            backgroundColor: 'rgba(15, 23, 42, 0.85)',
-            backdropFilter: 'blur(8px)',
-            border: '1px solid rgba(255, 149, 0, 0.4)',
-            borderRadius: '6px',
-            padding: '0.2rem 0.55rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            color: '#FFFFFF',
-            fontSize: '0.725rem',
-            fontWeight: 600,
-            zIndex: 2
-          }}>
-            <IconComp size={14} color="var(--accent-orange)" />
-            <span>Hardware Prototype</span>
-          </div>
         </div>
 
-        <h3 style={{ fontSize: '1.15rem', marginBottom: '0.65rem', lineHeight: 1.35, color: 'var(--text-dark)' }}>
+        <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', lineHeight: 1.35, color: 'var(--text-dark)' }}>
           {proj.title}
         </h3>
 
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem', minHeight: '3.4em', lineHeight: 1.55 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.35rem', minHeight: '3.6em', lineHeight: 1.6 }}>
           {proj.description}
         </p>
 
         {/* Deliverables list */}
-        <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+        <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-dark)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.1rem' }}>
             Deliverables:
           </span>
           {proj.features.slice(0, 4).map((feat, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.825rem', color: 'var(--text-muted)' }}>
-              <CheckIcon size={15} color="var(--accent-orange)" style={{ flexShrink: 0, marginTop: '2px' }} />
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <CheckIcon size={16} color="var(--accent-orange)" style={{ flexShrink: 0, marginTop: '2px' }} />
               <span>{feat}</span>
             </div>
           ))}
@@ -188,36 +128,37 @@ const ProjectCard = ({ proj, idx, onQuickStart, isAdminLoggedIn }) => {
 
       {/* Card Footer: Price & Quick Start */}
       <div style={{
-        paddingTop: '1rem',
+        paddingTop: '1.25rem',
         borderTop: '1px solid var(--border-color)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '0.75rem'
+        position: 'relative',
+        zIndex: 2
       }}>
         <div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-light)', fontWeight: 600 }}>Standard Package</div>
-          <div style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--accent-orange)', lineHeight: 1 }}>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 500 }}>Price</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-orange)', lineHeight: 1 }}>
             ${proj.price}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>Time: {proj.duration}</div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '3px' }}>Time: {proj.duration}</div>
         </div>
 
         <button
           onClick={() => onQuickStart(proj)}
           className="btn btn-primary"
-          style={{ padding: '0.6rem 1.1rem', fontSize: '0.875rem' }}
+          style={{ padding: '0.65rem 1.15rem', fontSize: '0.875rem' }}
         >
           <span>Select Solution</span>
-          <ArrowRightIcon size={15} />
+          <ArrowRightIcon size={16} />
         </button>
       </div>
     </div>
   );
 };
 
-export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) => {
-  const { data, isAdminLoggedIn, toggleView } = useApp();
+export const ProjectCatalog = ({ onSelectProjectForInquiry }) => {
+  const { data, isAdminLoggedIn } = useApp();
   const { projects } = data;
 
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -384,7 +325,6 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
                 proj={proj}
                 idx={idx}
                 onQuickStart={handleQuickStart}
-                isAdminLoggedIn={isAdminLoggedIn}
               />
             ))}
           </div>
@@ -393,4 +333,3 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
     </section>
   );
 };
-

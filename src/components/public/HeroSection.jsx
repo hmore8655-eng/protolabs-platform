@@ -3,7 +3,7 @@ import { ArrowRightIcon, CheckCircleIcon, SparklesIcon } from '../common/Icons';
 import { ProtoLabsIcon } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
 
-const HeroVisualShowcase = () => {
+const InteractiveCircuitShield = () => {
   const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
 
   const handleMouseMove = (e) => {
@@ -37,12 +37,12 @@ const HeroVisualShowcase = () => {
       <div
         style={{
           width: '100%',
-          backgroundColor: '#0F172A',
+          backgroundColor: '#0B0F19',
           borderRadius: 'var(--radius-lg)',
-          padding: '1.25rem',
+          padding: '1.75rem',
           boxShadow: tilt.isHovered 
-            ? '0 30px 60px -15px rgba(255, 149, 0, 0.4), 0 0 0 2px var(--accent-orange)' 
-            : '0 20px 45px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+            ? '0 30px 60px -15px rgba(255, 149, 0, 0.35), 0 0 0 2px var(--accent-orange)' 
+            : '0 20px 45px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 149, 0, 0.2)',
           position: 'relative',
           overflow: 'hidden',
           transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${tilt.isHovered ? 1.02 : 1}, ${tilt.isHovered ? 1.02 : 1}, 1)`,
@@ -50,109 +50,138 @@ const HeroVisualShowcase = () => {
           transformStyle: 'preserve-3d'
         }}
       >
-        {/* Dynamic Specular Glare Layer */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 200, 100, 0.25) 0%, rgba(255, 149, 0, 0.1) 40%, transparent 75%)`,
-            pointerEvents: 'none',
-            zIndex: 10,
-            borderRadius: 'inherit'
-          }}
-        />
+        {/* Dynamic Specular Glare Follower */}
+        {tilt.isHovered && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 180, 0, 0.18) 0%, transparent 65%)`,
+              pointerEvents: 'none',
+              zIndex: 10,
+              borderRadius: 'inherit'
+            }}
+          />
+        )}
 
-        {/* Top Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', padding: '0 0.25rem' }}>
+        {/* Top Telemetry Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <ProtoLabsIcon size={24} />
-            <span style={{ fontWeight: 800, fontSize: '1rem', color: '#FFFFFF' }}>
+            <ProtoLabsIcon size={26} />
+            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#FFFFFF' }}>
               Proto<span style={{ color: 'var(--accent-orange)' }}>Labs</span>
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(16, 185, 129, 0.15)', padding: '0.2rem 0.6rem', borderRadius: '999px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(16, 185, 129, 0.12)', padding: '0.25rem 0.65rem', borderRadius: '999px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
             <span className="animate-pulse-radar" style={{ width: '8px', height: '8px', backgroundColor: '#10B981', borderRadius: '50%' }} />
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#10B981', letterSpacing: '0.5px' }}>
-              LAB ACTIVE • 28GHz RF
+            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#10B981', letterSpacing: '0.5px' }}>
+              LAB STREAM • 28GHz ACTIVE
             </span>
           </div>
         </div>
 
-        {/* Image Showcase Container with zoom on hover */}
+        {/* Animated Circuit Matrix SVG */}
         <div style={{
-          position: 'relative',
+          backgroundColor: '#070A10',
           borderRadius: 'var(--radius-md)',
-          overflow: 'hidden',
-          border: '1px solid rgba(255, 149, 0, 0.3)',
-          backgroundColor: '#000000'
+          padding: '1.25rem 1rem',
+          border: '1px solid rgba(255, 149, 0, 0.25)',
+          position: 'relative'
         }}>
-          <img
-            src="/images/hero-hardware.jpg"
-            alt="ProtoLabs Engineering Hardware Prototype"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '340px',
-              objectFit: 'cover',
-              display: 'block',
-              transform: tilt.isHovered ? 'scale(1.05)' : 'scale(1)',
-              transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          />
+          <svg viewBox="0 0 460 260" style={{ width: '100%', height: 'auto', display: 'block' }}>
+            {/* Grid Pattern */}
+            <defs>
+              <pattern id="circuitGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255, 149, 0, 0.05)" strokeWidth="1" />
+              </pattern>
+              <linearGradient id="glowOrange" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#FF7F00" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#FF9500" stopOpacity="1" />
+              </linearGradient>
+            </defs>
 
-          {/* Floating HUD Telemetry Overlay */}
-          <div style={{
-            position: 'absolute',
-            bottom: '12px',
-            left: '12px',
-            right: '12px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: '0.5rem',
-            zIndex: 5
-          }}>
-            <div style={{
-              backgroundColor: 'rgba(15, 23, 42, 0.85)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 149, 0, 0.4)',
-              borderRadius: '8px',
-              padding: '0.35rem 0.65rem',
-              color: '#FFFFFF',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem'
-            }}>
-              <span style={{ color: 'var(--accent-orange)' }}>⚡</span>
-              <span>STM32 + LoRaWAN</span>
-            </div>
+            <rect width="460" height="260" fill="url(#circuitGrid)" />
 
-            <div style={{
-              backgroundColor: 'rgba(15, 23, 42, 0.85)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 149, 0, 0.4)',
-              borderRadius: '8px',
-              padding: '0.35rem 0.65rem',
-              color: '#FFFFFF',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem'
-            }}>
-              <span style={{ color: 'var(--accent-orange)' }}>📡</span>
-              <span>KiCAD 8 4-Layer Stackup</span>
-            </div>
-          </div>
+            {/* Circuit Traces */}
+            <path d="M 40 70 L 120 70 L 160 130 L 300 130 L 340 70 L 420 70" fill="none" stroke="rgba(255, 149, 0, 0.2)" strokeWidth="2" />
+            <path d="M 40 190 L 120 190 L 160 130 L 300 130 L 340 190 L 420 190" fill="none" stroke="rgba(255, 149, 0, 0.2)" strokeWidth="2" />
+            <path d="M 230 30 L 230 230" fill="none" stroke="rgba(255, 149, 0, 0.25)" strokeWidth="2" strokeDasharray="4 4" />
+
+            {/* Active Glowing Copper Bus */}
+            <path d="M 60 130 L 400 130" fill="none" stroke="url(#glowOrange)" strokeWidth="3" />
+
+            {/* Central Microprocessor Core */}
+            <g transform="translate(190, 90)">
+              <rect width="80" height="80" rx="12" fill="#111827" stroke="#FF9500" strokeWidth="3" />
+              <rect x="10" y="10" width="60" height="60" rx="8" fill="rgba(255, 149, 0, 0.15)" stroke="#FF7F00" strokeWidth="1" />
+              <circle cx="40" cy="40" r="14" fill="#FF9500" />
+              <text x="40" y="44" fill="#0B0F19" fontSize="10" fontWeight="900" textAnchor="middle">STM32</text>
+              <text x="40" y="88" fill="#FF9500" fontSize="8" fontWeight="bold" textAnchor="middle">ARM CORTEX-M4</text>
+            </g>
+
+            {/* Node Left: LoRa Transceiver */}
+            <g transform="translate(30, 105)">
+              <rect width="70" height="50" rx="8" fill="#161E2E" stroke="rgba(255, 149, 0, 0.5)" strokeWidth="1.5" />
+              <text x="35" y="24" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">SX1276 LoRa</text>
+              <text x="35" y="38" fill="#94A3B8" fontSize="8" textAnchor="middle">868/915 MHz</text>
+            </g>
+
+            {/* Node Right: 5G mmWave RF */}
+            <g transform="translate(360, 105)">
+              <rect width="70" height="50" rx="8" fill="#161E2E" stroke="rgba(255, 149, 0, 0.5)" strokeWidth="1.5" />
+              <text x="35" y="24" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">5G mmWave</text>
+              <text x="35" y="38" fill="#94A3B8" fontSize="8" textAnchor="middle">28GHz Array</text>
+            </g>
+
+            {/* Real-time Oscilloscope Waveform at Bottom */}
+            <g transform="translate(40, 205)">
+              <rect width="380" height="34" rx="6" fill="#090D16" stroke="rgba(255, 149, 0, 0.2)" />
+              <path d="M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17" fill="none" stroke="#FF9500" strokeWidth="2">
+                <animate attributeName="d" 
+                  values="
+                    M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17;
+                    M 10 17 Q 30 30, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17;
+                    M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17
+                  " 
+                  dur="2s" 
+                  repeatCount="indefinite" 
+                />
+              </path>
+            </g>
+
+            {/* Glowing Signal Packets traveling in real time */}
+            <circle cx="100" cy="130" r="5" fill="#FF9500">
+              <animate attributeName="cx" values="100;190" dur="1.2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1.2s" repeatCount="indefinite" />
+            </circle>
+
+            <circle cx="270" cy="130" r="5" fill="#FF7F00">
+              <animate attributeName="cx" values="270;360" dur="1.2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.2;1;0.2" dur="1.2s" repeatCount="indefinite" />
+            </circle>
+
+            <circle cx="230" cy="50" r="4" fill="#10B981">
+              <animate attributeName="cy" values="50;90" dur="1.8s" repeatCount="indefinite" />
+            </circle>
+          </svg>
         </div>
 
-        <div style={{ marginTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem' }}>
-          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Interactive 3D Hardware Telemetry</span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: 600 }}>Hover & Move Cursor to Inspect</span>
+        {/* Bottom Interactive HUD Footer */}
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem' }}>
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+              KiCAD 8 4-Layer
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+              DSP Filter CMSIS
+            </span>
+          </div>
+          <span style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: 600 }}>
+            Interactive 3D Circuit Matrix
+          </span>
         </div>
       </div>
     </div>
@@ -160,7 +189,7 @@ const HeroVisualShowcase = () => {
 };
 
 export const HeroSection = ({ onOpenAuthModal }) => {
-  const { data, isAdminLoggedIn, toggleView } = useApp();
+  const { data } = useApp();
   const { hero } = data;
 
   const scrollToSection = (id) => {
@@ -264,14 +293,14 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             </div>
           </div>
 
-          {/* Right Hero Visual - 3D Interactive Telemetry Device Showcase */}
+          {/* Right Hero Visual - 3D Interactive Circuit Shield */}
           <div style={{
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            <HeroVisualShowcase />
+            <InteractiveCircuitShield />
           </div>
         </div>
       </div>
