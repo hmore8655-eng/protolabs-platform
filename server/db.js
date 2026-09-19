@@ -258,10 +258,47 @@ const defaultData = {
   }
 };
 
+const { MongoClient } = require('mongodb');
+
 class Database {
   constructor() {
+    this.isCloudConnected = false;
+    this.mongoClient = null;
+    this.mongoCollection = null;
     this.ensureDirExists();
     this.load();
+  }
+
+  async initCloud() {
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) return false;
+
+    try {
+      const client = new MongoClient(mongoUri, { serverSelectionTimeoutMS: 8000 });
+      await client.connect();
+      this.mongoClient = client;
+      const db = client.db('protolabs_platform');
+      this.mongoCollection = db.collection('app_state');
+
+      const doc = await this.mongoCollection.findOne({ key: 'main_state' });
+      if (doc && doc.data) {
+        this.data = doc.data;
+        try { fs.writeFileSync(DB_PATH, JSON.stringify(this.data, null, 2), 'utf8'); } catch (e) {}
+      } else {
+        await this.mongoCollection.updateOne(
+          { key: 'main_state' },
+          { $set: { key: 'main_state', data: this.data, updatedAt: new Date().toISOString() } },
+          { upsert: true }
+        );
+      }
+
+      this.isCloudConnected = true;
+      return true;
+    } catch (err) {
+      console.error('[MongoDB Error]:', err.message);
+      this.isCloudConnected = false;
+      return false;
+    }
   }
 
   ensureDirExists() {
@@ -293,12 +330,26 @@ class Database {
     } catch (e) {
       console.error('Failed to write database file:', e);
     }
+
+    if (this.isCloudConnected && this.mongoCollection) {
+      this.mongoCollection.updateOne(
+        { key: 'main_state' },
+        { $set: { data: this.data, updatedAt: new Date().toISOString() } },
+        { upsert: true }
+      ).catch(err => console.error('[MongoDB Save Error]:', err.message));
+    }
   }
 
   reset() {
     this.data = JSON.parse(JSON.stringify(defaultData));
-    // Re-hash admin password
-    this.data.users[0].passwordHash = bcrypt.hashSync("admin123", 10);
+    this.data.users[0].passwordHash = bcrypt.hashSync("PROTOLABS@123", 10);
+    this.save();
+    return this.data;
+  }
+
+  importData(importedData) {
+    if (!importedData || typeof importedData !== 'object') throw new Error('Invalid backup file');
+    this.data = { ...defaultData, ...importedData };
     this.save();
     return this.data;
   }

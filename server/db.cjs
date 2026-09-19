@@ -225,10 +225,60 @@ const defaultData = {
   }
 };
 
+const { MongoClient } = require('mongodb');
+
 class Database {
   constructor() {
+    this.isCloudConnected = false;
+    this.mongoClient = null;
+    this.mongoCollection = null;
     this.ensureDirExists();
     this.load();
+  }
+
+  async initCloud() {
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.log('[Storage] No MONGODB_URI set. Running on local JSON storage (ephemeral on free Render containers).');
+      return false;
+    }
+
+    try {
+      console.log('[MongoDB Atlas] Connecting to cluster...');
+      const client = new MongoClient(mongoUri, {
+        serverSelectionTimeoutMS: 8000,
+      });
+      await client.connect();
+      this.mongoClient = client;
+      const db = client.db('protolabs_platform');
+      this.mongoCollection = db.collection('app_state');
+
+      // Fetch existing cloud state
+      const doc = await this.mongoCollection.findOne({ key: 'main_state' });
+      if (doc && doc.data) {
+        console.log('[MongoDB Atlas] Cloud state retrieved successfully! Hydrating platform data...');
+        this.data = doc.data;
+        // Keep local cache up to date
+        try {
+          fs.writeFileSync(DB_PATH, JSON.stringify(this.data, null, 2), 'utf8');
+        } catch (e) {}
+      } else {
+        console.log('[MongoDB Atlas] Initializing state in MongoDB Atlas cloud collection...');
+        await this.mongoCollection.updateOne(
+          { key: 'main_state' },
+          { $set: { key: 'main_state', data: this.data, updatedAt: new Date().toISOString() } },
+          { upsert: true }
+        );
+      }
+
+      this.isCloudConnected = true;
+      console.log('✅ [MongoDB Atlas] Cloud Persistence is ACTIVE. Edits will survive all Render spin-downs and restarts!');
+      return true;
+    } catch (err) {
+      console.error('[MongoDB Atlas Warning] Failed to connect to MongoDB URI:', err.message);
+      this.isCloudConnected = false;
+      return false;
+    }
   }
 
   ensureDirExists() {
@@ -272,6 +322,16 @@ class Database {
     } catch (e) {
       console.error('Failed to write database file:', e);
     }
+
+    if (this.isCloudConnected && this.mongoCollection) {
+      this.mongoCollection.updateOne(
+        { key: 'main_state' },
+        { $set: { data: this.data, updatedAt: new Date().toISOString() } },
+        { upsert: true }
+      ).catch(err => {
+        console.error('[MongoDB Atlas Save Error]:', err.message);
+      });
+    }
   }
 
   reset() {
@@ -280,6 +340,18 @@ class Database {
     this.data.chatThreads = [];
     this.data.chatMessages = [];
     this.data.users[0].passwordHash = bcrypt.hashSync("PROTOLABS@123", 10);
+    this.save();
+    return this.data;
+  }
+
+  importData(importedData) {
+    if (!importedData || typeof importedData !== 'object') {
+      throw new Error('Invalid backup file structure');
+    }
+    this.data = {
+      ...defaultData,
+      ...importedData
+    };
     this.save();
     return this.data;
   }

@@ -13,3 +13,5 @@ services:
         value: hmore8655@gmail.com
       - key: ADMIN_PASSWORD
         value: PROTOLABS@123
+      - key: MONGODB_URI
+        sync: false

@@ -118,6 +118,23 @@ export const AppProvider = ({ children }) => {
     showToast('All platform data reset to factory demo values.');
   };
 
+  const restoreBackup = async (backupPayload) => {
+    try {
+      const res = await api.restoreBackup(backupPayload);
+      if (res && res.data) {
+        setData(res.data);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(res.data));
+      }
+      showToast('Platform data restored successfully!');
+      return true;
+    } catch (err) {
+      showToast(`Restore failed: ${err.message}`, 'error');
+      return false;
+    }
+  };
+
+  const refreshData = () => fetchBackendData();
+
   // Projects CRUD with double persistence (API + Local Storage)
   const addProject = async (project) => {
     try {
@@ -349,7 +366,9 @@ export const AppProvider = ({ children }) => {
       updateServices,
       updateHowItWorks,
       updateHero,
-      updateSettings
+      updateSettings,
+      restoreBackup,
+      refreshData
     }}>
       {children}
     </AppContext.Provider>

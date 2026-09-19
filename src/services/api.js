@@ -243,5 +243,27 @@ export const api = {
       body: JSON.stringify(payload)
     });
     return handleResponse(res);
+  },
+
+  // Database Cloud Status & Backup Management
+  async getDatabaseStatus() {
+    const res = await fetch(`${API_BASE}/database/status`);
+    return handleResponse(res);
+  },
+
+  async exportBackup() {
+    const res = await fetch(`${API_BASE}/admin/export`, {
+      headers: getAuthHeaders()
+    });
+    return handleResponse(res);
+  },
+
+  async restoreBackup(backupData) {
+    const res = await fetch(`${API_BASE}/admin/restore`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(backupData)
+    });
+    return handleResponse(res);
   }
 };

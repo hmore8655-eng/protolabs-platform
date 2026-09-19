@@ -292,6 +292,41 @@ app.post('/api/upload', verifyToken, upload.single('file'), (req, res) => {
   res.json({ success: true, fileUrl, filename: req.file.filename });
 });
 
+app.get('/api/database/status', (req, res) => {
+  res.json({
+    isCloud: db.isCloudConnected,
+    mode: db.isCloudConnected ? 'MongoDB Atlas (Persistent Cloud Database)' : 'Local Disk JSON (Ephemeral on Free Render Containers)',
+    info: db.isCloudConnected 
+      ? 'All catalog edits, inquiries, and chat threads are permanently saved in MongoDB Atlas.'
+      : 'Running on local file storage. Note: Free Render containers sleep after 15 min of inactivity and wipe local files. Add MONGODB_URI to Render environment variables to make all edits permanent.'
+  });
+});
+
+app.get('/api/admin/export', verifyToken, (req, res) => {
+  const exportData = {
+    exportedAt: new Date().toISOString(),
+    version: '1.0',
+    data: db.data
+  };
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Disposition', `attachment; filename="protolabs-backup-${new Date().toISOString().slice(0, 10)}.json"`);
+  res.send(JSON.stringify(exportData, null, 2));
+});
+
+app.post('/api/admin/restore', verifyToken, (req, res) => {
+  try {
+    const payload = req.body;
+    const dataToImport = payload.data || payload;
+    if (!dataToImport || !Array.isArray(dataToImport.projects)) {
+      return res.status(400).json({ error: 'Invalid backup format. Must contain valid projects array.' });
+    }
+    const updated = db.importData(dataToImport);
+    res.json({ success: true, message: 'Database restored successfully!', data: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/reset-demo', verifyToken, (req, res) => {
   const freshData = db.reset();
   res.json({ success: true, message: 'Database reset to factory demo values', data: freshData });
@@ -309,10 +344,19 @@ if (fs.existsSync(DIST_DIR)) {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 ProtoLabs Full-Stack Express Backend Active!`);
-  console.log(`📡 Listening on: http://localhost:${PORT}`);
-  console.log(`💾 Database file: server/data/database.json`);
-  console.log(`=======================================================`);
-});
+// Start Server with Cloud Database Initialization
+(async () => {
+  try {
+    await db.initCloud();
+  } catch (e) {
+    console.error('Cloud storage init error:', e);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 ProtoLabs Full-Stack Express Backend Active!`);
+    console.log(`📡 Listening on: http://localhost:${PORT}`);
+    console.log(`💾 Storage Mode: ${db.isCloudConnected ? 'MongoDB Atlas (Persistent Cloud)' : 'Local File (database.json)'}`);
+    console.log(`=======================================================`);
+  });
+})();
