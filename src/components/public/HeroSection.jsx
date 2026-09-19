@@ -174,37 +174,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
                 </circle>
               </svg>
 
-              {/* Admin Quick Action Banner inside Card */}
-              <div style={{
-                marginTop: '1rem',
-                padding: '0.85rem 1rem',
-                backgroundColor: 'var(--accent-light-orange)',
-                borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--accent-soft-orange)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '0.85rem'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, color: 'var(--accent-dark-orange)' }}>
-                  <LockIcon size={16} />
-                  <span>Admin Credentials: <code>admin123</code></span>
-                </div>
-                
-                <button
-                  onClick={isAdminLoggedIn ? toggleView : onOpenAuthModal}
-                  style={{
-                    backgroundColor: 'var(--accent-orange)',
-                    color: '#FFFFFF',
-                    padding: '0.35rem 0.75rem',
-                    borderRadius: 'var(--radius-sm)',
-                    fontWeight: 700,
-                    fontSize: '0.75rem'
-                  }}
-                >
-                  {isAdminLoggedIn ? 'Open Admin' : 'Login Admin'}
-                </button>
-              </div>
+
             </div>
           </div>
         </div>

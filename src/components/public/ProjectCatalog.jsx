@@ -72,45 +72,37 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
           </p>
         </div>
 
-        {/* Admin Banner Control Notice */}
-        <div style={{
-          backgroundColor: 'var(--accent-light-orange)',
-          borderRadius: 'var(--radius-md)',
-          padding: '1rem 1.5rem',
-          marginBottom: '2.5rem',
-          border: '1px solid var(--accent-soft-orange)',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <LockIcon size={20} color="var(--accent-dark-orange)" />
-            <div>
-              <div style={{ fontWeight: 700, color: 'var(--text-dark)', fontSize: '0.95rem' }}>
-                {isAdminLoggedIn ? 'Admin Management Mode Active' : 'Admin Control Note'}
-              </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                {isAdminLoggedIn 
-                  ? 'You are logged in as Admin! Click "Manage Projects" to add items, reorder, or edit pricing.'
-                  : 'Log in as Admin (password: admin123) to add new projects, edit pricing, or reorder the catalog live!'}
+        {/* Admin Management Toolbar (Only shown when logged in) */}
+        {isAdminLoggedIn && (
+          <div style={{
+            backgroundColor: 'var(--accent-light-orange)',
+            borderRadius: 'var(--radius-md)',
+            padding: '1rem 1.5rem',
+            marginBottom: '2.5rem',
+            border: '1px solid var(--accent-soft-orange)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <LockIcon size={20} color="var(--accent-dark-orange)" />
+              <div>
+                <div style={{ fontWeight: 700, color: 'var(--text-dark)', fontSize: '0.95rem' }}>
+                  Admin Management Active
+                </div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  You are logged in as Admin. Switch to the Admin Dashboard to manage projects, edit pricing, or view inquiries.
+                </div>
               </div>
             </div>
-          </div>
 
-          {isAdminLoggedIn ? (
             <button onClick={toggleView} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
               <PlusIcon size={16} />
-              <span>Manage Projects & Pricing</span>
+              <span>Go to Admin Dashboard</span>
             </button>
-          ) : (
-            <button onClick={onOpenAuthModal} className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-              <LockIcon size={14} />
-              <span>Login as Admin (admin123)</span>
-            </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Filter & Search Bar */}
         <div style={{

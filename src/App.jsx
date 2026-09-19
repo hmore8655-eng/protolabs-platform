@@ -13,6 +13,7 @@ import { Footer } from './components/public/Footer';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminAuthModal } from './components/admin/AdminAuthModal';
 import { Toast } from './components/common/Toast';
+import { LiveChatWidget } from './components/common/LiveChatWidget';
 
 const MainAppContent = () => {
   const { isAdminView, isAdminLoggedIn } = useApp();
@@ -52,6 +53,8 @@ const MainAppContent = () => {
       </main>
 
       <Footer onOpenAuthModal={() => setIsAuthModalOpen(true)} />
+
+      <LiveChatWidget />
 
       <AdminAuthModal
         isOpen={isAuthModalOpen}

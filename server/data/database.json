@@ -3,7 +3,7 @@
     {
       "id": "usr-admin-harsh",
       "name": "Harsh More (ProtoLabs Specialist)",
-      "email": "hmore8655@gmail.com",
+      "email": "protolabs26@gmail.com",
       "passwordHash": "$2b$10$6RXExc1aga5SEQRgDmVm7uwTqhRUQTh1MGFErLHZNfv1R8a7B.9Pm",
       "role": "admin",
       "createdAt": "2026-09-01"
@@ -11,7 +11,7 @@
   ],
   "hero": {
     "headline": "ProtoLabs Engineering & Custom Hardware Solutions",
-    "subheading": "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at JSPM NTC, Pune.",
+    "subheading": "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at Narhe, Pune.",
     "primaryCta": "Browse Catalog",
     "secondaryCta": "Request Custom Project"
   },
@@ -142,7 +142,7 @@
       "id": "srv-1",
       "icon": "Clock",
       "title": "24-Hour Proposal Turnaround",
-      "description": "Submit your custom engineering specs and receive a detailed block diagram, bill of materials, and guaranteed fixed price within 24 hours."
+      "description": "Submit your custom engineering specs and chat directly with Harsh More to finalize your timeline, budget, and project scope within 24 hours."
     },
     {
       "id": "srv-2",
@@ -160,19 +160,19 @@
       "id": "srv-4",
       "icon": "User",
       "title": "Direct Admin Specialist Support",
-      "description": "One-on-one debugging sessions with Harsh More, video call code walkthroughs, and thesis/prototype assistance."
+      "description": "One-on-one live chat and video call code walkthroughs with Harsh More to discuss budget and custom deadlines."
     }
   ],
   "howItWorks": [
     {
       "step": "01",
       "title": "Select or Request Custom",
-      "description": "Browse our admin-managed project catalog or submit custom project specifications using our inquiry form."
+      "description": "Browse our project catalog or submit custom project specifications using our inquiry form."
     },
     {
       "step": "02",
-      "title": "Admin Review & Fixed Pricing",
-      "description": "Harsh More reviews your requirements, customizes project scope/pricing, and issues a formal proposal."
+      "title": "Live Chat with Harsh More",
+      "description": "Discuss your custom timeline and target budget range directly with Harsh More via live chat or proposal email."
     },
     {
       "step": "03",
@@ -187,54 +187,32 @@
       "category": "Telecom & RF",
       "client": "AeroTech Labs",
       "outcome": "Achieved 12km Line-of-Sight transmission with zero frame loss.",
-      "techStack": [
-        "STM32H7",
-        "RFM95W",
-        "OSD Chip",
-        "Custom 4-Layer PCB"
-      ],
+      "techStack": ["STM32H7", "RFM95W", "OSD Chip", "Custom 4-Layer PCB"],
       "image": "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80"
     },
     {
       "id": "port-2",
       "title": "Autonomous Warehouse RFID Inventory Scanner",
-      "category": "IoT & Automation",
+      category": "IoT & Automation",
       "client": "LogiSmart Logistics",
       "outcome": "Scans 500+ RFID tags per second with 99.8% accuracy.",
-      "techStack": [
-        "UHF RFID Impinj",
-        "ESP32",
-        "MQTT",
-        "Python Backend"
-      ],
+      "techStack": ["UHF RFID Impinj", "ESP32", "MQTT", "Python Backend"],
       "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80"
     }
   ],
   "testimonials": [],
   "inquiries": [],
+  "chatThreads": [],
+  "chatMessages": [],
   "settings": {
     "siteTitle": "ProtoLabs",
     "tagline": "BUILD • EXPERIMENT • INNOVATE — Electronics • Telecommunication • Real Solutions",
-    "contactEmail": "hmore8655@gmail.com",
+    "contactEmail": "protolabs26@gmail.com",
     "contactPhone": "+91 8856082411",
-    "location": "JSPM NTC, Narhe, Pune - 411041",
+    "location": "Narhe, Pune - 411041",
     "autoReplySubject": "Thank you for reaching out to ProtoLabs Engineering!",
-    "autoReplyTemplate": "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications and is preparing a custom technical proposal and milestone quote.\n\nYou can expect a direct response within 24 hours.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nJSPM NTC, Narhe, Pune - 411041\nPhone: +91 8856082411",
-    "thankYouMessage": "Thank you! Your inquiry has been received by ProtoLabs. Harsh More will review your specifications and send custom pricing within 24 hours.",
-    "paymentDetails": "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request",
-    "timelines": [
-      "Urgent (< 1 Week)",
-      "1-2 Weeks",
-      "2-4 Weeks",
-      "1-2 Months",
-      "Flexible"
-    ],
-    "budgets": [
-      "Under $300",
-      "$300 - $500",
-      "$500 - $1,000",
-      "$1,000 - $2,500",
-      "$2,500+"
-    ]
+    "autoReplyTemplate": "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications. Please use our Live Chat widget or expect a direct proposal email within 24 hours to finalize timeline & budget.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nNarhe, Pune - 411041\nPhone: +91 8856082411",
+    "thankYouMessage": "Thank you! Your inquiry has been received. You can now use the Live Chat widget below to chat directly with Harsh More regarding your timeline and budget!",
+    "paymentDetails": "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request"
   }
 }

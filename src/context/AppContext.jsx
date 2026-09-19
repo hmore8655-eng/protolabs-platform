@@ -81,14 +81,14 @@ export const AppProvider = ({ children }) => {
       }
     } catch (err) {
       // Local password fallback
-      if (password === 'admin123') {
+      if (password === 'PROTOLABS@123') {
         setIsAdminLoggedIn(true);
         setIsAdminView(true);
         showToast('Welcome back, Admin! (Offline Mode)');
         return true;
       }
     }
-    showToast('Invalid password. Try "admin123"', 'error');
+    showToast('Invalid admin password', 'error');
     return false;
   };
 

@@ -40,7 +40,7 @@ app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   if (!password) return res.status(400).json({ error: 'Password required' });
 
-  const userEmail = email || 'admin@protolabs.eng';
+  const userEmail = email || 'protolabs26@gmail.com';
   const result = loginUser(userEmail, password);
 
   if (result.error) {
@@ -151,7 +151,62 @@ app.delete('/api/inquiries/:id', verifyToken, (req, res) => {
   res.json({ success: true });
 });
 
-// Portfolio API
+// Live Chat API Endpoints (Client - Admin real-time thread messages)
+app.get('/api/chat/threads', verifyToken, (req, res) => {
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  res.json(db.data.chatThreads);
+});
+
+app.get('/api/chat/messages/:threadId', (req, res) => {
+  const { threadId } = req.params;
+  if (!db.data.chatMessages) db.data.chatMessages = [];
+  const messages = db.data.chatMessages.filter(m => m.threadId === threadId);
+  res.json(messages);
+});
+
+app.post('/api/chat/messages', (req, res) => {
+  const { threadId, clientName, clientEmail, sender, text, priceQuote, timelineQuote } = req.body;
+  if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
+
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  if (!db.data.chatMessages) db.data.chatMessages = [];
+
+  let thread = db.data.chatThreads.find(t => t.id === threadId);
+  if (!thread) {
+    thread = {
+      id: threadId,
+      clientName: clientName || 'Client Visitor',
+      clientEmail: clientEmail || 'visitor@protolabs.eng',
+      lastMessage: text,
+      updatedAt: new Date().toISOString(),
+      unreadCount: sender === 'client' ? 1 : 0
+    };
+    db.data.chatThreads.unshift(thread);
+  } else {
+    thread.lastMessage = text;
+    thread.updatedAt = new Date().toISOString();
+    if (sender === 'client') thread.unreadCount = (thread.unreadCount || 0) + 1;
+    if (priceQuote) thread.agreedPrice = priceQuote;
+    if (timelineQuote) thread.agreedTimeline = timelineQuote;
+  }
+
+  const newMessage = {
+    id: `msg-${Date.now()}`,
+    threadId,
+    sender: sender || 'client', // 'client' or 'admin'
+    text,
+    priceQuote,
+    timelineQuote,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+
+  db.data.chatMessages.push(newMessage);
+  db.save();
+
+  res.status(201).json(newMessage);
+});
+
+// Portfolio & Testimonials API
 app.get('/api/portfolio', (req, res) => res.json(db.data.portfolio));
 app.post('/api/portfolio', verifyToken, (req, res) => {
   const newItem = { ...req.body, id: `port-${Date.now()}` };
@@ -175,7 +230,6 @@ app.delete('/api/portfolio/:id', verifyToken, (req, res) => {
   res.json({ success: true });
 });
 
-// Testimonials API
 app.get('/api/testimonials', (req, res) => res.json(db.data.testimonials));
 app.post('/api/testimonials', verifyToken, (req, res) => {
   const newItem = { ...req.body, id: `test-${Date.now()}` };
@@ -236,7 +290,6 @@ app.post('/api/reset-demo', verifyToken, (req, res) => {
 });
 
 // Serve static frontend build in production for Render / Railway / Heroku
-// Uses middleware fallback compatible with Express 5 path-to-regexp parser
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));

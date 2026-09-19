@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { CpuIcon, LayersIcon, MailIcon, StarIcon, EyeIcon, SlidersIcon, LockIcon, RefreshIcon } from '../common/Icons';
+import { CpuIcon, LayersIcon, MailIcon, StarIcon, EyeIcon, SlidersIcon, LockIcon, RefreshIcon, MessageSquareIcon } from '../common/Icons';
 import { ProtoLabsIcon } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
 
 import { AdminDashboardOverview } from './AdminDashboardOverview';
 import { AdminProjectsManager } from './AdminProjectsManager';
 import { AdminInquiriesManager } from './AdminInquiriesManager';
+import { AdminChatManager } from './AdminChatManager';
 import { AdminTestimonialsManager } from './AdminTestimonialsManager';
 import { AdminPortfolioManager } from './AdminPortfolioManager';
 import { AdminServicesManager } from './AdminServicesManager';
@@ -19,6 +20,7 @@ export const AdminLayout = () => {
 
   const menuItems = [
     { id: 'overview', label: 'Dashboard Overview', icon: CpuIcon },
+    { id: 'chats', label: 'Live Client Chats', icon: MessageSquareIcon, badge: 'LIVE', badgeColor: 'orange' },
     { id: 'projects', label: 'Projects & Pricing', icon: LayersIcon, badge: data.projects.length },
     { id: 'inquiries', label: 'Inquiries & Quotes', icon: MailIcon, badge: pendingInquiriesCount > 0 ? pendingInquiriesCount : null, badgeColor: 'orange' },
     { id: 'services', label: 'Services & Process', icon: SlidersIcon },
@@ -157,6 +159,7 @@ export const AdminLayout = () => {
         {/* Content Area */}
         <main style={{ flex: 1, padding: '2rem', maxWidth: '1400px' }}>
           {activeTab === 'overview' && <AdminDashboardOverview setActiveTab={setActiveTab} />}
+          {activeTab === 'chats' && <AdminChatManager />}
           {activeTab === 'projects' && <AdminProjectsManager />}
           {activeTab === 'inquiries' && <AdminInquiriesManager />}
           {activeTab === 'services' && <AdminServicesManager />}

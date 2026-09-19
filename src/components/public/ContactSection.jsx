@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SendIcon, CheckCircleIcon, DollarSignIcon, SparklesIcon, XIcon, ShieldCheckIcon } from '../common/Icons';
+import { SendIcon, CheckCircleIcon, DollarSignIcon, SparklesIcon, MailIcon, ShieldCheckIcon } from '../common/Icons';
 import { useApp } from '../../context/AppContext';
 
 export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject }) => {
@@ -12,10 +12,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
     phone: '',
     projectType: 'Pre-defined',
     selectedProject: '',
-    timeline: settings.timelines[1] || '1-2 Weeks',
-    budget: settings.budgets[1] || '$300 - $500',
     description: '',
-    notes: '',
     agree: true
   });
 
@@ -55,13 +52,13 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
     }
 
     if (formData.projectType === 'Custom') {
-      if (!formData.description.trim() || formData.description.length < 20) {
-        newErrors.description = 'Please describe your custom project requirements (min 20 characters)';
+      if (!formData.description.trim() || formData.description.length < 15) {
+        newErrors.description = 'Please describe your hardware/firmware project requirements (min 15 characters)';
       }
     }
 
     if (!formData.agree) {
-      newErrors.agree = 'You must agree to be contacted for the quote';
+      newErrors.agree = 'You must agree to be contacted for proposal review';
     }
 
     setErrors(newErrors);
@@ -77,11 +74,8 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
       email: formData.email,
       phone: formData.phone,
       projectType: formData.projectType,
-      selectedProject: formData.projectType === 'Pre-defined' ? formData.selectedProject : 'Custom Project Request',
-      timeline: formData.timeline,
-      budget: formData.budget,
-      description: formData.description,
-      notes: formData.notes
+      selectedProject: formData.projectType === 'Pre-defined' ? formData.selectedProject : 'Custom Engineering Request',
+      description: formData.description
     });
 
     setSubmittedInquiry(newInq);
@@ -95,10 +89,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
       phone: '',
       projectType: 'Pre-defined',
       selectedProject: projects[0]?.title || '',
-      timeline: settings.timelines[1] || '1-2 Weeks',
-      budget: settings.budgets[1] || '$300 - $500',
       description: '',
-      notes: '',
       agree: true
     });
     if (onClearSelectedProject) onClearSelectedProject();
@@ -109,16 +100,16 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
       <div className="container">
         <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem auto' }}>
           <div className="badge badge-orange" style={{ marginBottom: '0.75rem' }}>
-            Direct Engineering Proposal
+            Direct Project Proposal
           </div>
           <h2 style={{ fontSize: '2.25rem', marginBottom: '1rem' }}>Request Project Quote</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
-            Submit your pre-defined selection or custom hardware/firmware specs. Guaranteed response with block diagram within 24 hours.
+            Submit your project details. Target budget and custom delivery timeline will be finalized directly with Harsh More via live chat or 24-hour proposal email.
           </p>
         </div>
 
         <div style={{
-          maxWidth: '840px',
+          maxWidth: '800px',
           margin: '0 auto',
           backgroundColor: '#FFFFFF',
           borderRadius: 'var(--radius-lg)',
@@ -148,52 +139,31 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                 {settings.thankYouMessage}
               </p>
 
-              {/* Auto reply simulation preview card */}
+              {/* Live Chat Prompt card */}
               <div style={{
-                backgroundColor: 'var(--secondary-bg)',
+                backgroundColor: 'var(--accent-light-orange)',
                 borderRadius: 'var(--radius-md)',
-                padding: '1.5rem',
+                padding: '1.25rem',
                 textAlign: 'left',
                 marginBottom: '2rem',
-                border: '1px dashed var(--accent-orange)'
+                border: '1px solid var(--accent-soft-orange)'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-dark-orange)', fontWeight: 700, fontSize: '0.875rem', marginBottom: '0.75rem' }}>
-                  <SparklesIcon size={16} />
-                  <span>Auto-Reply Email Notification Triggered</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-dark-orange)', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.35rem' }}>
+                  <SparklesIcon size={18} />
+                  <span>Start Live Chat with Harsh More</span>
                 </div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, whiteSpace: 'pre-line', fontFamily: 'monospace' }}>
-                  To: {submittedInquiry.email}
-                  {'\n'}Subject: {settings.autoReplySubject}
-                  {'\n\n'}
-                  {settings.autoReplyTemplate.replace('{{name}}', submittedInquiry.name).replace('{{project}}', submittedInquiry.selectedProject)}
+                <div style={{ fontSize: '0.875rem', color: 'var(--text-dark)', lineHeight: 1.5 }}>
+                  Click the orange 💬 Live Chat icon at the bottom right of your screen to discuss your target budget and deadline in real-time!
                 </div>
-              </div>
-
-              {/* Payment note display */}
-              <div style={{
-                backgroundColor: '#FFFDF9',
-                border: '1px solid var(--accent-soft-orange)',
-                padding: '1rem 1.25rem',
-                borderRadius: 'var(--radius-sm)',
-                marginBottom: '2rem',
-                fontSize: '0.9rem',
-                color: 'var(--text-dark)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                justifyContent: 'center'
-              }}>
-                <DollarSignIcon size={20} color="var(--accent-orange)" />
-                <span><strong>Payment Note:</strong> {settings.paymentDetails}</span>
               </div>
 
               <button onClick={handleResetForm} className="btn btn-primary">
-                Submit Another Project Inquiry
+                Submit Another Inquiry
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              {/* Project Type Switcher */}
+              {/* Category selector */}
               <div style={{ marginBottom: '2rem' }}>
                 <label className="form-label" style={{ marginBottom: '0.75rem', display: 'block' }}>Inquiry Category</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -210,7 +180,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                       transition: 'all 0.2s'
                     }}
                   >
-                    1. Instant Pre-Defined Project
+                    1. Pre-Defined Project
                   </button>
 
                   <button
@@ -226,15 +196,15 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                       transition: 'all 0.2s'
                     }}
                   >
-                    2. Custom ENTC Service Quote
+                    2. Custom Hardware / Firmware Quote
                   </button>
                 </div>
               </div>
 
-              {/* Selected Project Dropdown (If Pre-defined) */}
+              {/* Selected project dropdown */}
               {formData.projectType === 'Pre-defined' && (
                 <div className="form-group">
-                  <label className="form-label">Select Pre-Defined Project</label>
+                  <label className="form-label">Select Project from Catalog</label>
                   <select
                     name="selectedProject"
                     value={formData.selectedProject}
@@ -250,7 +220,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                 </div>
               )}
 
-              {/* Personal Info Grid */}
+              {/* Contact Info Grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
                 <div className="form-group">
                   <label className="form-label">Full Name *</label>
@@ -270,7 +240,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                   <input
                     type="email"
                     name="email"
-                    placeholder="alex@university.edu"
+                    placeholder="alex@example.com"
                     value={formData.email}
                     onChange={handleChange}
                     className={`form-input ${errors.email ? 'error' : ''}`}
@@ -283,7 +253,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                   <input
                     type="tel"
                     name="phone"
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 8856082411"
                     value={formData.phone}
                     onChange={handleChange}
                     className="form-input"
@@ -291,53 +261,39 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                 </div>
               </div>
 
-              {/* Timeline & Budget Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Project Timeline</label>
-                  <select
-                    name="timeline"
-                    value={formData.timeline}
-                    onChange={handleChange}
-                    className="form-select"
-                  >
-                    {settings.timelines.map(t => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Target Budget Range</label>
-                  <select
-                    name="budget"
-                    value={formData.budget}
-                    onChange={handleChange}
-                    className="form-select"
-                  >
-                    {settings.budgets.map(b => (
-                      <option key={b} value={b}>{b}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Custom Description Textarea */}
+              {/* Project Description */}
               <div className="form-group">
                 <label className="form-label">
-                  {formData.projectType === 'Custom' ? 'Project Requirements & Specifications *' : 'Custom Modifications / Notes (Optional)'}
+                  {formData.projectType === 'Custom' ? 'Custom Hardware / Firmware Specifications *' : 'System Modifications / Custom Requirements (Optional)'}
                 </label>
                 <textarea
                   name="description"
                   rows="4"
                   placeholder={formData.projectType === 'Custom' 
-                    ? 'Describe your hardware requirements, microcontrollers (STM32/ESP32), frequency bands (LoRa/5G), sensors, and expected outputs...' 
-                    : 'Add any specific component preferences, custom sensors, or delivery deadline notes...'}
+                    ? 'Describe your hardware requirements, microcontroller chips (STM32/ESP32), LoRa/5G frequencies, sensors, and expected outputs...' 
+                    : 'Add any specific component preferences, custom sensors, or notes...'}
                   value={formData.description}
                   onChange={handleChange}
                   className={`form-textarea ${errors.description ? 'error' : ''}`}
                 />
                 {errors.description && <span className="error-text">{errors.description}</span>}
+              </div>
+
+              {/* Live Chat & Proposal Note */}
+              <div style={{
+                backgroundColor: 'var(--secondary-bg)',
+                padding: '0.85rem 1rem',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.85rem',
+                color: 'var(--text-muted)',
+                marginBottom: '1.5rem',
+                border: '1px solid var(--border-color)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem'
+              }}>
+                <SparklesIcon size={16} color="var(--accent-orange)" />
+                <span><strong>Budget & Deadline Note:</strong> Target budget and delivery timeframe will be discussed live with Harsh More via chat or proposal email.</span>
               </div>
 
               {/* Agreement Checkbox */}
@@ -350,7 +306,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                     onChange={handleChange}
                     style={{ width: '18px', height: '18px', accentColor: 'var(--accent-orange)' }}
                   />
-                  <span>I agree to receive a technical quote & proposal within 24 hours.</span>
+                  <span>I agree to receive a technical proposal within 24 hours.</span>
                 </label>
                 {errors.agree && <span className="error-text" style={{ display: 'block', marginTop: '0.25rem' }}>{errors.agree}</span>}
               </div>
@@ -361,7 +317,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                 className="btn btn-primary"
                 style={{ width: '100%', padding: '1rem', fontSize: '1.05rem', gap: '0.75rem' }}
               >
-                <span>Get Instant Quote Proposal</span>
+                <span>Submit Inquiry & Open Live Proposal</span>
                 <SendIcon size={20} />
               </button>
             </form>

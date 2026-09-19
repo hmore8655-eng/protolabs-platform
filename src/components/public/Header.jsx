@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { LockIcon, MenuIcon, XIcon, ArrowRightIcon, PlusIcon } from '../common/Icons';
+import { LockIcon, MenuIcon, XIcon, ArrowRightIcon } from '../common/Icons';
 import { ProtoLabsLogoHorizontal } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
 
-export const Header = ({ onOpenAuthModal }) => {
+export const Header = () => {
   const { isAdminView, isAdminLoggedIn, toggleView, logoutAdmin } = useApp();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -36,7 +36,7 @@ export const Header = ({ onOpenAuthModal }) => {
           <ProtoLabsLogoHorizontal size={38} showTagline={true} />
         </a>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Nav Links */}
         <nav style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
           <button onClick={() => scrollToSection('hero')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Home</button>
           <button onClick={() => scrollToSection('catalog')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Projects Catalog</button>
@@ -48,8 +48,8 @@ export const Header = ({ onOpenAuthModal }) => {
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          {/* Admin Switch / Login Button */}
-          {isAdminLoggedIn ? (
+          {/* Admin Switch (Only visible if Admin is already authenticated) */}
+          {isAdminLoggedIn && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
               <button 
                 onClick={toggleView}
@@ -57,7 +57,7 @@ export const Header = ({ onOpenAuthModal }) => {
                 style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', gap: '0.4rem' }}
               >
                 <LockIcon size={15} />
-                <span>{isAdminView ? 'View Public Site' : 'Admin Portal (Add & Price)'}</span>
+                <span>{isAdminView ? 'View Public Site' : 'Admin Panel'}</span>
               </button>
               <button 
                 onClick={logoutAdmin}
@@ -66,27 +66,6 @@ export const Header = ({ onOpenAuthModal }) => {
                 Logout
               </button>
             </div>
-          ) : (
-            <button
-              onClick={onOpenAuthModal}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.825rem',
-                fontWeight: 600,
-                color: 'var(--text-dark)',
-                padding: '0.5rem 0.85rem',
-                borderRadius: 'var(--radius-sm)',
-                border: '1.5px solid var(--accent-orange)',
-                backgroundColor: 'var(--accent-light-orange)',
-                transition: 'all 0.2s'
-              }}
-              title="Admin Login to add projects & manage pricing"
-            >
-              <LockIcon size={14} color="var(--accent-dark-orange)" />
-              <span>Admin Login</span>
-            </button>
           )}
 
           <button 
@@ -99,7 +78,7 @@ export const Header = ({ onOpenAuthModal }) => {
             <ArrowRightIcon size={16} />
           </button>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Toggle */}
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
             style={{ padding: '0.5rem', color: 'var(--text-dark)' }}
@@ -128,15 +107,6 @@ export const Header = ({ onOpenAuthModal }) => {
           <button onClick={() => scrollToSection('why-us')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Services</button>
           <button onClick={() => scrollToSection('portfolio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Portfolio & Reviews</button>
           <button onClick={() => scrollToSection('contact')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Contact Form</button>
-          
-          <button 
-            onClick={() => { setIsMobileMenuOpen(false); onOpenAuthModal(); }}
-            className="btn btn-outline"
-            style={{ width: '100%', marginTop: '0.5rem', gap: '0.5rem' }}
-          >
-            <LockIcon size={16} />
-            <span>Admin Portal Login</span>
-          </button>
         </div>
       )}
 

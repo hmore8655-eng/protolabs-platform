@@ -114,7 +114,7 @@ export const Footer = ({ onOpenAuthModal }) => {
               }}
             >
               <LockIcon size={14} color="var(--accent-orange)" />
-              <span>Admin Portal (hmore8655@gmail.com)</span>
+              <span>Admin Access</span>
             </button>
           </div>
         </div>

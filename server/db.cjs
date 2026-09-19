@@ -4,12 +4,14 @@ const bcrypt = require('bcryptjs');
 
 const DB_PATH = path.join(__dirname, 'data', 'database.json');
 
+// Real Production Database configuration for Harsh More / ProtoLabs
 const defaultData = {
   users: [
     {
       id: "usr-admin-harsh",
       name: "Harsh More (ProtoLabs Specialist)",
-      email: "hmore8655@gmail.com",
+      email: "protolabs26@gmail.com",
+      // Password: PROTOLABS@123
       passwordHash: "$2b$10$6RXExc1aga5SEQRgDmVm7uwTqhRUQTh1MGFErLHZNfv1R8a7B.9Pm",
       role: "admin",
       createdAt: "2026-09-01"
@@ -17,9 +19,9 @@ const defaultData = {
   ],
   hero: {
     headline: "ProtoLabs Engineering & Custom Hardware Solutions",
-    subheading: "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at JSPM NTC, Pune.",
+    subheading: "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at Narhe, Pune.",
     primaryCta: "Browse Catalog",
-    secondaryCta: "Request Custom Project"
+    secondaryCta: "Request Custom Project",
   },
   projects: [
     {
@@ -148,7 +150,7 @@ const defaultData = {
       id: "srv-1",
       icon: "Clock",
       title: "24-Hour Proposal Turnaround",
-      description: "Submit your custom engineering specs and receive a detailed block diagram, bill of materials, and guaranteed fixed price within 24 hours."
+      description: "Submit your custom engineering specs and chat directly with Harsh More to finalize your timeline, budget, and project scope within 24 hours."
     },
     {
       id: "srv-2",
@@ -166,19 +168,19 @@ const defaultData = {
       id: "srv-4",
       icon: "User",
       title: "Direct Admin Specialist Support",
-      description: "One-on-one debugging sessions with Harsh More, video call code walkthroughs, and thesis/prototype assistance."
+      description: "One-on-one live chat and video call code walkthroughs with Harsh More to discuss budget and custom deadlines."
     }
   ],
   howItWorks: [
     {
       step: "01",
       title: "Select or Request Custom",
-      description: "Browse our admin-managed project catalog or submit custom project specifications using our inquiry form."
+      description: "Browse our project catalog or submit custom project specifications using our inquiry form."
     },
     {
       step: "02",
-      title: "Admin Review & Fixed Pricing",
-      description: "Harsh More reviews your requirements, customizes project scope/pricing, and issues a formal proposal."
+      title: "Live Chat with Harsh More",
+      description: "Discuss your custom timeline and target budget range directly with Harsh More via live chat or proposal email."
     },
     {
       step: "03",
@@ -208,18 +210,18 @@ const defaultData = {
   ],
   testimonials: [],
   inquiries: [],
+  chatThreads: [],
+  chatMessages: [],
   settings: {
     siteTitle: "ProtoLabs",
     tagline: "BUILD • EXPERIMENT • INNOVATE — Electronics • Telecommunication • Real Solutions",
-    contactEmail: "hmore8655@gmail.com",
+    contactEmail: "protolabs26@gmail.com",
     contactPhone: "+91 8856082411",
-    location: "JSPM NTC, Narhe, Pune - 411041",
+    location: "Narhe, Pune - 411041",
     autoReplySubject: "Thank you for reaching out to ProtoLabs Engineering!",
-    autoReplyTemplate: "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications and is preparing a custom technical proposal and milestone quote.\n\nYou can expect a direct response within 24 hours.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nJSPM NTC, Narhe, Pune - 411041\nPhone: +91 8856082411",
-    thankYouMessage: "Thank you! Your inquiry has been received by ProtoLabs. Harsh More will review your specifications and send custom pricing within 24 hours.",
-    paymentDetails: "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request",
-    timelines: ["Urgent (< 1 Week)", "1-2 Weeks", "2-4 Weeks", "1-2 Months", "Flexible"],
-    budgets: ["Under $300", "$300 - $500", "$500 - $1,000", "$1,000 - $2,500", "$2,500+"]
+    autoReplyTemplate: "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications. Please use our Live Chat widget or expect a direct proposal email within 24 hours to finalize timeline & budget.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nNarhe, Pune - 411041\nPhone: +91 8856082411",
+    thankYouMessage: "Thank you! Your inquiry has been received. You can now use the Live Chat widget below to chat directly with Harsh More regarding your timeline and budget!",
+    paymentDetails: "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request"
   }
 };
 
@@ -241,6 +243,18 @@ class Database {
       if (fs.existsSync(DB_PATH)) {
         const raw = fs.readFileSync(DB_PATH, 'utf8');
         this.data = JSON.parse(raw);
+        if (!this.data.chatThreads) this.data.chatThreads = [];
+        if (!this.data.chatMessages) this.data.chatMessages = [];
+        // Update admin email & location if changed
+        if (this.data.users && this.data.users[0]) {
+          this.data.users[0].email = "protolabs26@gmail.com";
+          this.data.users[0].passwordHash = "$2b$10$6RXExc1aga5SEQRgDmVm7uwTqhRUQTh1MGFErLHZNfv1R8a7B.9Pm";
+        }
+        if (this.data.settings) {
+          this.data.settings.contactEmail = "protolabs26@gmail.com";
+          this.data.settings.location = "Narhe, Pune - 411041";
+        }
+        this.save();
       } else {
         this.data = defaultData;
         this.save();
@@ -263,6 +277,8 @@ class Database {
   reset() {
     this.data = JSON.parse(JSON.stringify(defaultData));
     this.data.inquiries = [];
+    this.data.chatThreads = [];
+    this.data.chatMessages = [];
     this.data.users[0].passwordHash = bcrypt.hashSync("PROTOLABS@123", 10);
     this.save();
     return this.data;
