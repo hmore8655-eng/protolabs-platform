@@ -123,31 +123,47 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
 
           {/* Category Tabs */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: '0.5rem 1rem',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  transition: 'all 0.2s',
-                  backgroundColor: selectedCategory === cat ? 'var(--accent-orange)' : '#FFFFFF',
-                  color: selectedCategory === cat ? '#FFFFFF' : 'var(--text-dark)',
-                  border: selectedCategory === cat ? '1px solid var(--accent-orange)' : '1px solid var(--border-color)',
-                  boxShadow: selectedCategory === cat ? '0 4px 10px rgba(255, 149, 0, 0.25)' : 'none'
-                }}
-              >
-                {cat}
-              </button>
-            ))}
+            {categories.map(cat => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  style={{
+                    padding: '0.5rem 1.1rem',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                    backgroundColor: isSelected ? 'var(--accent-orange)' : '#FFFFFF',
+                    color: isSelected ? '#FFFFFF' : 'var(--text-dark)',
+                    border: isSelected ? '1px solid var(--accent-orange)' : '1px solid var(--border-color)',
+                    boxShadow: isSelected ? '0 6px 16px rgba(255, 149, 0, 0.35)' : 'none',
+                    transform: isSelected ? 'scale(1.04)' : 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.borderColor = 'var(--accent-orange)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.borderColor = 'var(--border-color)';
+                    }
+                  }}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '4rem 1rem', backgroundColor: 'var(--secondary-bg)', borderRadius: 'var(--radius-md)' }}>
+          <div className="animate-fade-up" style={{ textAlign: 'center', padding: '4rem 1rem', backgroundColor: 'var(--secondary-bg)', borderRadius: 'var(--radius-md)' }}>
             <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No projects match your search filters.</h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Try clearing filters or request a custom ProtoLabs project!</p>
             <button onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }} className="btn btn-outline">
@@ -160,12 +176,12 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
             gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
             gap: '2rem'
           }}>
-            {filteredProjects.map(proj => {
+            {filteredProjects.map((proj, idx) => {
               const IconComp = getIconComponent(proj.icon);
               return (
                 <div
                   key={proj.id}
-                  className="card-hover"
+                  className="card-hover animate-fade-up"
                   style={{
                     backgroundColor: '#FFFFFF',
                     borderRadius: 'var(--radius-md)',
@@ -173,7 +189,9 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry, onOpenAuthModal }) =
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    position: 'relative'
+                    position: 'relative',
+                    animationDelay: `${Math.min(idx * 70, 420)}ms`,
+                    animationFillMode: 'both'
                   }}
                 >
                   <div>

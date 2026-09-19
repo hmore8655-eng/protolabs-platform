@@ -132,34 +132,46 @@ export const LiveChatWidget = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          className="animate-float"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
             backgroundColor: '#111827',
             color: '#FFFFFF',
-            padding: '0.85rem 1.25rem',
+            padding: '0.85rem 1.35rem',
             borderRadius: '9999px',
             border: '2px solid var(--accent-orange)',
-            boxShadow: '0 10px 25px -5px rgba(255, 149, 0, 0.4)',
+            boxShadow: '0 12px 28px -4px rgba(255, 149, 0, 0.45)',
             cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             fontWeight: 700,
             fontSize: '0.9rem'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.03)';
+            e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(255, 149, 0, 0.55)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.boxShadow = '0 12px 28px -4px rgba(255, 149, 0, 0.45)';
           }}
         >
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
             <MessageSquareIcon size={22} color="var(--accent-orange)" />
-            <span style={{
-              position: 'absolute',
-              top: '-2px',
-              right: '-2px',
-              width: '10px',
-              height: '10px',
-              backgroundColor: '#10B981',
-              borderRadius: '50%',
-              border: '2px solid #111827'
-            }} />
+            <span 
+              className="animate-pulse-radar"
+              style={{
+                position: 'absolute',
+                top: '-3px',
+                right: '-3px',
+                width: '10px',
+                height: '10px',
+                backgroundColor: '#10B981',
+                borderRadius: '50%',
+                border: '2px solid #111827'
+              }} 
+            />
           </div>
           <span>Discuss Budget & Timeline Live</span>
         </button>
@@ -167,20 +179,22 @@ export const LiveChatWidget = () => {
 
       {/* Live Chat Box Window */}
       {isOpen && (
-        <div style={{
-          width: '380px',
-          maxWidth: '92vw',
-          height: '540px',
-          maxHeight: '80vh',
-          backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--radius-lg)',
-          boxShadow: '0 20px 40px rgba(0,0,0,0.25)',
-          border: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          animation: 'fadeInUp 0.3s ease-out'
-        }}>
+        <div 
+          className="animate-scale-pop"
+          style={{
+            width: '380px',
+            maxWidth: '92vw',
+            height: '540px',
+            maxHeight: '80vh',
+            backgroundColor: '#FFFFFF',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)',
+            border: '1px solid var(--border-color)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden'
+          }}
+        >
           {/* Header */}
           <div style={{
             backgroundColor: '#111827',

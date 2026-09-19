@@ -41,12 +41,12 @@ export const HeroSection = ({ onOpenAuthModal }) => {
         }}>
           {/* Left Text Column */}
           <div style={{ zIndex: 2 }}>
-            <div className="badge badge-orange" style={{ marginBottom: '1.25rem', fontSize: '0.875rem', padding: '0.4rem 1rem' }}>
+            <div className="badge badge-orange animate-scale-pop" style={{ marginBottom: '1.25rem', fontSize: '0.875rem', padding: '0.4rem 1rem' }}>
               <SparklesIcon size={16} />
               <span>ProtoLabs Hardware & Telecom Innovations</span>
             </div>
 
-            <h1 style={{
+            <h1 className="animate-fade-up" style={{
               fontSize: '2.6rem',
               letterSpacing: '-0.5px',
               marginBottom: '1.25rem',
@@ -55,7 +55,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
               {hero.headline}
             </h1>
 
-            <p style={{
+            <p className="animate-fade-up stagger-1" style={{
               fontSize: '1.125rem',
               color: 'var(--text-muted)',
               marginBottom: '2rem',
@@ -66,7 +66,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
+            <div className="animate-fade-up stagger-2" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
               <button 
                 onClick={() => scrollToSection('catalog')} 
                 className="btn btn-primary"
@@ -86,7 +86,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             </div>
 
             {/* Trust Signals */}
-            <div style={{
+            <div className="animate-fade-up stagger-3" style={{
               display: 'flex',
               flexWrap: 'wrap',
               gap: '1.5rem',

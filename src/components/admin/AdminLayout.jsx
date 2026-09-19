@@ -113,10 +113,25 @@ export const AdminLayout = () => {
                     borderRadius: 'var(--radius-sm)',
                     fontWeight: 600,
                     fontSize: '0.9rem',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                     backgroundColor: isActive ? 'var(--accent-light-orange)' : 'transparent',
                     color: isActive ? 'var(--accent-dark-orange)' : 'var(--text-dark)',
+                    borderLeft: isActive ? '4px solid var(--accent-orange)' : '4px solid transparent',
+                    boxShadow: isActive ? '0 2px 10px rgba(255, 149, 0, 0.14)' : 'none',
+                    transform: isActive ? 'translateX(4px)' : 'none',
                     textAlign: 'left'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.transform = 'translateX(4px)';
+                      e.currentTarget.style.backgroundColor = 'var(--secondary-bg)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -125,7 +140,10 @@ export const AdminLayout = () => {
                   </div>
 
                   {item.badge !== undefined && item.badge !== null && (
-                    <span className={`badge ${item.badgeColor === 'orange' ? 'badge-orange' : 'badge-gray'}`} style={{ fontSize: '0.75rem', padding: '0.15rem 0.5rem' }}>
+                    <span 
+                      className={`badge ${item.badgeColor === 'orange' ? 'badge-orange animate-pulse-glow' : 'badge-gray'}`} 
+                      style={{ fontSize: '0.75rem', padding: '0.15rem 0.5rem' }}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -156,16 +174,18 @@ export const AdminLayout = () => {
           </div>
         </aside>
 
-        {/* Content Area */}
-        <main style={{ flex: 1, padding: '2rem', maxWidth: '1400px' }}>
-          {activeTab === 'overview' && <AdminDashboardOverview setActiveTab={setActiveTab} />}
-          {activeTab === 'chats' && <AdminChatManager />}
-          {activeTab === 'projects' && <AdminProjectsManager />}
-          {activeTab === 'inquiries' && <AdminInquiriesManager />}
-          {activeTab === 'services' && <AdminServicesManager />}
-          {activeTab === 'portfolio' && <AdminPortfolioManager />}
-          {activeTab === 'testimonials' && <AdminTestimonialsManager />}
-          {activeTab === 'settings' && <AdminSettings />}
+        {/* Content Area with Buttery Smooth Transition */}
+        <main style={{ flex: 1, padding: '2rem', maxWidth: '1400px', overflowX: 'hidden' }}>
+          <div key={activeTab} className="animate-tab-content">
+            {activeTab === 'overview' && <AdminDashboardOverview setActiveTab={setActiveTab} />}
+            {activeTab === 'chats' && <AdminChatManager />}
+            {activeTab === 'projects' && <AdminProjectsManager />}
+            {activeTab === 'inquiries' && <AdminInquiriesManager />}
+            {activeTab === 'services' && <AdminServicesManager />}
+            {activeTab === 'portfolio' && <AdminPortfolioManager />}
+            {activeTab === 'testimonials' && <AdminTestimonialsManager />}
+            {activeTab === 'settings' && <AdminSettings />}
+          </div>
         </main>
       </div>
     </div>

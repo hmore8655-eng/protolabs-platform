@@ -95,16 +95,33 @@ button {
   background: var(--accent-orange);
 }
 
-/* Animations */
+/* Animations Suite */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUpSpring {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes scalePop {
+  0% { opacity: 0; transform: scale(0.95); }
+  70% { transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes pulseGlow {
   0% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0.4); }
   70% { box-shadow: 0 0 0 12px rgba(255, 149, 0, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 149, 0, 0); }
+}
+
+@keyframes pulseRadar {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes signalWave {
@@ -115,21 +132,55 @@ button {
 
 @keyframes floatSlow {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-7px); }
   100% { transform: translateY(0px); }
 }
 
+@keyframes tabFadeSlide {
+  0% { opacity: 0; transform: translateY(8px) scale(0.99); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes shimmerGleam {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .animate-fade-in {
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-up {
+  animation: fadeUpSpring 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-pop {
+  animation: scalePop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-pulse-glow {
-  animation: pulseGlow 2s infinite;
+  animation: pulseGlow 2.5s infinite;
+}
+
+.animate-pulse-radar {
+  animation: pulseRadar 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-float {
-  animation: floatSlow 4s ease-in-out infinite;
+  animation: floatSlow 3.8s ease-in-out infinite;
 }
+
+.animate-tab-content {
+  animation: tabFadeSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger Animation Utility Delays */
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
 
 /* Custom UI Utilities */
 .container {
@@ -146,24 +197,26 @@ button {
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   border-radius: var(--radius-sm);
-  transition: all var(--transition-normal);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.96) !important;
 }
 
 .btn-primary {
-  background-color: var(--accent-orange);
+  background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-dark-orange) 100%);
   color: #FFFFFF;
   box-shadow: 0 4px 14px rgba(255, 149, 0, 0.35);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-dark-orange);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 149, 0, 0.45);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 8px 24px rgba(255, 149, 0, 0.45);
 }
 
 .btn-outline {
@@ -175,6 +228,7 @@ button {
 .btn-outline:hover {
   background-color: var(--accent-light-orange);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 149, 0, 0.15);
 }
 
 .btn-secondary {
@@ -185,6 +239,7 @@ button {
 .btn-secondary:hover {
   background-color: #E2E8F0;
   color: var(--text-dark);
+  transform: translateY(-1px);
 }
 
 .btn-danger {
@@ -194,6 +249,7 @@ button {
 
 .btn-danger:hover {
   background-color: #DC2626;
+  transform: translateY(-1px);
 }
 
 .badge {
@@ -204,6 +260,7 @@ button {
   font-size: 0.8125rem;
   font-weight: 600;
   border-radius: var(--radius-full);
+  transition: all 0.2s ease;
 }
 
 .badge-orange {
@@ -227,15 +284,17 @@ button {
   color: #475569;
 }
 
-/* Card hover glow */
+/* Card hover glow with smooth spring */
 .card-hover {
-  transition: all var(--transition-normal);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid var(--border-color);
+  will-change: transform, box-shadow;
 }
 
 .card-hover:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--accent-orange);
+  transform: translateY(-7px);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.08), 0 0 0 1.5px var(--accent-orange);
+  border-color: transparent;
 }
 
 /* Form Controls */
