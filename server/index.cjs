@@ -36,6 +36,25 @@ app.use((req, res, next) => {
   next();
 });
 
+// Explicit robots.txt and sitemap.xml handlers for Googlebot / Search Crawlers
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send('User-agent: *\nAllow: /\nDisallow:\n\nSitemap: https://protolabs-platform.onrender.com/sitemap.xml\n');
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const sitemapPath = path.join(__dirname, '..', 'dist', 'sitemap.xml');
+  const pubPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
+  if (fs.existsSync(sitemapPath)) {
+    res.type('application/xml');
+    return res.sendFile(sitemapPath);
+  } else if (fs.existsSync(pubPath)) {
+    res.type('application/xml');
+    return res.sendFile(pubPath);
+  }
+  res.status(404).send('Sitemap not found');
+});
+
 // Auth Routes
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
