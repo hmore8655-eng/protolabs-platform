@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: protolabs-platform
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: node server/index.cjs
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: hmore8655@gmail.com
