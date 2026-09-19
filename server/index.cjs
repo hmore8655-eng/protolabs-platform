@@ -152,7 +152,7 @@ app.delete('/api/inquiries/:id', verifyToken, (req, res) => {
 });
 
 // Live Chat API Endpoints (Client - Admin real-time thread messages)
-app.get('/api/chat/threads', verifyToken, (req, res) => {
+app.get('/api/chat/threads', (req, res) => {
   if (!db.data.chatThreads) db.data.chatThreads = [];
   res.json(db.data.chatThreads);
 });
@@ -165,25 +165,32 @@ app.get('/api/chat/messages/:threadId', (req, res) => {
 });
 
 app.post('/api/chat/messages', (req, res) => {
-  const { threadId, clientName, clientEmail, sender, text, priceQuote, timelineQuote } = req.body;
+  const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
   if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
 
   if (!db.data.chatThreads) db.data.chatThreads = [];
   if (!db.data.chatMessages) db.data.chatMessages = [];
 
   let thread = db.data.chatThreads.find(t => t.id === threadId);
+  const resolvedName = clientName || (sender === 'client' ? senderName : null) || 'Client Visitor';
+  const resolvedEmail = clientEmail || 'visitor@protolabs.eng';
+
   if (!thread) {
     thread = {
       id: threadId,
-      clientName: clientName || 'Client Visitor',
-      clientEmail: clientEmail || 'visitor@protolabs.eng',
+      clientName: resolvedName,
+      clientEmail: resolvedEmail,
       lastMessage: text,
+      lastActivity: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       unreadCount: sender === 'client' ? 1 : 0
     };
     db.data.chatThreads.unshift(thread);
   } else {
+    if (clientName) thread.clientName = clientName;
+    if (clientEmail) thread.clientEmail = clientEmail;
     thread.lastMessage = text;
+    thread.lastActivity = new Date().toISOString();
     thread.updatedAt = new Date().toISOString();
     if (sender === 'client') thread.unreadCount = (thread.unreadCount || 0) + 1;
     if (priceQuote) thread.agreedPrice = priceQuote;
@@ -194,10 +201,11 @@ app.post('/api/chat/messages', (req, res) => {
     id: `msg-${Date.now()}`,
     threadId,
     sender: sender || 'client', // 'client' or 'admin'
+    senderName: senderName || (sender === 'admin' ? 'Harsh More (Admin)' : resolvedName),
     text,
     priceQuote,
     timelineQuote,
-    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    timestamp: new Date().toISOString()
   };
 
   db.data.chatMessages.push(newMessage);

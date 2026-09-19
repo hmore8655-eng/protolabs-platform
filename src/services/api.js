@@ -221,5 +221,27 @@ export const api = {
       headers: getAuthHeaders()
     });
     return handleResponse(res);
+  },
+
+  // Live Client-Admin Chat
+  async getChatThreads() {
+    const res = await fetch(`${API_BASE}/chat/threads`, {
+      headers: getAuthHeaders()
+    });
+    return handleResponse(res);
+  },
+
+  async getChatMessages(threadId) {
+    const res = await fetch(`${API_BASE}/chat/messages/${threadId}`);
+    return handleResponse(res);
+  },
+
+  async sendChatMessage(payload) {
+    const res = await fetch(`${API_BASE}/chat/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify(payload)
+    });
+    return handleResponse(res);
   }
 };

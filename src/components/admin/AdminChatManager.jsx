@@ -81,9 +81,15 @@ export const AdminChatManager = () => {
         text: textToSend
       });
 
-      setActiveMessages((prev) => [...prev, newMsg]);
-      fetchThreads(); // update threads list preview
+      if (newMsg && newMsg.id) {
+        setActiveMessages((prev) => {
+          if (prev.some(m => m.id === newMsg.id)) return prev;
+          return [...prev, newMsg];
+        });
+      }
+      await fetchThreads(); // update threads list preview
     } catch (err) {
+      console.error('Admin reply error:', err);
       showToast('Failed to send admin reply', 'error');
     } finally {
       setIsLoading(false);
@@ -275,7 +281,7 @@ export const AdminChatManager = () => {
                       {msg.text}
                     </div>
                     <div style={{ fontSize: '0.675rem', color: '#9CA3AF', marginTop: '0.2rem' }}>
-                      {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                      {msg.timestamp ? (isNaN(new Date(msg.timestamp).getTime()) ? msg.timestamp : new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : ''}
                     </div>
                   </div>
                 );

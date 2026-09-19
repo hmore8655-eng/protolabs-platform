@@ -65,17 +65,22 @@ export const LiveChatWidget = () => {
       setThreadId(newThreadId);
       setIsInitializing(false);
 
-      // Send initial welcome/system message + user greeting if any
+      // Send initial welcome message
       const initMsg = await api.sendChatMessage({
         threadId: newThreadId,
+        clientName,
+        clientEmail,
         sender: 'client',
         senderName: clientName,
         text: `Hi Harsh! I'd like to negotiate the budget and project timeline for my engineering project.`
       });
 
-      setMessages([initMsg]);
+      if (initMsg && initMsg.id) {
+        setMessages([initMsg]);
+      }
       showToast('Chat connected! Admin Harsh More will reply shortly.');
     } catch (err) {
+      console.error('Start chat error:', err);
       showToast('Failed to start chat. Check connection.', 'error');
     } finally {
       setIsLoading(false);
@@ -90,16 +95,27 @@ export const LiveChatWidget = () => {
     setIsLoading(true);
 
     try {
+      const activeName = clientName || localStorage.getItem('protolabs_chat_client_name') || 'Client';
+      const activeEmail = clientEmail || localStorage.getItem('protolabs_chat_client_email') || 'visitor@protolabs.eng';
+
       const newMsg = await api.sendChatMessage({
         threadId,
+        clientName: activeName,
+        clientEmail: activeEmail,
         sender: isAdminLoggedIn ? 'admin' : 'client',
-        senderName: isAdminLoggedIn ? 'Harsh More (Admin)' : (clientName || 'Client'),
+        senderName: isAdminLoggedIn ? 'Harsh More (Admin)' : activeName,
         text: textToSend
       });
 
-      setMessages((prev) => [...prev, newMsg]);
+      if (newMsg && newMsg.id) {
+        setMessages((prev) => {
+          if (prev.some(m => m.id === newMsg.id)) return prev;
+          return [...prev, newMsg];
+        });
+      }
       scrollToBottom();
     } catch (err) {
+      console.error('Send message error:', err);
       showToast('Failed to send message', 'error');
     } finally {
       setIsLoading(false);
@@ -307,7 +323,7 @@ export const LiveChatWidget = () => {
                           {msg.text}
                         </div>
                         <div style={{ fontSize: '0.65rem', color: '#9CA3AF', marginTop: '0.2rem', padding: '0 0.25rem' }}>
-                          {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                          {msg.timestamp ? (isNaN(new Date(msg.timestamp).getTime()) ? msg.timestamp : new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : ''}
                         </div>
                       </div>
                     );
