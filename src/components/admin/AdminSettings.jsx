@@ -1,14 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
-import { CheckIcon, SparklesIcon, ServerIcon } from '../common/Icons';
+import { CheckIcon, ServerIcon } from '../common/Icons';
 import { api } from '../../services/api';
+
+const DEFAULT_HERO = {
+  headline: "ProtoLabs Engineering & Custom Hardware Solutions",
+  subheading: "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at Narhe, Pune.",
+  primaryCta: "Browse Catalog",
+  secondaryCta: "Request Custom Project"
+};
+
+const DEFAULT_SETTINGS = {
+  siteTitle: "ProtoLabs",
+  tagline: "BUILD • EXPERIMENT • INNOVATE — Electronics • Telecommunication • Real Solutions",
+  contactEmail: "protolabs26@gmail.com",
+  contactPhone: "+91 8856082411",
+  location: "Narhe, Pune - 411041",
+  paymentDetails: "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request",
+  thankYouMessage: "Thank you! Your inquiry has been received. You can now use the Live Chat widget below to chat directly with Harsh More regarding your timeline and budget!",
+  autoReplySubject: "Thank you for reaching out to ProtoLabs Engineering!",
+  autoReplyTemplate: "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications. Please use our Live Chat widget or expect a direct proposal email within 24 hours to finalize timeline & budget.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nNarhe, Pune - 411041\nPhone: +91 8856082411",
+  timelines: ["1-2 Weeks", "2-3 Weeks", "1 Month", "Custom"],
+  budgets: ["< $200", "$200 - $500", "$500 - $1000", "$1000+"]
+};
 
 export const AdminSettings = () => {
   const { data, updateHero, updateSettings, restoreBackup, showToast } = useApp();
-  const { hero, settings } = data;
+  const hero = data?.hero;
+  const settings = data?.settings;
 
-  const [heroForm, setHeroForm] = useState(hero);
-  const [settingsForm, setSettingsForm] = useState(settings);
+  const [heroForm, setHeroForm] = useState(() => ({
+    ...DEFAULT_HERO,
+    ...(hero || {})
+  }));
+
+  const [settingsForm, setSettingsForm] = useState(() => ({
+    ...DEFAULT_SETTINGS,
+    ...(settings || {}),
+    timelines: Array.isArray(settings?.timelines) ? settings.timelines : DEFAULT_SETTINGS.timelines,
+    budgets: Array.isArray(settings?.budgets) ? settings.budgets : DEFAULT_SETTINGS.budgets
+  }));
+
   const [timelineInput, setTimelineInput] = useState('');
   const [budgetInput, setBudgetInput] = useState('');
 
@@ -16,6 +48,25 @@ export const AdminSettings = () => {
   const [dbStatus, setDbStatus] = useState({ loading: true, isCloud: false, mode: 'Checking...', info: '' });
   const [isExporting, setIsExporting] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Keep forms in sync when context data updates
+  useEffect(() => {
+    if (hero) {
+      setHeroForm(prev => ({ ...DEFAULT_HERO, ...prev, ...hero }));
+    }
+  }, [hero]);
+
+  useEffect(() => {
+    if (settings) {
+      setSettingsForm(prev => ({
+        ...DEFAULT_SETTINGS,
+        ...prev,
+        ...settings,
+        timelines: Array.isArray(settings.timelines) ? settings.timelines : (prev.timelines || DEFAULT_SETTINGS.timelines),
+        budgets: Array.isArray(settings.budgets) ? settings.budgets : (prev.budgets || DEFAULT_SETTINGS.budgets)
+      }));
+    }
+  }, [settings]);
 
   useEffect(() => {
     api.getDatabaseStatus()
@@ -73,14 +124,21 @@ export const AdminSettings = () => {
           return;
         }
         await restoreBackup(payload);
-        if (payload.hero) setHeroForm(payload.hero);
-        if (payload.settings) setSettingsForm(payload.settings);
+        if (payload.hero) setHeroForm({ ...DEFAULT_HERO, ...payload.hero });
+        if (payload.settings) {
+          setSettingsForm({
+            ...DEFAULT_SETTINGS,
+            ...payload.settings,
+            timelines: Array.isArray(payload.settings.timelines) ? payload.settings.timelines : DEFAULT_SETTINGS.timelines,
+            budgets: Array.isArray(payload.settings.budgets) ? payload.settings.budgets : DEFAULT_SETTINGS.budgets
+          });
+        }
       } catch (err) {
         showToast(`Failed to parse backup: ${err.message}`, 'error');
       }
     };
     reader.readAsText(file);
-    e.target.value = null; // reset input
+    e.target.value = null;
   };
 
   const handleSaveHero = () => {
@@ -95,7 +153,7 @@ export const AdminSettings = () => {
     if (!timelineInput.trim()) return;
     setSettingsForm(prev => ({
       ...prev,
-      timelines: [...prev.timelines, timelineInput.trim()]
+      timelines: [...(prev.timelines || []), timelineInput.trim()]
     }));
     setTimelineInput('');
   };
@@ -103,7 +161,7 @@ export const AdminSettings = () => {
   const handleRemoveTimeline = (index) => {
     setSettingsForm(prev => ({
       ...prev,
-      timelines: prev.timelines.filter((_, i) => i !== index)
+      timelines: (prev.timelines || []).filter((_, i) => i !== index)
     }));
   };
 
@@ -111,7 +169,7 @@ export const AdminSettings = () => {
     if (!budgetInput.trim()) return;
     setSettingsForm(prev => ({
       ...prev,
-      budgets: [...prev.budgets, budgetInput.trim()]
+      budgets: [...(prev.budgets || []), budgetInput.trim()]
     }));
     setBudgetInput('');
   };
@@ -119,9 +177,12 @@ export const AdminSettings = () => {
   const handleRemoveBudget = (index) => {
     setSettingsForm(prev => ({
       ...prev,
-      budgets: prev.budgets.filter((_, i) => i !== index)
+      budgets: (prev.budgets || []).filter((_, i) => i !== index)
     }));
   };
+
+  const safeTimelines = Array.isArray(settingsForm?.timelines) ? settingsForm.timelines : DEFAULT_SETTINGS.timelines;
+  const safeBudgets = Array.isArray(settingsForm?.budgets) ? settingsForm.budgets : DEFAULT_SETTINGS.budgets;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -246,7 +307,7 @@ export const AdminSettings = () => {
           <label className="form-label">Hero Main Headline</label>
           <input
             type="text"
-            value={heroForm.headline}
+            value={heroForm.headline || ''}
             onChange={(e) => setHeroForm({ ...heroForm, headline: e.target.value })}
             className="form-input"
           />
@@ -256,7 +317,7 @@ export const AdminSettings = () => {
           <label className="form-label">Hero Subheading</label>
           <textarea
             rows="3"
-            value={heroForm.subheading}
+            value={heroForm.subheading || ''}
             onChange={(e) => setHeroForm({ ...heroForm, subheading: e.target.value })}
             className="form-textarea"
           />
@@ -267,7 +328,7 @@ export const AdminSettings = () => {
             <label className="form-label">Primary CTA Button Text</label>
             <input
               type="text"
-              value={heroForm.primaryCta}
+              value={heroForm.primaryCta || ''}
               onChange={(e) => setHeroForm({ ...heroForm, primaryCta: e.target.value })}
               className="form-input"
             />
@@ -277,7 +338,7 @@ export const AdminSettings = () => {
             <label className="form-label">Secondary CTA Button Text</label>
             <input
               type="text"
-              value={heroForm.secondaryCta}
+              value={heroForm.secondaryCta || ''}
               onChange={(e) => setHeroForm({ ...heroForm, secondaryCta: e.target.value })}
               className="form-input"
             />
@@ -309,7 +370,7 @@ export const AdminSettings = () => {
             <label className="form-label">Contact Email</label>
             <input
               type="email"
-              value={settingsForm.contactEmail}
+              value={settingsForm.contactEmail || ''}
               onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
               className="form-input"
             />
@@ -319,7 +380,7 @@ export const AdminSettings = () => {
             <label className="form-label">Contact Phone</label>
             <input
               type="text"
-              value={settingsForm.contactPhone}
+              value={settingsForm.contactPhone || ''}
               onChange={(e) => setSettingsForm({ ...settingsForm, contactPhone: e.target.value })}
               className="form-input"
             />
@@ -329,7 +390,7 @@ export const AdminSettings = () => {
             <label className="form-label">Lab Location</label>
             <input
               type="text"
-              value={settingsForm.location}
+              value={settingsForm.location || ''}
               onChange={(e) => setSettingsForm({ ...settingsForm, location: e.target.value })}
               className="form-input"
             />
@@ -340,7 +401,7 @@ export const AdminSettings = () => {
           <label className="form-label">Payment Information Display Note</label>
           <input
             type="text"
-            value={settingsForm.paymentDetails}
+            value={settingsForm.paymentDetails || ''}
             onChange={(e) => setSettingsForm({ ...settingsForm, paymentDetails: e.target.value })}
             className="form-input"
           />
@@ -350,7 +411,7 @@ export const AdminSettings = () => {
           <label className="form-label">Thank You Post-Submission Message</label>
           <textarea
             rows="2"
-            value={settingsForm.thankYouMessage}
+            value={settingsForm.thankYouMessage || ''}
             onChange={(e) => setSettingsForm({ ...settingsForm, thankYouMessage: e.target.value })}
             className="form-textarea"
           />
@@ -360,7 +421,7 @@ export const AdminSettings = () => {
           <label className="form-label">Auto-Reply Email Subject</label>
           <input
             type="text"
-            value={settingsForm.autoReplySubject}
+            value={settingsForm.autoReplySubject || ''}
             onChange={(e) => setSettingsForm({ ...settingsForm, autoReplySubject: e.target.value })}
             className="form-input"
           />
@@ -370,7 +431,7 @@ export const AdminSettings = () => {
           <label className="form-label">Auto-Reply Email Body Template</label>
           <textarea
             rows="4"
-            value={settingsForm.autoReplyTemplate}
+            value={settingsForm.autoReplyTemplate || ''}
             onChange={(e) => setSettingsForm({ ...settingsForm, autoReplyTemplate: e.target.value })}
             className="form-textarea"
             style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
@@ -392,7 +453,7 @@ export const AdminSettings = () => {
               <button type="button" onClick={handleAddTimeline} className="btn btn-secondary">Add</button>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-              {settingsForm.timelines.map((t, idx) => (
+              {safeTimelines.map((t, idx) => (
                 <span key={idx} style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', backgroundColor: 'var(--secondary-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
                   {t} <span onClick={() => handleRemoveTimeline(idx)} style={{ cursor: 'pointer', color: '#EF4444', marginLeft: '4px' }}>×</span>
                 </span>
@@ -413,7 +474,7 @@ export const AdminSettings = () => {
               <button type="button" onClick={handleAddBudget} className="btn btn-secondary">Add</button>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-              {settingsForm.budgets.map((b, idx) => (
+              {safeBudgets.map((b, idx) => (
                 <span key={idx} style={{ fontSize: '0.8rem', padding: '0.2rem 0.6rem', backgroundColor: 'var(--secondary-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)' }}>
                   {b} <span onClick={() => handleRemoveBudget(idx)} style={{ cursor: 'pointer', color: '#EF4444', marginLeft: '4px' }}>×</span>
                 </span>
