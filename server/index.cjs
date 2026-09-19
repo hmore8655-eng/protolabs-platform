@@ -236,14 +236,15 @@ app.post('/api/reset-demo', verifyToken, (req, res) => {
 });
 
 // Serve static frontend build in production for Render / Railway / Heroku
+// Uses middleware fallback compatible with Express 5 path-to-regexp parser
 const DIST_DIR = path.join(__dirname, '..', 'dist');
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
-      return next();
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      return res.sendFile(path.join(DIST_DIR, 'index.html'));
     }
-    res.sendFile(path.join(DIST_DIR, 'index.html'));
+    next();
   });
 }
 

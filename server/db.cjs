@@ -4,14 +4,12 @@ const bcrypt = require('bcryptjs');
 
 const DB_PATH = path.join(__dirname, 'data', 'database.json');
 
-// Real Production Database configuration for Harsh More / ProtoLabs
 const defaultData = {
   users: [
     {
       id: "usr-admin-harsh",
       name: "Harsh More (ProtoLabs Specialist)",
       email: "hmore8655@gmail.com",
-      // Password: PROTOLABS@123
       passwordHash: "$2b$10$6RXExc1aga5SEQRgDmVm7uwTqhRUQTh1MGFErLHZNfv1R8a7B.9Pm",
       role: "admin",
       createdAt: "2026-09-01"
@@ -21,7 +19,7 @@ const defaultData = {
     headline: "ProtoLabs Engineering & Custom Hardware Solutions",
     subheading: "BUILD • EXPERIMENT • INNOVATE — Full-Stack Hardware, Embedded Systems & Telecommunications Engineering Platform. Founded by Harsh More at JSPM NTC, Pune.",
     primaryCta: "Browse Catalog",
-    secondaryCta: "Request Custom Project",
+    secondaryCta: "Request Custom Project"
   },
   projects: [
     {
@@ -209,7 +207,6 @@ const defaultData = {
     }
   ],
   testimonials: [],
-  // 100% PRODUCTION READY - ZERO DUMMY INQUIRIES
   inquiries: [],
   settings: {
     siteTitle: "ProtoLabs",
