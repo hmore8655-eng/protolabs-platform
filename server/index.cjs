@@ -235,6 +235,18 @@ app.post('/api/reset-demo', verifyToken, (req, res) => {
   res.json({ success: true, message: 'Database reset to factory demo values', data: freshData });
 });
 
+// Serve static frontend build in production for Render / Railway / Heroku
+const DIST_DIR = path.join(__dirname, '..', 'dist');
+if (fs.existsSync(DIST_DIR)) {
+  app.use(express.static(DIST_DIR));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
   console.log(`=======================================================`);
   console.log(`🚀 ProtoLabs Full-Stack Express Backend Active!`);
