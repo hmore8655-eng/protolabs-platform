@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LockIcon, XIcon, ShieldCheckIcon, AlertCircleIcon } from '../common/Icons';
+import { LockIcon, XIcon, AlertCircleIcon } from '../common/Icons';
 import { useApp } from '../../context/AppContext';
 import { api } from '../../services/api';
 
@@ -9,9 +9,13 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [googleClientId, setGoogleClientId] = useState('');
   const googleBtnRef = useRef(null);
+  const hasRenderedRef = useRef(false);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      hasRenderedRef.current = false;
+      return;
+    }
     setError('');
 
     // Fetch Google Client ID from backend
@@ -24,10 +28,14 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (!isOpen || !googleClientId || !window.google?.accounts?.id || !googleBtnRef.current) return;
+    if (hasRenderedRef.current) return;
 
     try {
+      googleBtnRef.current.innerHTML = '';
       window.google.accounts.id.initialize({
         client_id: googleClientId,
+        auto_select: false,
+        cancel_on_tap_outside: true,
         callback: async (response) => {
           if (!response || !response.credential) return;
           setIsLoading(true);
@@ -43,12 +51,15 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
       });
 
       window.google.accounts.id.renderButton(googleBtnRef.current, {
+        type: 'standard',
         theme: 'filled_blue',
         size: 'large',
         text: 'signin_with',
         shape: 'rectangular',
-        width: 380
+        width: 320,
+        logo_alignment: 'left'
       });
+      hasRenderedRef.current = true;
     } catch (e) {
       console.warn('Google Identity initialization:', e);
     }
@@ -58,7 +69,7 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content" style={{ maxWidth: '440px', padding: '2rem' }}>
+      <div className="modal-content" style={{ maxWidth: '400px', padding: '2rem' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -104,30 +115,15 @@ export const AdminAuthModal = ({ isOpen, onClose }) => {
           </div>
         )}
 
-        {/* Identity Badge */}
+        {/* Google Button */}
         <div style={{
-          backgroundColor: 'var(--secondary-bg)',
-          padding: '0.85rem 1rem',
-          borderRadius: 'var(--radius-sm)',
-          fontSize: '0.85rem',
-          color: 'var(--text-muted)',
-          marginBottom: '1.5rem',
-          border: '1px solid var(--border-color)',
+          margin: '1.5rem 0',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: '0.75rem'
+          minHeight: '46px',
+          justifyContent: 'center'
         }}>
-          <ShieldCheckIcon size={22} color="var(--accent-orange)" />
-          <div>
-            <div style={{ fontWeight: 700, color: 'var(--text-dark)', fontSize: '0.85rem' }}>Authorized Administrators Only</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              Restricted to: <strong style={{ color: 'var(--accent-dark-orange)' }}>hmore8655@gmail.com</strong>
-            </div>
-          </div>
-        </div>
-
-        {/* Loading State or Google Button */}
-        <div style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '46px', justifyContent: 'center' }}>
           {isLoading ? (
             <div style={{ fontSize: '0.9rem', color: 'var(--accent-orange)', fontWeight: 600 }}>
               Verifying Google Credentials...

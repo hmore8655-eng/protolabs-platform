@@ -241,7 +241,7 @@ app.post('/api/chat/messages', (req, res) => {
     id: `msg-${Date.now()}`,
     threadId,
     sender: sender || 'client', // 'client' or 'admin'
-    senderName: senderName || (sender === 'admin' ? 'Harsh More (Admin)' : resolvedName),
+    senderName: senderName || (sender === 'admin' ? 'ProtoLabs Engineer' : resolvedName),
     text,
     priceQuote,
     timelineQuote,

@@ -104,7 +104,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
           </div>
           <h2 style={{ fontSize: '2.25rem', marginBottom: '1rem' }}>Request Project Quote</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
-            Submit your project details. Target budget and custom delivery timeline will be finalized directly with Harsh More via live chat or 24-hour proposal email.
+            Submit your project details. Target budget and custom delivery timeline will be finalized directly with ProtoLabs Engineer via live chat or 24-hour proposal email.
           </p>
         </div>
 
@@ -150,7 +150,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-dark-orange)', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.35rem' }}>
                   <SparklesIcon size={18} />
-                  <span>Start Live Chat with Harsh More</span>
+                  <span>Start Live Chat with ProtoLabs Engineer</span>
                 </div>
                 <div style={{ fontSize: '0.875rem', color: 'var(--text-dark)', lineHeight: 1.5 }}>
                   Click the orange 💬 Live Chat icon at the bottom right of your screen to discuss your target budget and deadline in real-time!
@@ -293,7 +293,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                 gap: '0.6rem'
               }}>
                 <SparklesIcon size={16} color="var(--accent-orange)" />
-                <span><strong>Budget & Deadline Note:</strong> Target budget and delivery timeframe will be discussed live with Harsh More via chat or proposal email.</span>
+                <span><strong>Budget & Deadline Note:</strong> Target budget and delivery timeframe will be discussed live with ProtoLabs Engineer via chat or proposal email.</span>
               </div>
 
               {/* Agreement Checkbox */}

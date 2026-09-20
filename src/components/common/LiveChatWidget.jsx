@@ -72,13 +72,13 @@ export const LiveChatWidget = () => {
         clientEmail,
         sender: 'client',
         senderName: clientName,
-        text: `Hi Harsh! I'd like to negotiate the budget and project timeline for my engineering project.`
+        text: `Hi ProtoLabs Engineer! I'd like to negotiate the budget and project timeline for my engineering project.`
       });
 
       if (initMsg && initMsg.id) {
         setMessages([initMsg]);
       }
-      showToast('Chat connected! Admin Harsh More will reply shortly.');
+      showToast('Chat connected! ProtoLabs Engineer will reply shortly.');
     } catch (err) {
       console.error('Start chat error:', err);
       showToast('Failed to start chat. Check connection.', 'error');
@@ -103,7 +103,7 @@ export const LiveChatWidget = () => {
         clientName: activeName,
         clientEmail: activeEmail,
         sender: isAdminLoggedIn ? 'admin' : 'client',
-        senderName: isAdminLoggedIn ? 'Harsh More (Admin)' : activeName,
+        senderName: isAdminLoggedIn ? 'ProtoLabs Engineer' : activeName,
         text: textToSend
       });
 
@@ -217,14 +217,14 @@ export const LiveChatWidget = () => {
                 fontWeight: 800,
                 color: '#FFFFFF'
               }}>
-                HM
+                PL
               </div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span>Harsh More</span>
+                  <span>ProtoLabs Engineer</span>
                   <span style={{ fontSize: '0.7rem', backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10B981', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>Online</span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>ProtoLabs Engineering Lead</div>
+                <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Official Technical Support</div>
               </div>
             </div>
 
@@ -249,7 +249,7 @@ export const LiveChatWidget = () => {
             fontWeight: 600
           }}>
             <SparklesIcon size={16} style={{ flexShrink: 0 }} />
-            <span>Chat live with Admin Harsh More to set custom budget & timeline!</span>
+            <span>Chat live with ProtoLabs Engineer to set custom budget & timeline!</span>
           </div>
 
           {/* Body */}
@@ -257,7 +257,7 @@ export const LiveChatWidget = () => {
             <form onSubmit={startNewThread} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1, justifyContent: 'center' }}>
               <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
                 <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-dark)', marginBottom: '0.25rem' }}>Start Negotiation Chat</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Enter your details below to connect directly with Harsh More.</p>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Enter your details below to connect directly with ProtoLabs Engineer.</p>
               </div>
 
               <div>
@@ -322,7 +322,7 @@ export const LiveChatWidget = () => {
                           marginBottom: '0.2rem',
                           padding: '0 0.25rem'
                         }}>
-                          {msg.senderName || (isAdmin ? 'Harsh More (Admin)' : 'Client')}
+                          {msg.senderName || (isAdmin ? 'ProtoLabs Engineer' : 'Client')}
                         </div>
                         <div style={{
                           maxWidth: '82%',

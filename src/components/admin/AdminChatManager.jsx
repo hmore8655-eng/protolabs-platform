@@ -77,7 +77,7 @@ export const AdminChatManager = () => {
       const newMsg = await api.sendChatMessage({
         threadId: activeThreadId,
         sender: 'admin',
-        senderName: 'Harsh More (Admin)',
+        senderName: 'ProtoLabs Engineer',
         text: textToSend
       });
 
@@ -300,7 +300,7 @@ export const AdminChatManager = () => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Reply as Admin Harsh More..."
+                placeholder="Reply as ProtoLabs Engineer..."
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}

@@ -76,7 +76,7 @@ export const AppProvider = ({ children }) => {
         setIsAdminLoggedIn(true);
         setIsAdminView(true);
         localStorage.setItem('protolabs_token', res.token);
-        showToast('Authenticated! Welcome Harsh More (Admin).');
+        showToast('Authenticated! Welcome ProtoLabs Engineer (Admin).');
         await fetchBackendData();
         return true;
       }
@@ -94,7 +94,7 @@ export const AppProvider = ({ children }) => {
         setIsAdminLoggedIn(true);
         setIsAdminView(true);
         localStorage.setItem('protolabs_token', res.token);
-        showToast(`Google Verified! Welcome ${res.user?.name || 'Harsh More'} (Admin).`);
+        showToast(`Google Verified! Welcome ${res.user?.name || 'ProtoLabs Engineer'} (Admin).`);
         await fetchBackendData();
         return { success: true };
       }

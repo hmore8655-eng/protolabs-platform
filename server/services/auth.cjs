@@ -49,7 +49,7 @@ const loginWithGoogle = async (idToken) => {
     if (!user) {
       user = {
         id: `usr-google-${Date.now()}`,
-        name: googlePayload.name || 'Harsh More',
+        name: 'ProtoLabs Engineer',
         email: googleEmail,
         role: 'admin'
       };
@@ -122,7 +122,7 @@ const verifyToken = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
   if (token === 'admin_offline_token') {
-    req.user = { role: 'admin', name: 'Harsh More' };
+    req.user = { role: 'admin', name: 'ProtoLabs Engineer' };
     return next();
   }
 
