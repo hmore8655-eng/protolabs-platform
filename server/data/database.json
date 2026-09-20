@@ -135,6 +135,186 @@
       "published": true,
       "order": 6,
       "createdAt": "2026-09-15"
+    },
+    {
+      "id": "proj-7",
+      "title": "Line Following Car Using Arduino Uno R3",
+      "category": "Robotics",
+      "description": "Autonomous line tracking robotic vehicle powered by Arduino Uno R3, dual TCRT5000 IR sensor array, and L298N high-torque dual H-Bridge motor driver.",
+      "price": 1999,
+      "duration": "3-5 Days",
+      "features": [
+        "Arduino Uno R3 ATmega328P Microcontroller",
+        "Dual TCRT5000 Infrared Reflective Sensors",
+        "L298N Dual H-Bridge Motor Driver Module",
+        "2WD High-Torque Geared DC Chassis Motors",
+        "PID Algorithm Source Code & Wiring Diagram"
+      ],
+      "icon": "Cpu",
+      "featured": true,
+      "published": true,
+      "order": 7,
+      "createdAt": "2026-09-18"
+    },
+    {
+      "id": "proj-8",
+      "title": "Bluetooth Controlled Car Using ESP32",
+      "category": "Robotics",
+      "description": "Smartphone-steered RC robotic vehicle powered by ESP32 Wi-Fi & Bluetooth Dual-Core SoC with real-time Android gamepad app telemetry.",
+      "price": 2499,
+      "duration": "1 Week",
+      "features": [
+        "ESP32-WROOM-32 32-Bit Dual Core SoC",
+        "Bluetooth Serial Telemetry & Mobile App Control",
+        "L298N Motor Driver with PWM Speed Control",
+        "Rechargeable 18650 Li-ion Dual Battery Pack",
+        "Complete Arduino C++ Firmware & APK Files"
+      ],
+      "icon": "Radio",
+      "featured": true,
+      "published": true,
+      "order": 8,
+      "createdAt": "2026-09-18"
+    },
+    {
+      "id": "proj-9",
+      "title": "Smart Automatic Street Light Using Arduino",
+      "category": "IoT & Automation",
+      "description": "Energy-saving intelligent street illumination system with LDR day/night sensing, PIR human motion detection, and dynamic PWM LED dimming.",
+      "price": 1499,
+      "duration": "3-5 Days",
+      "features": [
+        "Arduino Uno / Nano Controller Board",
+        "High-Sensitivity Light Dependent Resistor (LDR)",
+        "HC-SR501 Passive Infrared Motion Detector",
+        "Dynamic PWM Multi-Level Power Dimming",
+        "Energy Saving Simulation & Hardware Schematics"
+      ],
+      "icon": "Zap",
+      "featured": false,
+      "published": true,
+      "order": 9,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-10",
+      "title": "Automatic Water Level Control System",
+      "category": "Embedded Systems",
+      "description": "Automated overhead tank and sump pump management system with ultrasonic distance sensor, dry-run protection, and relay switching.",
+      "price": 1799,
+      "duration": "4-6 Days",
+      "features": [
+        "HC-SR04 Contactless Ultrasonic Depth Sensor",
+        "Optocoupled 10A High-Voltage Relay Module",
+        "Dry-Run Motor Burnout Prevention Algorithm",
+        "16x2 I2C Liquid Crystal Display Status Panel",
+        "Circuit Diagram, Breadboard Layout & Code"
+      ],
+      "icon": "Layers",
+      "featured": false,
+      "published": true,
+      "order": 10,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-11",
+      "title": "RFID Smart Door Lock & Access Control",
+      "category": "Embedded Systems",
+      "description": "Contactless biometric security system utilizing RC522 13.56MHz RFID reader, solenoid door strike actuator, and master authorization card programming.",
+      "price": 2199,
+      "duration": "1 Week",
+      "features": [
+        "MFRC522 13.56MHz High-Frequency RFID Reader",
+        "12V Electromagnetic Solenoid Door Latch",
+        "Buzzer & Bi-Color LED Authorization Feedback",
+        "EEPROM Onboard Authorized Card Storage",
+        "Complete Enclosure CAD & Circuit Gerber"
+      ],
+      "icon": "Cpu",
+      "featured": true,
+      "published": true,
+      "order": 11,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-12",
+      "title": "Touchless Smart Dustbin with Servo Lid",
+      "category": "Robotics",
+      "description": "Hygienic hands-free automatic waste disposal system powered by ultrasonic proximity detection and micro servo lid actuating mechanism.",
+      "price": 1299,
+      "duration": "2-4 Days",
+      "features": [
+        "Ultrasonic Distance Sensor for Gesture Trigger",
+        "SG90 Metal-Gear Responsive Servo Actuator",
+        "Battery-Efficient Standby Power Consumption",
+        "Compact 3D Printable Mechanical Hinge Linkage",
+        "Full Arduino Source Code & Assembly Guide"
+      ],
+      "icon": "Zap",
+      "featured": false,
+      "published": true,
+      "order": 12,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-13",
+      "title": "Smart Home Automation System with Voice & App",
+      "category": "IoT & Automation",
+      "description": "Multi-channel AC appliance control platform integrating ESP8266 NodeMCU / ESP32, Sinric Pro / Blynk cloud, and Google Assistant voice commands.",
+      "price": 3499,
+      "duration": "1-2 Weeks",
+      "features": [
+        "ESP8266 / ESP32 Wi-Fi IoT Microcontroller",
+        "4-Channel Optocoupled 230V AC Relay Board",
+        "Manual Wall Switch Real-Time Feedback Sync",
+        "Google Assistant & Amazon Alexa Voice Control",
+        "Blynk / Sinric Pro Cloud Dashboard Setup"
+      ],
+      "icon": "Radio",
+      "featured": true,
+      "published": true,
+      "order": 13,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-14",
+      "title": "IoT RFID Attendance System with Cloud Logging",
+      "category": "IoT & Automation",
+      "description": "Automated student & employee attendance logger combining RC522 RFID reader, ESP8266 Wi-Fi, and Google Sheets / Firebase real-time database logging.",
+      "price": 2899,
+      "duration": "1 Week",
+      "features": [
+        "RC522 13.56MHz RFID Card & Keyfob Scanner",
+        "ESP8266 NodeMCU Wi-Fi Cloud Uploader",
+        "Instant Google Sheets / Firebase Data Logging",
+        "OLED Display for User Name & Timestamp",
+        "Exportable Excel Attendance Report Engine"
+      ],
+      "icon": "Server",
+      "featured": true,
+      "published": true,
+      "order": 14,
+      "createdAt": "2026-09-19"
+    },
+    {
+      "id": "proj-15",
+      "title": "Smart Agriculture Monitoring System Using Raspberry Pi",
+      "category": "IoT & Automation",
+      "description": "Precision farming environment analyzer leveraging Raspberry Pi 4, soil NPK & moisture sensors, DHT22 climate telemetry, and automated drip irrigation.",
+      "price": 5999,
+      "duration": "1-2 Weeks",
+      "features": [
+        "Raspberry Pi 4 Model B Single Board Computer",
+        "Soil Moisture & Ambient Temperature/Humidity Sensor",
+        "Automated Submersible DC Water Pump Relay",
+        "Python Flask Web Dashboard with Live Telemetry",
+        "Telegram / Email Automated Crop Alerts"
+      ],
+      "icon": "Cpu",
+      "featured": true,
+      "published": true,
+      "order": 15,
+      "createdAt": "2026-09-19"
     }
   ],
   "services": [
