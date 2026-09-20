@@ -165,7 +165,14 @@ export const ProjectCatalog = ({ onSelectProjectForInquiry }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
 
-  const categories = ['All', 'IoT & Automation', 'Telecom & RF', 'FPGA & DSP', 'PCB Design', 'Embedded Systems'];
+  const categories = useMemo(() => {
+    const defaultList = ['All', 'Robotics', 'IoT & Automation', 'Telecom & RF', 'Embedded Systems', 'FPGA & DSP', 'PCB Design'];
+    const dynamicSet = new Set(defaultList);
+    (projects || []).forEach(p => {
+      if (p.category) dynamicSet.add(p.category);
+    });
+    return Array.from(dynamicSet);
+  }, [projects]);
 
   const filteredProjects = useMemo(() => {
     return projects
