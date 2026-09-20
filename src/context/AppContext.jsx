@@ -81,16 +81,29 @@ export const AppProvider = ({ children }) => {
         return true;
       }
     } catch (err) {
-      if (password === 'PROTOLABS@123') {
-        localStorage.setItem('protolabs_token', 'admin_offline_token');
-        setIsAdminLoggedIn(true);
-        setIsAdminView(true);
-        showToast('Authenticated as Admin.');
-        return true;
-      }
+      console.warn('Backend login attempt:', err.message);
     }
     showToast('Invalid admin password', 'error');
     return false;
+  };
+
+  const loginAdminWithGoogle = async (credential) => {
+    try {
+      const res = await api.loginWithGoogle(credential);
+      if (res && res.token) {
+        setIsAdminLoggedIn(true);
+        setIsAdminView(true);
+        localStorage.setItem('protolabs_token', res.token);
+        showToast(`Google Verified! Welcome ${res.user?.name || 'Harsh More'} (Admin).`);
+        await fetchBackendData();
+        return { success: true };
+      }
+      return { success: false, error: res?.error || 'Authentication failed' };
+    } catch (err) {
+      const msg = err.message || 'Google authentication failed';
+      showToast(msg, 'error');
+      return { success: false, error: msg };
+    }
   };
 
   const logoutAdmin = () => {
@@ -346,6 +359,7 @@ export const AppProvider = ({ children }) => {
       toast,
       showToast,
       loginAdmin,
+      loginAdminWithGoogle,
       logoutAdmin,
       toggleView,
       resetToDemoData,

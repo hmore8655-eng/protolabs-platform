@@ -6,7 +6,7 @@ const fs = require('fs');
 const multer = require('multer');
 
 const db = require('./db.cjs');
-const { loginUser, verifyToken } = require('./services/auth.cjs');
+const { loginUser, loginWithGoogle, verifyToken, AUTHORIZED_ADMIN_EMAILS } = require('./services/auth.cjs');
 const { sendInquiryConfirmation, sendQuoteProposalEmail } = require('./services/email.cjs');
 
 const app = express();
@@ -71,6 +71,26 @@ app.post('/api/auth/login', (req, res) => {
 
 app.get('/api/auth/me', verifyToken, (req, res) => {
   res.json({ user: req.user });
+});
+
+app.post('/api/auth/google', async (req, res) => {
+  const { credential } = req.body;
+  if (!credential) {
+    return res.status(400).json({ error: 'Google credential token is required' });
+  }
+
+  const result = await loginWithGoogle(credential);
+  if (result.error) {
+    return res.status(403).json(result);
+  }
+  return res.json(result);
+});
+
+app.get('/api/auth/config', (req, res) => {
+  res.json({
+    googleClientId: process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || '',
+    authorizedEmails: AUTHORIZED_ADMIN_EMAILS
+  });
 });
 
 // Projects API

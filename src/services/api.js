@@ -28,6 +28,28 @@ export const api = {
     return data;
   },
 
+  async loginWithGoogle(credential) {
+    const res = await fetch(`${API_BASE}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential })
+    });
+    const data = await handleResponse(res);
+    if (data.token) {
+      localStorage.setItem('protolabs_token', data.token);
+    }
+    return data;
+  },
+
+  async getAuthConfig() {
+    try {
+      const res = await fetch(`${API_BASE}/auth/config`);
+      return await res.json();
+    } catch (e) {
+      return { googleClientId: '', authorizedEmails: ['hmore8655@gmail.com', 'protolabs26@gmail.com'] };
+    }
+  },
+
   async getMe() {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders()
