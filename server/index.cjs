@@ -88,7 +88,7 @@ app.post('/api/auth/google', async (req, res) => {
 
 app.get('/api/auth/config', (req, res) => {
   res.json({
-    googleClientId: process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || '',
+    googleClientId: process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || '240596567313-jlkud0rbae1nj39mojkepk98tv77i08k.apps.googleusercontent.com',
     authorizedEmails: AUTHORIZED_ADMIN_EMAILS
   });
 });
