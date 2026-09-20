@@ -246,7 +246,9 @@ export const AdminProjectsManager = () => {
 
                   {/* Price & Timeline */}
                   <td style={{ padding: '0.85rem 1rem' }}>
-                    <div style={{ fontWeight: 800, color: 'var(--accent-orange)', fontSize: '1.1rem' }}>${proj.price}</div>
+                    <div style={{ fontWeight: 800, color: 'var(--accent-orange)', fontSize: '1.1rem' }}>
+                      ₹{typeof proj.price === 'number' ? proj.price.toLocaleString('en-IN') : proj.price}
+                    </div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{proj.duration}</div>
                   </td>
 
@@ -342,7 +344,7 @@ export const AdminProjectsManager = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Price ($ USD) *</label>
+                  <label className="form-label">Price (₹ INR) *</label>
                   <input
                     type="number"
                     required

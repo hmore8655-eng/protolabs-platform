@@ -11,7 +11,7 @@ export const initialData = {
       title: "Smart Agriculture LoRaWAN Gateway & Sensor Node",
       category: "IoT & Automation",
       description: "ProtoLabs long-range environmental monitoring platform equipped with multi-sensor payload, solar MPPT charging PCB, and cloud dashboard integration.",
-      price: 349,
+      price: 4999,
       duration: "1-2 Weeks",
       features: [
         "SX1276 LoRa 868/915MHz Transceiver",
@@ -31,7 +31,7 @@ export const initialData = {
       title: "5G Microstrip Patch Array & Beamforming Simulation",
       category: "Telecom & RF",
       description: "28GHz mmWave 4x4 microstrip patch antenna array designed with CST Studio / ANSYS HFSS featuring beam steering optimization.",
-      price: 499,
+      price: 7999,
       duration: "2-3 Weeks",
       features: [
         "28GHz mmWave 4x4 Antenna Array Design",
@@ -51,7 +51,7 @@ export const initialData = {
       title: "Real-Time STM32 Audio DSP & Active Noise Control",
       category: "FPGA & DSP",
       description: "Dual-microphone acoustic echo cancellation and real-time noise reduction board powered by STM32F4/F7 DSP CMSIS libraries.",
-      price: 299,
+      price: 3999,
       duration: "1-2 Weeks",
       features: [
         "STM32F407 High-Performance ARM Cortex-M4",
@@ -71,7 +71,7 @@ export const initialData = {
       title: "FPGA Gigabit Ethernet & PCIe Data Acquisition Card",
       category: "FPGA & DSP",
       description: "High-speed data acquisition hardware layout and Xilinx Artix-7 Verilog HDL core for multi-channel sensor digitizing.",
-      price: 599,
+      price: 9999,
       duration: "3-4 Weeks",
       features: [
         "Xilinx Artix-7 XC7A35T Verilog Cores",
@@ -91,7 +91,7 @@ export const initialData = {
       title: "Compact 4-Layer KiCAD PCB for Automotive ECU",
       category: "PCB Design",
       description: "ISO-11898 compliant CAN-Bus and LIN telemetry ECU module for vehicle diagnostic data logging with reverse polarity protection.",
-      price: 279,
+      price: 3499,
       duration: "1 Week",
       features: [
         "High-Speed CAN FD Transceiver Layout",
@@ -111,7 +111,7 @@ export const initialData = {
       title: "Automated Industrial Sensor Node with NB-IoT / GSM",
       category: "Embedded Systems",
       description: "Cellular IoT telematics node with SIM7000G module, GPS location tracking, ultra-low sleep current (5uA), and battery management.",
-      price: 389,
+      price: 5499,
       duration: "2 Weeks",
       features: [
         "SIM7000G NB-IoT / eMTC / EGPRS Module",
@@ -202,8 +202,8 @@ export const initialData = {
     autoReplySubject: "Thank you for reaching out to ProtoLabs!",
     autoReplyTemplate: "Hello {{name}},\n\nThank you for submitting your inquiry for {{project}} on ProtoLabs. Our Admin engineering specialist has received your requirements and is preparing a custom proposal and pricing.\n\nYou can expect a direct response within 24 hours.\n\nBest regards,\nProtoLabs Team",
     thankYouMessage: "Thank you! Your inquiry has been received by ProtoLabs. Our Admin specialist will review your specifications and send custom pricing within 24 hours.",
-    paymentDetails: "Google Pay / UPI ID: protolabs@okaxis | Bank Transfer: HDFC Bank (AC: 5010023491823, IFSC: HDFC0000123)",
+    paymentDetails: "Google Pay / PhonePe / UPI ID: hmore8655@okicici | Bank Transfer on Request",
     timelines: ["Urgent (< 1 Week)", "1-2 Weeks", "2-4 Weeks", "1-2 Months", "Flexible"],
-    budgets: ["Under $300", "$300 - $500", "$500 - $1,000", "$1,000 - $2,500", "$2,500+"]
+    budgets: ["Under ₹5,000", "₹5,000 - ₹15,000", "₹15,000 - ₹30,000", "₹30,000 - ₹50,000", "₹50,000+"]
   }
 };

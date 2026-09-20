@@ -29,7 +29,7 @@ const defaultData = {
       title: "Smart Agriculture LoRaWAN Gateway & Sensor Node",
       category: "IoT & Automation",
       description: "ProtoLabs long-range environmental monitoring platform equipped with multi-sensor payload, solar MPPT charging PCB, and cloud dashboard integration.",
-      price: 349,
+      price: 4999,
       duration: "1-2 Weeks",
       features: [
         "SX1276 LoRa 868/915MHz Transceiver",
@@ -49,7 +49,7 @@ const defaultData = {
       title: "5G Microstrip Patch Array & Beamforming Simulation",
       category: "Telecom & RF",
       description: "28GHz mmWave 4x4 microstrip patch antenna array designed with CST Studio / ANSYS HFSS featuring beam steering optimization.",
-      price: 499,
+      price: 7999,
       duration: "2-3 Weeks",
       features: [
         "28GHz mmWave 4x4 Antenna Array Design",
@@ -69,7 +69,7 @@ const defaultData = {
       title: "Real-Time STM32 Audio DSP & Active Noise Control",
       category: "FPGA & DSP",
       description: "Dual-microphone acoustic echo cancellation and real-time noise reduction board powered by STM32F4/F7 DSP CMSIS libraries.",
-      price: 299,
+      price: 3999,
       duration: "1-2 Weeks",
       features: [
         "STM32F407 High-Performance ARM Cortex-M4",
@@ -89,7 +89,7 @@ const defaultData = {
       title: "FPGA Gigabit Ethernet & PCIe Data Acquisition Card",
       category: "FPGA & DSP",
       description: "High-speed data acquisition hardware layout and Xilinx Artix-7 Verilog HDL core for multi-channel sensor digitizing.",
-      price: 599,
+      price: 9999,
       duration: "3-4 Weeks",
       features: [
         "Xilinx Artix-7 XC7A35T Verilog Cores",
@@ -109,7 +109,7 @@ const defaultData = {
       title: "Compact 4-Layer KiCAD PCB for Automotive ECU",
       category: "PCB Design",
       description: "ISO-11898 compliant CAN-Bus and LIN telemetry ECU module for vehicle diagnostic data logging with reverse polarity protection.",
-      price: 279,
+      price: 3499,
       duration: "1 Week",
       features: [
         "High-Speed CAN FD Transceiver Layout",
@@ -129,7 +129,7 @@ const defaultData = {
       title: "Automated Industrial Sensor Node with NB-IoT / GSM",
       category: "Embedded Systems",
       description: "Cellular IoT telematics node with SIM7000G module, GPS location tracking, ultra-low sleep current (5uA), and battery management.",
-      price: 389,
+      price: 5499,
       duration: "2 Weeks",
       features: [
         "SIM7000G NB-IoT / eMTC / EGPRS Module",
@@ -237,16 +237,14 @@ class Database {
   }
 
   async initCloud() {
-    const mongoUri = process.env.MONGODB_URI;
-    if (!mongoUri) {
-      console.log('[Storage] No MONGODB_URI set. Running on local JSON storage (ephemeral on free Render containers).');
-      return false;
-    }
+    const FALLBACK_MONGO_URI = 'mongodb+srv://protolabs26_db_user:nzPpm8XB6R687Ot3@cluster0.7hkrpyd.mongodb.net/?appName=Cluster0';
+    const mongoUri = process.env.MONGODB_URI || FALLBACK_MONGO_URI;
 
     try {
       console.log('[MongoDB Atlas] Connecting to cluster...');
       const client = new MongoClient(mongoUri, {
         serverSelectionTimeoutMS: 8000,
+        connectTimeoutMS: 8000,
       });
       await client.connect();
       this.mongoClient = client;
@@ -272,11 +270,13 @@ class Database {
       }
 
       this.isCloudConnected = true;
+      this.cloudError = null;
       console.log('✅ [MongoDB Atlas] Cloud Persistence is ACTIVE. Edits will survive all Render spin-downs and restarts!');
       return true;
     } catch (err) {
       console.error('[MongoDB Atlas Warning] Failed to connect to MongoDB URI:', err.message);
       this.isCloudConnected = false;
+      this.cloudError = err.message;
       return false;
     }
   }
@@ -295,6 +295,19 @@ class Database {
         this.data = JSON.parse(raw);
         if (!this.data.chatThreads) this.data.chatThreads = [];
         if (!this.data.chatMessages) this.data.chatMessages = [];
+        
+        // Upgrade any legacy USD prices to INR if needed
+        if (Array.isArray(this.data.projects)) {
+          this.data.projects.forEach(p => {
+            if (p.price === 349) p.price = 4999;
+            else if (p.price === 499) p.price = 7999;
+            else if (p.price === 299) p.price = 3999;
+            else if (p.price === 599) p.price = 9999;
+            else if (p.price === 279) p.price = 3499;
+            else if (p.price === 389) p.price = 5499;
+          });
+        }
+
         // Update admin email & location if changed
         if (this.data.users && this.data.users[0]) {
           this.data.users[0].email = "protolabs26@gmail.com";

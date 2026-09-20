@@ -213,7 +213,7 @@ export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject })
                   >
                     {projects.map(p => (
                       <option key={p.id} value={p.title}>
-                        {p.title} (${p.price} - {p.category})
+                        {p.title} (₹{typeof p.price === 'number' ? p.price.toLocaleString('en-IN') : p.price} - {p.category})
                       </option>
                     ))}
                   </select>

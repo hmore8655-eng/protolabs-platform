@@ -138,8 +138,8 @@ const ProjectCard = ({ proj, idx, onQuickStart }) => {
       }}>
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 500 }}>Price</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-orange)', lineHeight: 1 }}>
-            ${proj.price}
+          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-dark)' }}>
+            ₹{typeof proj.price === 'number' ? proj.price.toLocaleString('en-IN') : proj.price}
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '3px' }}>Time: {proj.duration}</div>
         </div>

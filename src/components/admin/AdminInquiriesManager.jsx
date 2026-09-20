@@ -35,7 +35,7 @@ export const AdminInquiriesManager = () => {
     setReplyMessage(
       `Hello ${inquiry.name},\n\nThank you for reaching out regarding "${inquiry.selectedProject}".\n\n` +
       `We have reviewed your project requirements:\n"${inquiry.description || 'Standard catalog package.'}"\n\n` +
-      `Our technical quote for this deliverable is ${inquiry.quotedPrice || '$349'}.\nEstimated completion timeframe: ${inquiry.timeline}.\n\n` +
+      `Our technical quote for this deliverable is ${inquiry.quotedPrice || '₹4,999'}.\nEstimated completion timeframe: ${inquiry.timeline}.\n\n` +
       `Payment details:\n${settings.paymentDetails}\n\nPlease let us know if you'd like to proceed with milestone confirmation.`
     );
   };
@@ -301,13 +301,13 @@ export const AdminInquiriesManager = () => {
             {/* Quote Inputs */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
               <div className="form-group">
-                <label className="form-label">Quoted Milestone Price ($ USD)</label>
+                <label className="form-label">Quoted Milestone Price (₹ INR)</label>
                 <input
                   type="text"
                   value={quotePrice}
                   onChange={(e) => setQuotePrice(e.target.value)}
                   className="form-input"
-                  placeholder="e.g. $349"
+                  placeholder="e.g. ₹4,999 or ₹12,500"
                 />
               </div>
 

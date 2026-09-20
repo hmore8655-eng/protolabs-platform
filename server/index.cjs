@@ -315,10 +315,13 @@ app.post('/api/upload', verifyToken, upload.single('file'), (req, res) => {
 app.get('/api/database/status', (req, res) => {
   res.json({
     isCloud: db.isCloudConnected,
+    error: db.cloudError || null,
     mode: db.isCloudConnected ? 'MongoDB Atlas (Persistent Cloud Database)' : 'Local Disk JSON (Ephemeral on Free Render Containers)',
     info: db.isCloudConnected 
       ? 'All catalog edits, inquiries, and chat threads are permanently saved in MongoDB Atlas.'
-      : 'Running on local file storage. Note: Free Render containers sleep after 15 min of inactivity and wipe local files. Add MONGODB_URI to Render environment variables to make all edits permanent.'
+      : (db.cloudError 
+          ? `MongoDB connection pending or blocked (${db.cloudError}). Please ensure MongoDB Atlas Network Access has 0.0.0.0/0 (Allow Access from Anywhere).`
+          : 'Running on local file storage. Add MONGODB_URI to environment variables.')
   });
 });
 

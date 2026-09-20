@@ -21,7 +21,7 @@ const DEFAULT_SETTINGS = {
   autoReplySubject: "Thank you for reaching out to ProtoLabs Engineering!",
   autoReplyTemplate: "Hello {{name}},\n\nThank you for submitting your project inquiry for {{project}} on ProtoLabs. Harsh More (ENTC Engineering Specialist) has received your specifications. Please use our Live Chat widget or expect a direct proposal email within 24 hours to finalize timeline & budget.\n\nBest regards,\nHarsh More | ProtoLabs Engineering\nNarhe, Pune - 411041\nPhone: +91 8856082411",
   timelines: ["1-2 Weeks", "2-3 Weeks", "1 Month", "Custom"],
-  budgets: ["< $200", "$200 - $500", "$500 - $1000", "$1000+"]
+  budgets: ["< ₹5,000", "₹5,000 - ₹15,000", "₹15,000 - ₹30,000", "₹30,000+"]
 };
 
 export const AdminSettings = () => {
@@ -267,18 +267,24 @@ export const AdminSettings = () => {
             marginTop: '0.75rem',
             lineHeight: 1.5
           }}>
-            <strong>Why do edits disappear if nobody visits the site for some time?</strong>
+            <strong>Why do chats and catalogs reset when nobody visits the site for some time?</strong>
             <p style={{ margin: '0.35rem 0' }}>
-              On Render's free tier, the web service goes to sleep after 15 minutes of inactivity. When someone visits, Render boots a fresh container from the GitHub repository, which resets all local file changes.
+              On Render's free tier, the server sleeps after 15 minutes of inactivity. When it wakes up, Render starts a fresh container, which wipes local files unless connected to a cloud database like MongoDB Atlas.
             </p>
-            <strong>How to make all your changes permanent forever (100% Free):</strong>
+            {dbStatus.error && (
+              <div style={{ backgroundColor: '#FEE2E2', border: '1px solid #F87171', color: '#991B1B', padding: '0.6rem 0.8rem', borderRadius: '4px', margin: '0.5rem 0', fontSize: '0.8rem' }}>
+                <strong>Cloud Connection Status:</strong> {dbStatus.info}
+              </div>
+            )}
+            <strong>Required 2-Minute Step in MongoDB Atlas to Make Data Permanent:</strong>
             <ol style={{ margin: '0.35rem 0 0 1.25rem', padding: 0 }}>
-              <li>Create a free forever cluster on <a href="https://www.mongodb.com/atlas" target="_blank" rel="noreferrer" style={{ color: '#047857', fontWeight: 600, textDecoration: 'underline' }}>MongoDB Atlas</a> (M0 Free Tier).</li>
-              <li>Get your connection string (e.g. <code>mongodb+srv://admin:pass@cluster.mongodb.net/protolabs</code>).</li>
-              <li>Go to <strong>Render Dashboard → protolabs-platform → Environment</strong>, add <code>MONGODB_URI</code> and click Save.</li>
+              <li>Log into <a href="https://cloud.mongodb.com" target="_blank" rel="noreferrer" style={{ color: '#047857', fontWeight: 600, textDecoration: 'underline' }}>MongoDB Atlas</a>.</li>
+              <li>Click <strong>Network Access</strong> in the left sidebar menu under <em>Security</em>.</li>
+              <li>Click <strong>+ Add IP Address</strong> → Click <strong>ALLOW ACCESS FROM ANYWHERE</strong> (sets <code>0.0.0.0/0</code>) → Click <strong>Confirm</strong>.</li>
+              <li><em>(This allows Render's cloud servers to connect without being blocked by Atlas firewall!)</em></li>
             </ol>
             <p style={{ margin: '0.35rem 0 0', fontSize: '0.8rem', color: '#92400E' }}>
-              💡 Once <code>MONGODB_URI</code> is added, all catalog edits, hero text, and client chats stay saved permanently regardless of spin-downs or new commits!
+              💡 Your MongoDB Atlas URI is already built into the backend! As soon as <code>0.0.0.0/0</code> is added in Atlas Network Access, this status will turn <strong style={{ color: '#047857' }}>GREEN</strong> and your chats, projects, and inquiries will never reset again!
             </p>
           </div>
         )}

@@ -21,7 +21,7 @@
       "title": "Smart Agriculture LoRaWAN Gateway & Sensor Node",
       "category": "IoT & Automation",
       "description": "ProtoLabs long-range environmental monitoring platform equipped with multi-sensor payload, solar MPPT charging PCB, and cloud dashboard integration.",
-      "price": 349,
+      "price": 4999,
       "duration": "1-2 Weeks",
       "features": [
         "SX1276 LoRa 868/915MHz Transceiver",
@@ -41,7 +41,7 @@
       "title": "5G Microstrip Patch Array & Beamforming Simulation",
       "category": "Telecom & RF",
       "description": "28GHz mmWave 4x4 microstrip patch antenna array designed with CST Studio / ANSYS HFSS featuring beam steering optimization.",
-      "price": 499,
+      "price": 7999,
       "duration": "2-3 Weeks",
       "features": [
         "28GHz mmWave 4x4 Antenna Array Design",
@@ -61,7 +61,7 @@
       "title": "Real-Time STM32 Audio DSP & Active Noise Control",
       "category": "FPGA & DSP",
       "description": "Dual-microphone acoustic echo cancellation and real-time noise reduction board powered by STM32F4/F7 DSP CMSIS libraries.",
-      "price": 299,
+      "price": 3999,
       "duration": "1-2 Weeks",
       "features": [
         "STM32F407 High-Performance ARM Cortex-M4",
@@ -81,7 +81,7 @@
       "title": "FPGA Gigabit Ethernet & PCIe Data Acquisition Card",
       "category": "FPGA & DSP",
       "description": "High-speed data acquisition hardware layout and Xilinx Artix-7 Verilog HDL core for multi-channel sensor digitizing.",
-      "price": 599,
+      "price": 9999,
       "duration": "3-4 Weeks",
       "features": [
         "Xilinx Artix-7 XC7A35T Verilog Cores",
@@ -101,7 +101,7 @@
       "title": "Compact 4-Layer KiCAD PCB for Automotive ECU",
       "category": "PCB Design",
       "description": "ISO-11898 compliant CAN-Bus and LIN telemetry ECU module for vehicle diagnostic data logging with reverse polarity protection.",
-      "price": 279,
+      "price": 3499,
       "duration": "1 Week",
       "features": [
         "High-Speed CAN FD Transceiver Layout",
@@ -121,7 +121,7 @@
       "title": "Automated Industrial Sensor Node with NB-IoT / GSM",
       "category": "Embedded Systems",
       "description": "Cellular IoT telematics node with SIM7000G module, GPS location tracking, ultra-low sleep current (5uA), and battery management.",
-      "price": 389,
+      "price": 5499,
       "duration": "2 Weeks",
       "features": [
         "SIM7000G NB-IoT / eMTC / EGPRS Module",
