@@ -2,101 +2,109 @@
 
 > **BUILD • EXPERIMENT • INNOVATE — Electronics • Telecommunication • Real Solutions**
 
-ProtoLabs is a state-of-the-art, full-stack services marketplace and project catalog platform designed for electronics, telecommunications, IoT, and embedded systems engineering. Founded by **Harsh More** at JSPM NTC, Pune.
+ProtoLabs is a full-stack engineering marketplace, hardware showcase, and proposal management platform designed for electronics, telecommunications, IoT, robotics, and embedded systems. Founded by **Harsh More** at Narhe, Pune.
 
 ---
 
-## 🌟 Key Features
+## 🌟 Platform Highlights
 
-- **Public Services Marketplace**: Hero banner with an interactive SVG hardware circuit diagram, pre-defined project catalog, filters, search, and a custom quote request wizard.
-- **Full Admin Control Panel**: Log in as Admin (`hmore8655@gmail.com`) to add projects, set custom pricing, update deliverable checklists, review incoming client lead proposals, and manage site settings.
-- **RESTful Express Backend**: Node.js REST API (`server/index.cjs`) handling projects, inquiries, portfolio items, client reviews, settings, and file uploads.
-- **Clean Production Database**: Zero fake leads or dummy data — database file (`server/data/database.json`) populates strictly when actual clients submit real inquiries.
-- **Auto-Responder Email Service**: Automated email notifications upon project inquiry submission and manual quote proposal dispatches.
+- **Interactive Engineering Catalog**: Dynamic catalog of industry-grade hardware prototypes, schematics, PCB designs, robotics vehicles, and CST/HFSS RF antennas with real-time category filtering and INR pricing.
+- **Client Inquiry & Proposal System**: Interactive inquiry submission wizard allowing clients to select pre-defined solutions or submit custom engineering specifications.
+- **Interactive 3D Hardware Cards**: Modern CSS 3D perspective mouse-tilt cards with dynamic light glare effects and pure vector hardware badges.
+- **Admin Management Portal**: Secure administrative portal to manage catalog offerings, reorder items, quote client milestones, and configure site settings.
+- **Persistent Cloud Database**: Connected to MongoDB Atlas cloud database ensuring all dynamic inquiries, chat threads, and catalog updates survive server spin-downs.
+- **Production SEO & Rich Snippets**: Fully indexed on Google with JSON-LD Schema.org structured data (`ProfessionalService`, `WebSite`), custom XML sitemap, and robots.txt crawler optimization.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 19, Vite, Vanilla CSS Design System, Responsive 3D Canvas & Micro-Animations |
+| **Backend** | Node.js, Express.js REST API, Multer (schematic & BOM uploads), Nodemailer |
+| **Database** | MongoDB Atlas (Persistent Cloud Storage) + Local Failover Cache |
+| **Security** | JWT (JSON Web Tokens), Bcrypt password hashing |
+| **Deployment** | Render Web Services, Cloudflare SSL |
+
+---
+
+## 📁 Project Architecture
+
+```text
+protolabs-platform/
+├── public/                 # Static assets, sitemap.xml, robots.txt, favicon.svg
+├── server/
+│   ├── data/               # Local JSON database failover cache
+│   ├── services/           # Authentication, email, and notification services
+│   ├── db.cjs              # Database abstraction with MongoDB Atlas cloud sync
+│   └── index.cjs           # Express REST API server endpoints
+├── src/
+│   ├── components/
+│   │   ├── admin/          # Admin dashboard, project editor, inquiries manager
+│   │   ├── public/         # Hero section, project catalog, contact forms, navbar, footer
+│   │   └── common/         # Pure SVG hardware icons and brand vectors
+│   ├── context/            # Global React application state (AppContext)
+│   ├── data/               # Initial verified engineering solutions
+│   ├── services/           # Frontend API client service
+│   ├── App.jsx             # Root layout and view controller
+│   └── main.jsx            # React application entry point
+├── package.json            # Node.js dependencies and scripts
+└── vite.config.js          # Vite build configuration
+```
+
+---
+
+## 🚀 Getting Started Locally
+
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+```bash
+# 1. Clone repository
+git clone https://github.com/hmore8655-eng/protolabs-platform.git
+cd protolabs-platform
+
+# 2. Install dependencies
+npm install
+
+# 3. Start development server (Frontend + Backend)
+npm run dev
+```
+
+- **Frontend Application**: `http://localhost:5173`
+- **Backend REST API**: `http://localhost:5000/api`
+
+---
+
+## 🌐 Environment Variables (Production)
+
+To run the application in a production environment (such as Render), configure the following environment variables in your hosting dashboard:
+
+| Variable | Description |
+| :--- | :--- |
+| `PORT` | Server listening port (default: 5000) |
+| `MONGODB_URI` | Your MongoDB Atlas connection string |
+| `JWT_SECRET` | Secure secret key for signing admin authentication tokens |
+| `ADMIN_EMAIL` | Admin account login email |
+| `ADMIN_PASSWORD` | Admin account secure password |
 
 ---
 
 ## 👨‍💻 Founder & Contact Info
 
-- **Specialist & Founder**: Harsh More
-- **Contact Email**: `hmore8655@gmail.com`
-- **Phone Number**: `+91 8856082411`
-- **Location**: JSPM NTC, Narhe, Pune - 411041
-- **Payment UPI ID**: `hmore8655@okicici`
-- **GitHub**: [https://github.com/hmore8655-eng](https://github.com/hmore8655-eng)
-- **LinkedIn**: [https://www.linkedin.com/in/harsh-more-593a87300](https://www.linkedin.com/in/harsh-more-593a87300)
+- **Founder & Lead Specialist**: Harsh More
+- **Location**: Narhe, Pune - 411041, Maharashtra, India
+- **Email**: [protolabs26@gmail.com](mailto:protolabs26@gmail.com)
+- **Phone**: +91 8856082411
+- **UPI ID**: `hmore8655@okicici`
+- **GitHub**: [@hmore8655-eng](https://github.com/hmore8655-eng)
+- **LinkedIn**: [Harsh More](https://www.linkedin.com/in/harsh-more-593a87300)
 
 ---
 
-## 🔐 Admin Login Credentials
+## 📄 License
 
-- **Admin Email**: `hmore8655@gmail.com`
-- **Admin Password**: `PROTOLABS@123`
-
----
-
-## 🚀 Step-by-Step GitHub Push Instructions
-
-Run the following commands inside this project directory (`C:\Users\hmore\.gemini\antigravity-ide\scratch\entc-platform`) to upload your code to your GitHub repository:
-
-```bash
-# 1. Initialize Git repository
-git init
-
-# 2. Configure Git user details (if not already set)
-git config user.name "Harsh More"
-git config user.email "hmore8655@gmail.com"
-
-# 3. Stage all production files
-git add .
-
-# 4. Create your initial commit (CRITICAL: This creates the local 'main' branch!)
-git commit -m "Initial release of ProtoLabs full-stack platform"
-
-# 5. Set branch to main
-git branch -M main
-
-# 6. Link your remote GitHub repository
-git remote add origin https://github.com/hmore8655-eng/protolabs-platform.git
-
-# 7. Push to GitHub
-git push -u origin main
-```
-
-> [!TIP]
-> **Fixing `error: src refspec main does not match any`**:
-> This error happens when you run `git push` before committing files. Make sure you run `git add .` and `git commit -m "Initial commit"` first before running `git push -u origin main`.
-> If your remote GitHub repository already has a default README, run `git pull origin main --rebase` before `git push`.
-
----
-
-## 🌐 Deploying Live to a Custom Domain (Render / Vercel / Railway)
-
-### Option A: Free 1-Click Deployment on Render.com (Recommended for Full-Stack Node + Express)
-
-1. Sign up on [Render.com](https://render.com) and link your GitHub account (`hmore8655-eng`).
-2. Click **New +** -> **Web Service**.
-3. Select your repository `hmore8655-eng/protolabs-platform`.
-4. Set Build Command: `npm install && npm run build`
-5. Set Start Command: `node server/index.cjs`
-6. Add Environment Variables:
-   - `ADMIN_EMAIL`: `hmore8655@gmail.com`
-   - `ADMIN_PASSWORD`: `PROTOLABS@123`
-   - `JWT_SECRET`: `protolabs_production_secret_8856082411`
-7. Click **Create Web Service**. Your full-stack platform will be live at `https://protolabs-platform.onrender.com`!
-8. **Custom Domain**: Go to **Settings** -> **Custom Domains** on Render and attach your domain (e.g. `protolabs.in` or `protolabs.com`).
-
----
-
-## 🛠 Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run Vite frontend & Express REST server concurrently
-npm run server & npm run dev
-```
-
-- **Frontend App**: `http://localhost:5173`
-- **Backend API**: `http://localhost:5000/api`
+This project is licensed under the MIT License — see the LICENSE file for details.
