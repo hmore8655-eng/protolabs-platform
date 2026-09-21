@@ -204,6 +204,34 @@ app.get('/api/chat/messages/:threadId', (req, res) => {
   res.json(messages);
 });
 
+app.put('/api/chat/threads/:id/seen', verifyToken, (req, res) => {
+  const { id } = req.params;
+  const { isSeen } = req.body;
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  const thread = db.data.chatThreads.find(t => t.id === id);
+  if (!thread) return res.status(404).json({ error: 'Thread not found' });
+
+  const seenStatus = isSeen !== undefined ? !!isSeen : true;
+  thread.isSeen = seenStatus;
+  thread.unreadCount = seenStatus ? 0 : Math.max(1, thread.unreadCount || 1);
+  thread.updatedAt = new Date().toISOString();
+  db.save();
+  res.json(thread);
+});
+
+app.delete('/api/chat/threads/:id', verifyToken, (req, res) => {
+  const { id } = req.params;
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  if (!db.data.chatMessages) db.data.chatMessages = [];
+
+  const initialCount = db.data.chatThreads.length;
+  db.data.chatThreads = db.data.chatThreads.filter(t => t.id !== id);
+  db.data.chatMessages = db.data.chatMessages.filter(m => m.threadId !== id);
+  db.save();
+
+  res.json({ success: true, deleted: initialCount !== db.data.chatThreads.length });
+});
+
 app.post('/api/chat/messages', (req, res) => {
   const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
   if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
@@ -223,7 +251,8 @@ app.post('/api/chat/messages', (req, res) => {
       lastMessage: text,
       lastActivity: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      unreadCount: sender === 'client' ? 1 : 0
+      unreadCount: sender === 'client' ? 1 : 0,
+      isSeen: sender === 'admin'
     };
     db.data.chatThreads.unshift(thread);
   } else {
@@ -232,7 +261,13 @@ app.post('/api/chat/messages', (req, res) => {
     thread.lastMessage = text;
     thread.lastActivity = new Date().toISOString();
     thread.updatedAt = new Date().toISOString();
-    if (sender === 'client') thread.unreadCount = (thread.unreadCount || 0) + 1;
+    if (sender === 'client') {
+      thread.unreadCount = (thread.unreadCount || 0) + 1;
+      thread.isSeen = false;
+    } else {
+      thread.unreadCount = 0;
+      thread.isSeen = true;
+    }
     if (priceQuote) thread.agreedPrice = priceQuote;
     if (timelineQuote) thread.agreedTimeline = timelineQuote;
   }

@@ -267,6 +267,23 @@ export const api = {
     return handleResponse(res);
   },
 
+  async markChatThreadSeen(threadId, isSeen = true) {
+    const res = await fetch(`${API_BASE}/chat/threads/${threadId}/seen`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+      body: JSON.stringify({ isSeen })
+    });
+    return handleResponse(res);
+  },
+
+  async deleteChatThread(threadId) {
+    const res = await fetch(`${API_BASE}/chat/threads/${threadId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    return handleResponse(res);
+  },
+
   // Database Cloud Status & Backup Management
   async getDatabaseStatus() {
     const res = await fetch(`${API_BASE}/database/status`);
