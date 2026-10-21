@@ -842,3 +842,117 @@ h1, h2, h3, h4, .section-title {
   #catalog .card-hover { transition: none; }
   #catalog .card-hover:hover { transform: none; }
 }
+
+
+/* Fourth design pass — portfolio, process and inquiry experience */
+#process .container > div:nth-child(2) {
+  gap: clamp(1rem, 2.2vw, 1.6rem) !important;
+}
+#process .container > div:nth-child(2) > div {
+  position: relative;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 4px !important;
+  border: 1px solid #d8cec0 !important;
+  background: #fbf7f0 !important;
+}
+#process .container > div:nth-child(2) > div::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  bottom: -48px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(217,108,54,.22);
+  border-radius: 50%;
+  pointer-events: none;
+}
+#process .container > div:nth-child(2) > div > div:first-child > span {
+  color: #d96c36 !important;
+  font-variant-numeric: tabular-nums;
+}
+#why-us .container > div:nth-child(2) {
+  gap: 0 !important;
+  border-top: 1px solid #d8cec0;
+  border-left: 1px solid #d8cec0;
+}
+#why-us .container > div:nth-child(2) > div {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-right: 1px solid #d8cec0 !important;
+  border-bottom: 1px solid #d8cec0 !important;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem) !important;
+}
+#portfolio .container > div:nth-child(2) {
+  justify-content: flex-start !important;
+  gap: .45rem !important;
+}
+#portfolio .container > div:nth-child(2) button {
+  min-height: 40px;
+  border: 1px solid #d8cec0 !important;
+  background: transparent !important;
+  color: #55534e !important;
+  padding: .65rem .9rem !important;
+}
+#portfolio .container > div:nth-child(2) button[aria-pressed="true"],
+#portfolio .container > div:nth-child(2) button.active {
+  background: #343638 !important;
+  color: #f4ebdd !important;
+  border-color: #343638 !important;
+}
+#portfolio .container > div:nth-child(3) {
+  gap: 1rem !important;
+}
+#portfolio .container > div:nth-child(3) > div {
+  overflow: hidden;
+}
+#portfolio .container > div:nth-child(3) img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+#portfolio .container > div:nth-child(3) > div > div:last-child {
+  padding: clamp(1rem, 2vw, 1.5rem) !important;
+}
+#contact .container > div:nth-child(2) {
+  border: 1px solid #d8cec0 !important;
+  border-radius: 4px !important;
+  background: #fbf7f0 !important;
+  box-shadow: 0 18px 50px rgba(52,54,56,.055);
+}
+#contact .container > div:nth-child(2) input,
+#contact .container > div:nth-child(2) textarea,
+#contact .container > div:nth-child(2) select {
+  border: 1px solid #d8cec0 !important;
+  border-radius: 3px !important;
+  background: #fffdf8 !important;
+  color: #343638 !important;
+  min-height: 46px;
+}
+#contact .container > div:nth-child(2) textarea {
+  min-height: 130px;
+}
+#contact .container > div:nth-child(2) input:focus,
+#contact .container > div:nth-child(2) textarea:focus,
+#contact .container > div:nth-child(2) select:focus {
+  border-color: #d96c36 !important;
+  box-shadow: 0 0 0 3px rgba(217,108,54,.12);
+}
+#contact .container > div:nth-child(2) label {
+  color: #55534e;
+  font-size: .82rem;
+  font-weight: 600;
+}
+@media (max-width: 767px) {
+  #why-us .container > div:nth-child(2) {
+    grid-template-columns: 1fr !important;
+  }
+  #portfolio .container > div:nth-child(2) {
+    justify-content: flex-start !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #portfolio .container > div:nth-child(3) img { transition: none; }
+  #portfolio .container > div:nth-child(3) > div:hover img { transform: none; }
+}
