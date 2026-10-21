@@ -269,8 +269,19 @@ app.delete('/api/chat/threads/:id', verifyToken, (req, res) => {
 });
 
 app.post('/api/chat/messages', (req, res) => {
-  const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
-  if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
+  const { threadId, sender, text } = req.body || {};
+  if (typeof threadId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(threadId)) {
+    return res.status(400).json({ error: 'A valid threadId is required.' });
+  }
+  if (typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ error: 'Message text is required.' });
+  }
+  if (text.length > 4000) {
+    return res.status(413).json({ error: 'Messages must be 4,000 characters or fewer.' });
+  }
+  if (sender !== undefined && sender !== 'client' && sender !== 'admin') {
+    return res.status(400).json({ error: 'Invalid message sender.' });
+  }
   if (sender === 'admin') {
     return verifyToken(req, res, () => {
       req.isAuthenticatedAdmin = true;
@@ -315,8 +326,8 @@ function saveChatMessage(req, res) {
       thread.unreadCount = 0;
       thread.isSeen = true;
     }
-    if (priceQuote) thread.agreedPrice = priceQuote;
-    if (timelineQuote) thread.agreedTimeline = timelineQuote;
+    if (req.isAuthenticatedAdmin && priceQuote) thread.agreedPrice = priceQuote;
+    if (req.isAuthenticatedAdmin && timelineQuote) thread.agreedTimeline = timelineQuote;
   }
 
   const newMessage = {
@@ -325,8 +336,8 @@ function saveChatMessage(req, res) {
     sender: sender || 'client', // 'client' or 'admin'
     senderName: senderName || (sender === 'admin' ? 'ProtoLabs Engineer' : resolvedName),
     text,
-    priceQuote,
-    timelineQuote,
+    priceQuote: req.isAuthenticatedAdmin ? priceQuote : undefined,
+    timelineQuote: req.isAuthenticatedAdmin ? timelineQuote : undefined,
     timestamp: new Date().toISOString()
   };
 
