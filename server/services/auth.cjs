@@ -92,8 +92,10 @@ const loginUser = (email, password) => {
     return { error: 'Admin account not configured' };
   }
 
-  const isMatch = bcrypt.compareSync(password, user.passwordHash) || 
-    (process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD);
+  const hasPasswordHash = typeof user.passwordHash === 'string' && user.passwordHash.length > 0;
+  const isHashMatch = hasPasswordHash && bcrypt.compareSync(password, user.passwordHash);
+  const isEnvironmentPasswordMatch = Boolean(process.env.ADMIN_PASSWORD) && password === process.env.ADMIN_PASSWORD;
+  const isMatch = isHashMatch || isEnvironmentPasswordMatch;
 
   if (!isMatch) {
     return { error: 'Invalid admin password' };
