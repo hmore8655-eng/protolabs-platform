@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 /**
  * Lightweight CSS 3D hero object.
  * This is constructed from actual DOM geometry rather than a background image,
  * so it renders locally without a 3D service, external model or WebGL dependency.
  */
-export const Hero3DStructure = () => (
-  <div className="pl3d-stage" role="img" aria-label="Three-dimensional conceptual electronics development board with processor, components, connectors and circuit traces">
+export const Hero3DStructure = () => {
+  const stageRef = useRef(null);
+
+  const handlePointerMove = (event) => {
+    if (!stageRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const bounds = stageRef.current.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+    stageRef.current.style.setProperty('--pl3d-pointer-x', (x * 3.5).toFixed(2) + 'deg');
+    stageRef.current.style.setProperty('--pl3d-pointer-y', (y * -3).toFixed(2) + 'deg');
+  };
+
+  const resetPointer = () => {
+    if (!stageRef.current) return;
+    stageRef.current.style.setProperty('--pl3d-pointer-x', '0deg');
+    stageRef.current.style.setProperty('--pl3d-pointer-y', '0deg');
+  };
+
+  return (
+  <div ref={stageRef} className="pl3d-stage" onPointerMove={handlePointerMove} onPointerLeave={resetPointer} role="img" aria-label="Three-dimensional conceptual electronics development board with processor, components, connectors and circuit traces">
     <div className="pl3d-orbit pl3d-orbit--one" />
     <div className="pl3d-orbit pl3d-orbit--two" />
     <div className="pl3d-board-wrap">
@@ -36,12 +54,12 @@ export const Hero3DStructure = () => (
     <div className="pl3d-caption pl3d-caption--bottom"><span>ENGINEERED FROM THE BOARD UP</span><span className="pl3d-caption__line" /></div>
     <div className="pl3d-axis"><span>X</span><span>Y</span><span>Z</span><i /></div>
     <style>{`
-      .pl3d-stage{position:absolute;inset:0;overflow:hidden;perspective:1100px;isolation:isolate}
+      .pl3d-stage{--pl3d-pointer-x:0deg;--pl3d-pointer-y:0deg;position:absolute;inset:0;overflow:hidden;perspective:1100px;isolation:isolate;touch-action:pan-y}
       .pl3d-stage:before{content:"";position:absolute;width:74%;aspect-ratio:1;left:14%;top:7%;border-radius:50%;background:radial-gradient(circle,rgba(217,108,54,.16),rgba(217,108,54,.035) 40%,transparent 70%);filter:blur(12px)}
       .pl3d-orbit{position:absolute;width:74%;height:52%;left:13%;top:24%;border:1px solid rgba(244,238,223,.12);border-radius:50%;transform:rotate(-28deg) rotateX(64deg)}
       .pl3d-orbit--two{width:91%;height:66%;left:4%;top:17%;border-color:rgba(217,108,54,.2);transform:rotate(23deg) rotateX(66deg)}
       .pl3d-board-wrap{position:absolute;inset:8% 0 7%;display:grid;place-items:center;perspective:1200px;animation:pl3d-float 7s ease-in-out infinite}
-      .pl3d-board{position:relative;width:min(76%,440px);aspect-ratio:1.22;transform:rotateX(58deg) rotateZ(-31deg);transform-style:preserve-3d;border:1px solid #69816b;border-radius:9px;background:linear-gradient(135deg,#244b3c 0%,#153528 58%,#10271f 100%);box-shadow:0 22px 0 #10251d,0 26px 0 #0a1914,0 46px 55px rgba(0,0,0,.55),inset 0 0 0 8px rgba(8,24,17,.35),inset 0 0 0 10px rgba(154,179,132,.12)}
+      .pl3d-board{position:relative;width:min(76%,440px);aspect-ratio:1.22;transform:rotateX(calc(58deg + var(--pl3d-pointer-y))) rotateY(var(--pl3d-pointer-x)) rotateZ(-31deg);transform-style:preserve-3d;transition:transform .25s ease-out;border:1px solid #69816b;border-radius:9px;background:linear-gradient(135deg,#244b3c 0%,#153528 58%,#10271f 100%);box-shadow:0 22px 0 #10251d,0 26px 0 #0a1914,0 46px 55px rgba(0,0,0,.55),inset 0 0 0 8px rgba(8,24,17,.35),inset 0 0 0 10px rgba(154,179,132,.12)}
       .pl3d-board:before{content:"";position:absolute;inset:5%;border:1px solid rgba(209,185,116,.3);border-radius:4px;background-image:radial-gradient(circle,rgba(220,188,110,.6) 1px,transparent 1.8px);background-size:18px 18px;opacity:.65}
       .pl3d-board:after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(130deg,rgba(255,255,255,.12),transparent 28%,transparent 68%,rgba(0,0,0,.15));pointer-events:none}
       .pl3d-board-edge{position:absolute;inset:0;transform:translateZ(-12px);border-radius:9px;background:#0b2118;box-shadow:0 12px 0 #08170f}
@@ -85,7 +103,7 @@ export const Hero3DStructure = () => (
       @keyframes pl3d-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
       @media(max-width:900px){.pl3d-board{width:min(72%,390px)}.pl3d-caption--top{top:18%;right:0}.pl3d-caption--bottom{bottom:12%;left:0}.pl3d-axis{display:none}}
       @media(max-width:560px){.pl3d-stage{opacity:.65}.pl3d-board-wrap{inset:15% -14% 9% 8%}.pl3d-board{width:88%}.pl3d-caption{font-size:.48rem}.pl3d-caption--top{top:22%}.pl3d-caption--bottom{bottom:10%}.pl3d-orbit{width:100%;left:0}}
-      @media(prefers-reduced-motion:reduce){.pl3d-board-wrap{animation:none}}
+      @media(prefers-reduced-motion:reduce){.pl3d-board-wrap{animation:none}.pl3d-board{transition:none}}
     `}</style>
   </div>
 );
