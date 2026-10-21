@@ -58,7 +58,13 @@ export const LiveChatWidget = () => {
 
     setIsLoading(true);
     try {
-      const newThreadId = 'thr_' + Date.now();
+      // Use an unpredictable ID: it acts as the public client's chat access token.
+      // Timestamp-only IDs are guessable and could expose private conversation history.
+      const newThreadId = 'thr_' + (
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : Array.from({ length: 4 }, () => Math.random().toString(36).slice(2)).join('')
+      );
       localStorage.setItem('protolabs_chat_thread_id', newThreadId);
       localStorage.setItem('protolabs_chat_client_name', clientName);
       localStorage.setItem('protolabs_chat_client_email', clientEmail);
