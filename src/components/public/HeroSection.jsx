@@ -1,72 +1,104 @@
 import React from 'react';
 import { ArrowRightIcon } from '../common/Icons';
+import { Hero3DStructure } from './Hero3DStructure';
 
 export const HeroSection = () => {
   const goTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
-    <section className="pl-film" id="hero" aria-label="ProtoLabs product engineering">
-      <div className="pl-film__frame">
-        <img
-          className="pl-film__image"
-          src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=90"
-          alt="Close-up of precision electronics and circuit board components"
-          fetchPriority="high"
-        />
-        <div className="pl-film__veil" />
-        <div className="pl-film__topline">
-          <span><i /> PROTOLABS / PRODUCT ENGINEERING</span>
-          <span>DESIGN&nbsp; — &nbsp;DEVELOP&nbsp; — &nbsp;DELIVER</span>
+    <section className="forma-home" id="hero" aria-label="ProtoLabs product engineering">
+      <div className="forma-home__stage">
+        <div className="forma-home__grain" aria-hidden="true" />
+        <div className="forma-home__top">
+          <span className="forma-home__index"><i /> PROTOLABS <span>/</span> ENGINEERING STUDIO</span>
+          <span className="forma-home__discipline">ELECTRONICS&nbsp; · &nbsp;EMBEDDED&nbsp; · &nbsp;PROTOTYPING</span>
         </div>
-        <div className="pl-film__copy">
-          <p className="pl-film__eyebrow">FROM FIRST PRINCIPLES TO FINISHED PROTOTYPE</p>
-          <h1>Make the<br />idea <em>real.</em></h1>
-          <p className="pl-film__description">Electronics, embedded systems and thoughtful engineering—turned into hardware that works.</p>
-          <div className="pl-film__actions">
-            <button className="pl-film__primary" onClick={() => goTo('catalog')}>Explore our work <ArrowRightIcon size={17} /></button>
-            <button className="pl-film__secondary" onClick={() => goTo('contact')}>Have a project? <span>↗</span></button>
+
+        <div className="forma-home__copy">
+          <p className="forma-home__kicker"><span>01</span> IDEAS, BUILT INTO REALITY</p>
+          <h1>Make it<br /><em>matter.</em></h1>
+          <p className="forma-home__summary">From a first sketch to a working system. We bring electronics, embedded software and product thinking together to make ambitious ideas tangible.</p>
+          <div className="forma-home__actions">
+            <button className="forma-home__primary" onClick={() => goTo('catalog')}>Explore projects <ArrowRightIcon size={16} /></button>
+            <button className="forma-home__text-link" onClick={() => goTo('contact')}>Bring us a challenge <span>↗</span></button>
           </div>
         </div>
-        <div className="pl-film__image-label"><span>01 / ENGINEERING IN DETAIL</span><span>HARDWARE, MADE HUMAN.</span></div>
-        <div className="pl-film__scroll"><span>SCROLL TO EXPLORE</span><i /></div>
+
+        <div className="forma-home__product" aria-label="Three-dimensional electronics development board">
+          <div className="forma-home__product-halo" />
+          <Hero3DStructure />
+          <div className="forma-home__product-note"><span>PL / 001</span><span>COMPUTE MODULE<br />ENGINEERING STUDY</span></div>
+        </div>
+
+        <div className="forma-home__baseline">
+          <span>DESIGN WITH INTENT. BUILD WITH PRECISION.</span>
+          <span className="forma-home__scroll">SCROLL TO EXPLORE <i /></span>
+          <span>INDEPENDENT PRODUCT ENGINEERING <b>©</b></span>
+        </div>
       </div>
-      <div className="pl-film__intro">
-        <div><span className="pl-film__label">THE PROTOLABS APPROACH</span><h2>Not just a concept.<br /><em>A thing that works.</em></h2></div>
-        <p>We bring electronics, embedded software and rapid prototyping together to move ambitious ideas from the first sketch to a working product.</p>
-        <button onClick={() => goTo('catalog')}>Discover what we build <ArrowRightIcon size={16} /></button>
+
+      <div className="forma-home__manifesto">
+        <div className="forma-home__manifesto-heading">
+          <span className="forma-home__section-tag">A PRACTICAL KIND OF INNOVATION</span>
+          <h2>Good ideas deserve<br />to <em>leave the page.</em></h2>
+        </div>
+        <p>We work across hardware and software to turn complex concepts into clear, testable, buildable products. No theatre. Just thoughtful engineering and real progress.</p>
+        <button onClick={() => goTo('catalog')}>See what we make <ArrowRightIcon size={16} /></button>
       </div>
+
+      <div className="forma-home__capabilities" aria-label="ProtoLabs capabilities">
+        <div><span>01</span><strong>Electronics design</strong><i>↗</i></div>
+        <div><span>02</span><strong>Embedded systems</strong><i>↗</i></div>
+        <div><span>03</span><strong>Rapid prototyping</strong><i>↗</i></div>
+        <div><span>04</span><strong>Product development</strong><i>↗</i></div>
+      </div>
+
       <style>{`
-        #hero.pl-film{display:block!important;position:relative!important;padding:0!important;border:0!important;overflow:hidden!important;background:#11120f!important;color:#f6f1e7!important}
-        #hero.pl-film:before,#hero.pl-film:after{content:none!important}
-        .pl-film{--film-orange:#d96c36;--film-paper:#f4eedf}
-        .pl-film__frame{height:clamp(620px,calc(100svh - 76px),1000px);min-height:620px;position:relative;isolation:isolate;overflow:hidden;background:#151613}
-        .pl-film__image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center 52%;filter:grayscale(1) brightness(.61) contrast(1.12);transform:none!important;animation:none!important}
-        .pl-film__veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,10,9,.86) 0%,rgba(9,10,9,.61) 34%,rgba(9,10,9,.13) 74%,rgba(9,10,9,.12) 100%),linear-gradient(0deg,rgba(9,10,9,.52),transparent 24%,rgba(9,10,9,.2));z-index:1}
-        .pl-film__topline{position:absolute;z-index:2;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:23px clamp(24px,5.2vw,84px);border-bottom:1px solid rgba(255,255,255,.22);font-size:10px;font-weight:700;letter-spacing:.16em;color:rgba(246,241,231,.78)}
-        .pl-film__topline span:first-child{display:flex;align-items:center;gap:10px}.pl-film__topline i{width:7px;height:7px;background:var(--film-orange);border-radius:50%;display:inline-block}
-        .pl-film__copy{position:absolute;z-index:2;left:clamp(24px,9.2vw,150px);top:50%;transform:translateY(-48%);width:min(780px,70%);padding:0}
-        .pl-film__eyebrow{font-size:10px;letter-spacing:.2em;font-weight:750;color:rgba(246,241,231,.72);margin:0 0 clamp(22px,3vh,34px)}
-        .pl-film__copy h1{font-size:clamp(76px,10.8vw,164px)!important;line-height:.82!important;letter-spacing:-.09em!important;font-weight:500!important;color:#f6f1e7!important;margin:0!important;text-wrap:balance}
-        .pl-film__copy h1 em{font-style:normal;color:var(--film-orange)}
-        .pl-film__description{max-width:420px;margin:30px 0 0;font-size:clamp(14px,1.25vw,18px);line-height:1.75;color:rgba(246,241,231,.78)}
-        .pl-film__actions{display:flex;align-items:center;gap:28px;margin-top:32px}
-        .pl-film__primary{display:inline-flex;align-items:center;gap:25px;background:var(--film-orange);color:#fff7ed;padding:16px 20px;font-size:12px;font-weight:750;transition:background .2s,transform .2s}
-        .pl-film__primary:hover{background:#b95127;transform:translateY(-2px)}
-        .pl-film__secondary{display:flex;align-items:center;gap:10px;color:#f6f1e7;font-size:12px;font-weight:700}.pl-film__secondary span{font-size:18px;color:var(--film-orange)}
-        .pl-film__image-label{position:absolute;z-index:2;left:clamp(24px,5.2vw,84px);right:clamp(24px,5.2vw,84px);bottom:70px;display:flex;justify-content:space-between;gap:18px;font-size:9px;font-weight:700;letter-spacing:.16em;color:rgba(246,241,231,.62)}
-        .pl-film__image-label span:first-child{color:var(--film-orange)}
-        .pl-film__scroll{position:absolute;z-index:2;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:13px;padding:18px;border-top:1px solid rgba(246,241,231,.2);font-size:9px;letter-spacing:.18em;font-weight:750;color:rgba(246,241,231,.68)}
-        .pl-film__scroll i{width:28px;height:1px;background:var(--film-orange);display:inline-block}
-        .pl-film__intro{display:grid;grid-template-columns:1.1fr .8fr auto;align-items:end;gap:clamp(24px,4vw,70px);padding:clamp(62px,8vw,118px) clamp(24px,9.2vw,150px);background:var(--film-paper);color:#292a27}
-        .pl-film__label{font-size:10px;letter-spacing:.18em;font-weight:800;color:#b95127}
-        .pl-film__intro h2{font-size:clamp(36px,4.4vw,66px);font-weight:500;line-height:.98;letter-spacing:-.065em;margin:20px 0 0;color:#292a27}
-        .pl-film__intro h2 em{font-style:normal;color:#b95127}
-        .pl-film__intro>p{font-size:15px;line-height:1.8;color:#66635b;max-width:400px;margin:0}
-        .pl-film__intro>button{display:flex;align-items:center;gap:16px;white-space:nowrap;border-bottom:1px solid #b95127;padding:0 0 12px;color:#292a27;font-size:12px;font-weight:750}
-        @media(min-width:1600px){.pl-film__copy{left:max(9.2vw,calc((100vw - 1440px)/2))}.pl-film__frame{height:calc(100svh - 88px);max-height:1050px}}
-        @media(max-width:760px){.pl-film__frame{height:calc(100svh - 64px);min-height:600px;max-height:860px}.pl-film__image{object-position:58% center}.pl-film__veil{background:linear-gradient(90deg,rgba(9,10,9,.78),rgba(9,10,9,.38) 80%),linear-gradient(0deg,rgba(9,10,9,.6),transparent 40%)}.pl-film__topline{padding:17px 18px;font-size:8px;letter-spacing:.09em}.pl-film__topline span:last-child{max-width:110px;text-align:right}.pl-film__copy{left:23px;top:47%;width:calc(100% - 46px);transform:translateY(-42%)}.pl-film__copy h1{font-size:clamp(70px,15vw,112px)!important}.pl-film__description{max-width:340px;margin-top:23px}.pl-film__actions{gap:18px;flex-wrap:wrap;margin-top:25px}.pl-film__primary{padding:14px 15px;gap:15px}.pl-film__image-label{left:22px;right:22px;bottom:65px;font-size:7px;letter-spacing:.09em}.pl-film__intro{grid-template-columns:1fr;gap:23px;padding:58px 24px}.pl-film__intro>button{justify-self:start}}
-        @media(max-height:700px) and (min-width:761px){.pl-film__frame{height:calc(100svh - 70px);min-height:540px}.pl-film__copy h1{font-size:clamp(66px,8.5vw,118px)!important}.pl-film__description{margin-top:20px}.pl-film__actions{margin-top:22px}}
-        @media(prefers-reduced-motion:reduce){.pl-film *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+        #hero.forma-home{display:block!important;position:relative!important;padding:0!important;margin:0!important;overflow:hidden!important;background:#171916!important;color:#f4eedf!important;border:0!important;isolation:isolate}
+        #hero.forma-home:before,#hero.forma-home:after{content:none!important}
+        .forma-home{--fh-paper:#f4eedf;--fh-ink:#292b28;--fh-orange:#d96c36;--fh-line:rgba(244,238,223,.19)}
+        .forma-home__stage{height:calc(100svh - 76px);min-height:680px;max-height:1100px;position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 73% 48%,#28352a 0%,#1b211b 31%,#171916 67%)}
+        .forma-home__grain{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E")}
+        .forma-home__top{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:23px clamp(24px,5.3vw,86px);border-bottom:1px solid var(--fh-line);font-size:9px;letter-spacing:.16em;font-weight:750;color:rgba(244,238,223,.68)}
+        .forma-home__index{display:flex;align-items:center;gap:10px}.forma-home__index i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--fh-orange)}.forma-home__index span{color:var(--fh-orange)}
+        .forma-home__discipline{text-align:right}
+        .forma-home__copy{position:absolute;z-index:4;left:clamp(28px,9vw,148px);top:49%;transform:translateY(-48%);width:min(44%,620px)}
+        .forma-home__kicker{display:flex;align-items:center;gap:12px;margin:0 0 clamp(24px,3.5vh,38px);font-size:9px;letter-spacing:.2em;font-weight:800;color:rgba(244,238,223,.65)}
+        .forma-home__kicker span{color:var(--fh-orange)}
+        .forma-home__copy h1{font-size:clamp(88px,10.4vw,166px)!important;line-height:.79!important;letter-spacing:-.095em!important;font-weight:500!important;margin:0!important;color:var(--fh-paper)!important;text-wrap:balance}
+        .forma-home__copy h1 em{font-style:normal;color:var(--fh-orange)}
+        .forma-home__summary{max-width:400px;margin:32px 0 0;font-size:clamp(14px,1.1vw,17px);line-height:1.75;color:rgba(244,238,223,.72)}
+        .forma-home__actions{display:flex;align-items:center;flex-wrap:wrap;gap:25px;margin-top:31px}
+        .forma-home__primary{display:inline-flex;align-items:center;gap:25px;min-height:50px;padding:0 18px;background:var(--fh-orange);color:#fff7ed;font-size:11px;font-weight:800;transition:background .2s,transform .2s}
+        .forma-home__primary:hover{background:#b95127;transform:translateY(-2px)}
+        .forma-home__text-link{display:flex;align-items:center;gap:11px;color:var(--fh-paper);font-size:11px;font-weight:750}
+        .forma-home__text-link span{font-size:17px;color:var(--fh-orange)}
+        .forma-home__product{position:absolute;z-index:2;top:7%;right:1.2%;bottom:5%;width:61%;pointer-events:none}
+        .forma-home__product-halo{position:absolute;inset:11% 5% 9%;border-radius:50%;background:radial-gradient(ellipse,rgba(116,151,105,.15),rgba(116,151,105,.035) 42%,transparent 70%);filter:blur(15px)}
+        .forma-home__product .pl3d-stage{position:absolute;inset:0;overflow:visible!important}
+        .forma-home__product .pl3d-webgl-mount{position:absolute;inset:0}
+        .forma-home__product .pl3d-webgl-canvas{width:100%!important;height:100%!important;display:block}
+        .forma-home__product .pl3d-caption,.forma-home__product .pl3d-axis{display:none!important}
+        .forma-home__product .pl3d-fallback{inset:14% 6%!important}
+        .forma-home__product-note{position:absolute;z-index:4;right:6%;bottom:10%;display:flex;gap:16px;align-items:flex-start;padding-top:10px;border-top:1px solid rgba(244,238,223,.25);color:rgba(244,238,223,.55);font-size:8px;line-height:1.6;letter-spacing:.12em}
+        .forma-home__product-note span:first-child{color:var(--fh-orange);font-weight:800}
+        .forma-home__baseline{position:absolute;z-index:5;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding:18px clamp(24px,5.3vw,86px);border-top:1px solid var(--fh-line);font-size:8px;letter-spacing:.15em;font-weight:750;color:rgba(244,238,223,.48)}
+        .forma-home__baseline>span:last-child{text-align:right}.forma-home__baseline b{color:var(--fh-orange)}
+        .forma-home__scroll{display:flex;align-items:center;gap:12px;color:rgba(244,238,223,.72)}.forma-home__scroll i{width:26px;height:1px;background:var(--fh-orange)}
+        .forma-home__manifesto{display:grid;grid-template-columns:1.1fr .8fr auto;align-items:end;gap:clamp(24px,4vw,70px);padding:clamp(68px,8vw,118px) clamp(28px,9vw,148px);background:var(--fh-paper);color:var(--fh-ink)}
+        .forma-home__section-tag{font-size:9px;letter-spacing:.17em;font-weight:850;color:#b95127}
+        .forma-home__manifesto h2{font-size:clamp(40px,5vw,74px);line-height:.96;letter-spacing:-.075em;font-weight:500;margin:20px 0 0;color:var(--fh-ink)}
+        .forma-home__manifesto h2 em{font-style:normal;color:#b95127}
+        .forma-home__manifesto>p{max-width:400px;margin:0;color:#656158;font-size:14px;line-height:1.85}
+        .forma-home__manifesto>button{display:flex;align-items:center;gap:16px;white-space:nowrap;padding:0 0 12px;border-bottom:1px solid #b95127;color:var(--fh-ink);font-size:11px;font-weight:800}
+        .forma-home__capabilities{display:grid;grid-template-columns:repeat(4,1fr);background:#e9e1d2;color:var(--fh-ink);border-top:1px solid #d9d0c0}
+        .forma-home__capabilities>div{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;padding:24px clamp(16px,2.6vw,42px);border-right:1px solid #d9d0c0}
+        .forma-home__capabilities>div:last-child{border-right:0}.forma-home__capabilities span{font-size:9px;color:#b95127;font-weight:800}.forma-home__capabilities strong{font-size:11px;font-weight:750}.forma-home__capabilities i{font-style:normal;color:#b95127}
+        @media(min-width:1600px){.forma-home__copy{left:max(9vw,calc((100vw - 1440px)/2))}.forma-home__product{right:3%;width:59%}}
+        @media(max-width:1000px){.forma-home__copy{width:48%;left:5%}.forma-home__copy h1{font-size:clamp(78px,10vw,120px)!important}.forma-home__product{right:-6%;width:65%}.forma-home__summary{max-width:340px}}
+        @media(max-width:760px){.forma-home__stage{height:calc(100svh - 68px);min-height:690px;max-height:920px}.forma-home__top{padding:17px 18px;font-size:7px;letter-spacing:.09em}.forma-home__discipline{max-width:118px}.forma-home__copy{left:22px;top:34%;transform:none;width:calc(100% - 44px)}.forma-home__kicker{font-size:8px;margin-bottom:18px}.forma-home__copy h1{font-size:clamp(72px,17vw,116px)!important}.forma-home__summary{max-width:330px;margin-top:20px;font-size:13px}.forma-home__actions{gap:17px;margin-top:21px}.forma-home__primary{min-height:46px;padding:0 14px;gap:15px}.forma-home__text-link{font-size:10px}.forma-home__product{top:34%;right:-7%;bottom:7%;width:94%;opacity:.88}.forma-home__product-halo{inset:12% 3% 8%}.forma-home__product-note{right:9%;bottom:11%;font-size:7px}.forma-home__baseline{grid-template-columns:1fr auto;padding:15px 18px;font-size:7px;letter-spacing:.08em}.forma-home__baseline>span:last-child{display:none}.forma-home__manifesto{grid-template-columns:1fr;gap:23px;padding:58px 24px}.forma-home__manifesto h2{font-size:clamp(40px,10vw,60px)}.forma-home__manifesto>button{justify-self:start}.forma-home__capabilities{grid-template-columns:1fr 1fr}.forma-home__capabilities>div{padding:17px 14px;border-bottom:1px solid #d9d0c0}.forma-home__capabilities>div:nth-child(2){border-right:0}.forma-home__capabilities strong{font-size:10px}}
+        @media(max-height:760px) and (min-width:761px){.forma-home__stage{min-height:620px}.forma-home__copy h1{font-size:clamp(76px,8.7vw,128px)!important}.forma-home__summary{margin-top:22px}.forma-home__actions{margin-top:22px}.forma-home__product{top:4%;bottom:2%}}
+        @media(prefers-reduced-motion:reduce){.forma-home__primary{transition:none}.forma-home__primary:hover{transform:none}}
       `}</style>
     </section>
   );
