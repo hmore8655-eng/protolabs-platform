@@ -105,7 +105,7 @@ const ProjectCard = ({ proj, idx, onQuickStart }) => {
         </div>
 
         <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', lineHeight: 1.35, color: 'var(--text-dark)' }}>
-          {proj.title}
+          <a href={`/project/${encodeURIComponent(proj.id)}`} style={{color:'inherit',textDecoration:'none'}} aria-label={`View ${proj.title} project details}>{proj.title}<span style={{color:'var(--accent-orange)',marginLeft:'.4rem'}}>↗</span></a>
         </h3>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.35rem', minHeight: '3.6em', lineHeight: 1.6 }}>
@@ -144,14 +144,12 @@ const ProjectCard = ({ proj, idx, onQuickStart }) => {
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '3px' }}>Time: {proj.duration}</div>
         </div>
 
-        <button
-          onClick={() => onQuickStart(proj)}
-          className="btn btn-primary"
-          style={{ padding: '0.65rem 1.15rem', fontSize: '0.875rem' }}
-        >
-          <span>Select Solution</span>
-          <ArrowRightIcon size={16} />
-        </button>
+        <div style={{display:'flex',flexWrap:'wrap',gap:'.55rem',justifyContent:'flex-end'}}>
+          <a href={`/project/${encodeURIComponent(proj.id)}`} className="btn btn-outline" style={{padding:'.65rem .9rem',fontSize:'.82rem'}}>View details <ArrowRightIcon size={15} /></a>
+          <button onClick={() => onQuickStart(proj)} className="btn btn-primary" style={{padding:'.65rem .9rem',fontSize:'.82rem'}}>
+            <span>Enquire</span><ArrowRightIcon size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );
