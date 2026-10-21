@@ -7,6 +7,7 @@ export const HeroSection = () => {
   return (
     <section className="forma-home" id="hero" aria-label="ProtoLabs product engineering">
       <div className="forma-home__stage">
+        <div className="forma-home__visuals" aria-hidden="true"><div className="forma-home__visual forma-home__visual--circuit" /><div className="forma-home__visual forma-home__visual--workbench" /><div className="forma-home__visual forma-home__visual--robotics" /></div>
         <div className="forma-home__grain" aria-hidden="true" />
         <div className="forma-home__top">
           <span className="forma-home__index"><i /> PROTOLABS <span>/</span> ENGINEERING STUDIO</span>
@@ -14,9 +15,9 @@ export const HeroSection = () => {
         </div>
 
         <div className="forma-home__copy">
-          <p className="forma-home__kicker"><span>01</span> IDEAS, BUILT INTO REALITY</p>
-          <h1>Make it<br /><em>matter.</em></h1>
-          <p className="forma-home__summary">From a first sketch to a working system. We bring electronics, embedded software and product thinking together to make ambitious ideas tangible.</p>
+          <p className="forma-home__kicker"><span>01</span> THINK IT. BUILD IT. MAKE IT REAL.</p>
+          <h1>Curiosity<br /><em>in motion.</em></h1>
+          <p className="forma-home__summary">We turn bold ideas into working things — blending electronics, embedded intelligence and hands-on making to bring tomorrow a little closer.</p>
           <div className="forma-home__actions">
             <button className="forma-home__primary" onClick={() => goTo('catalog')}>Explore projects <ArrowRightIcon size={16} /></button>
             <button className="forma-home__text-link" onClick={() => goTo('contact')}>Bring us a challenge <span>↗</span></button>
@@ -24,7 +25,7 @@ export const HeroSection = () => {
         </div>
 
         <div className="forma-home__baseline">
-          <span>DESIGN WITH INTENT. BUILD WITH PRECISION.</span>
+          <span>FROM FIRST SPARK TO FIRST PROTOTYPE.</span>
           <span className="forma-home__scroll">SCROLL TO EXPLORE <i /></span>
           <span>INDEPENDENT PRODUCT ENGINEERING <b>©</b></span>
         </div>
@@ -32,18 +33,18 @@ export const HeroSection = () => {
 
       <div className="forma-home__manifesto">
         <div className="forma-home__manifesto-heading">
-          <span className="forma-home__section-tag">A PRACTICAL KIND OF INNOVATION</span>
-          <h2>Good ideas deserve<br />to <em>leave the page.</em></h2>
+          <span className="forma-home__section-tag">THE BEAUTY IS IN THE BUILD</span>
+          <h2>Imagine more.<br /><em>Make something real.</em></h2>
         </div>
-        <p>We work across hardware and software to turn complex concepts into clear, testable, buildable products. No theatre. Just thoughtful engineering and real progress.</p>
-        <button onClick={() => goTo('catalog')}>See what we make <ArrowRightIcon size={16} /></button>
+        <p>Ideas get interesting when you can hold them, test them, break them, and make them better. We bring hardware, software and imagination to the same workbench.</p>
+        <button onClick={() => goTo('catalog')}>Explore the work <ArrowRightIcon size={16} /></button>
       </div>
 
       <div className="forma-home__capabilities" aria-label="ProtoLabs capabilities">
-        <div><span>01</span><strong>Electronics design</strong><i>↗</i></div>
-        <div><span>02</span><strong>Embedded systems</strong><i>↗</i></div>
-        <div><span>03</span><strong>Rapid prototyping</strong><i>↗</i></div>
-        <div><span>04</span><strong>Product development</strong><i>↗</i></div>
+        <div><span>01</span><strong>Shape the hardware</strong><i>↗</i></div>
+        <div><span>02</span><strong>Give it intelligence</strong><i>↗</i></div>
+        <div><span>03</span><strong>Prototype the possible</strong><i>↗</i></div>
+        <div><span>04</span><strong>Build what’s next</strong><i>↗</i></div>
       </div>
 
       <style>{`
