@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ProtoLabsLogoHorizontal } from '../common/ProtoLabsLogo';
+import { Hero3DStructure } from './Hero3DStructure';
 
 const sceneFor = (project) => {
   const title = (project?.title || '').toLowerCase();
@@ -22,7 +23,9 @@ export const ProjectDetailPage = ({ projectId }) => {
     </main>;
   }
 
-  const price = typeof project.price === 'number' ? '₹' + project.price.toLocaleString('en-IN') : project.price;
+  const hasPrice = (typeof project.price === 'number' && Number.isFinite(project.price)) || (typeof project.price === 'string' && project.price.trim().length > 0);
+  const price = typeof project.price === 'number' ? '₹' + project.price.toLocaleString('en-IN') : (hasPrice ? project.price : 'Request a quote');
+  const useConceptModel = /pcb|circuit|embedded|electronics|hardware|microcontroller|iot|sensor|robot|automation|raspberry|arduino|fpga|controller/i.test([project.title, project.category, project.description].filter(Boolean).join(' '));
   const image = project.image || project.imageUrl || project.coverImage || `https://images.unsplash.com/${sceneFor(project)}?auto=format&fit=crop&w=2400&q=90`;
   const inquiryUrl = '/?project=' + encodeURIComponent(project.title) + '#contact';
 
@@ -35,7 +38,7 @@ export const ProjectDetailPage = ({ projectId }) => {
         .pl-product__back{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
         .pl-product__hero{min-height:min(760px,calc(100vh - 76px));position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#1f2421;color:#f4eedf;padding:clamp(2rem,7vw,7rem) clamp(1rem,7vw,7rem)}
         .pl-product__image{position:absolute;inset:-4%;background-image:linear-gradient(90deg,rgba(19,23,20,.9) 0%,rgba(19,23,20,.62) 48%,rgba(19,23,20,.12) 100%),linear-gradient(0deg,rgba(19,23,20,.8),transparent 55%),url('${image}');background-position:center;background-size:cover;animation:plSceneDrift 24s ease-in-out infinite alternate;transform:scale(1.04)}
-        .pl-product__grid{position:absolute;inset:0;opacity:.17;background-image:linear-gradient(rgba(244,238,223,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(244,238,223,.14) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(90deg,black,transparent 85%);pointer-events:none}
+        .pl-product__model{position:absolute;inset:0;opacity:.9;pointer-events:none;background:radial-gradient(ellipse at 65% 42%,rgba(57,89,66,.32),transparent 56%),linear-gradient(90deg,rgba(19,23,20,.97) 0%,rgba(19,23,20,.8) 42%,rgba(19,23,20,.16) 100%)}\n        .pl-product__model .pl3d-stage{inset:0 0 0 36%;}\n        .pl-product__model .pl3d-caption,.pl-product__model .pl3d-axis{display:none}\n        .pl-product__grid{position:absolute;inset:0;opacity:.17;background-image:linear-gradient(rgba(244,238,223,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(244,238,223,.14) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(90deg,black,transparent 85%);pointer-events:none}
         .pl-product__heroContent{position:relative;z-index:2;max-width:940px;animation:plRise .9s cubic-bezier(.16,1,.3,1) both}
         .pl-product__eyebrow{display:flex;gap:.7rem;align-items:center;color:#f2a47d;text-transform:uppercase;font-size:.68rem;letter-spacing:.2em;font-weight:800}
         .pl-product__eyebrow:before{content:'';width:30px;height:1px;background:var(--orange)}
@@ -60,7 +63,7 @@ export const ProjectDetailPage = ({ projectId }) => {
         .pl-product__bottom a{color:#f2a47d;border-bottom:1px solid #d96c36;padding-bottom:.6rem;white-space:nowrap;font-weight:700}
         @keyframes plSceneDrift{0%{transform:scale(1.04) translate3d(-1%,0,0)}100%{transform:scale(1.15) translate3d(1%,-1%,0)}}
         @keyframes plRise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:760px){.pl-product__hero{min-height:670px}.pl-product__details{grid-template-columns:1fr;width:calc(100% - 2rem)}.pl-product__features{grid-template-columns:1fr}.pl-product__buy{position:static}.pl-product__bottom{align-items:flex-start;flex-direction:column}.pl-product__nav{height:68px}.pl-product__nav svg{max-width:145px}}
+        @media(max-width:760px){.pl-product__model .pl3d-stage{inset:0 0 0 10%;opacity:.72}.pl-product__hero{min-height:670px}.pl-product__details{grid-template-columns:1fr;width:calc(100% - 2rem)}.pl-product__features{grid-template-columns:1fr}.pl-product__buy{position:static}.pl-product__bottom{align-items:flex-start;flex-direction:column}.pl-product__nav{height:68px}.pl-product__nav svg{max-width:145px}}
         @media(prefers-reduced-motion:reduce){.pl-product__image,.pl-product__heroContent{animation:none}.pl-product__cta{transition:none}}
       `}</style>
       <nav className="pl-product__nav">
@@ -95,7 +98,7 @@ export const ProjectDetailPage = ({ projectId }) => {
           <div className="pl-product__sectionLabel">Project package</div>
           <h3 style={{fontSize:'1.25rem',lineHeight:1.35}}>{project.title}</h3>
           <div className="pl-product__price">{price}</div>
-          <p>Listed project price · estimated completion {project.duration || 'to be confirmed'}.</p>
+          <p>{hasPrice ? 'Listed project price' : 'Pricing depends on final scope, components, and deliverables'} · estimated completion {project.duration || 'to be confirmed'}.</p>
           <a className="pl-product__cta" href={inquiryUrl}><span>Enquire about this project</span><span aria-hidden="true">↗</span></a>
           <p className="pl-product__fine">This is a project/service listing, not an instant checkout. Confirm scope, availability, physical hardware, and final quotation with ProtoLabs before ordering.</p>
         </aside>
