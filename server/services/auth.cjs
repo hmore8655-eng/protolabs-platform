@@ -88,7 +88,7 @@ const loginUser = (email, password) => {
     const normalizedEmail = String(email).trim().toLowerCase();
     user = db.data.users.find(u => String(u.email || '').trim().toLowerCase() === normalizedEmail);
   }
-  if (!user) {
+  if (!user || user.role !== 'admin') {
     return { error: 'Admin account not configured' };
   }
 
@@ -127,6 +127,9 @@ const verifyToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded || decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Administrator access required.' });
+    }
     req.user = decoded;
     next();
   } catch (err) {
