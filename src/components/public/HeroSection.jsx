@@ -75,13 +75,13 @@ export const HeroSection = () => {
         .forma-home__product .pl3d-webgl-canvas{display:block;width:100%!important;height:100%!important}
         .forma-home__product .pl3d-caption,.forma-home__product .pl3d-axis{display:none!important}
         .forma-home__product .pl3d-fallback{inset:12% 8%!important}
-        .forma-home__copy{position:absolute;z-index:4;left:clamp(26px,5.4vw,88px);bottom:clamp(78px,10vh,118px);top:auto;transform:none;width:min(46%,650px);padding:0}
-        .forma-home__kicker{display:flex;align-items:center;gap:12px;margin:0 0 22px;font-size:9px;letter-spacing:.19em;font-weight:800;color:rgba(244,238,223,.7)}
+        .forma-home__copy{position:absolute;z-index:4;left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);width:min(820px,calc(100% - 48px));padding:0;text-align:center;display:flex;flex-direction:column;align-items:center}
+        .forma-home__kicker{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 22px;font-size:9px;letter-spacing:.19em;font-weight:800;color:rgba(244,238,223,.7)}
         .forma-home__kicker span{color:var(--orange)}
-        .forma-home__copy h1{margin:0!important;color:#f4f1e9!important;font-size:clamp(82px,11.5vw,176px)!important;line-height:.78!important;letter-spacing:-.09em!important;font-weight:400!important;text-wrap:balance;max-width:8ch}
+        .forma-home__copy h1{margin:0!important;color:#f4f1e9!important;font-size:clamp(82px,11.5vw,176px)!important;line-height:.78!important;letter-spacing:-.09em!important;font-weight:400!important;text-wrap:balance;max-width:none}
         .forma-home__copy h1 em{font-style:normal;color:#e36e36}
-        .forma-home__summary{max-width:390px;margin:25px 0 0;color:rgba(244,238,223,.74);font-size:clamp(13px,1vw,15px);line-height:1.7}
-        .forma-home__actions{display:flex;align-items:center;flex-wrap:wrap;gap:22px;margin-top:24px}
+        .forma-home__summary{max-width:520px;margin:25px auto 0;color:rgba(244,238,223,.74);font-size:clamp(13px,1vw,15px);line-height:1.7}
+        .forma-home__actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:22px;margin-top:28px}
         .forma-home__primary{display:inline-flex;align-items:center;justify-content:center;gap:22px;min-height:46px;padding:0 16px;border:1px solid rgba(244,238,223,.7);background:#f4eedf;color:#171816;font-size:10px;font-weight:800;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
         .forma-home__primary:hover{background:var(--orange);border-color:var(--orange);color:#fff}
         .forma-home__text-link{display:inline-flex;align-items:center;gap:10px;padding:8px 0;border:0;background:transparent;color:#f4eedf;font-size:10px;font-weight:750;cursor:pointer}
@@ -102,16 +102,16 @@ export const HeroSection = () => {
         .forma-home__capabilities>div:hover{background:#f4eedf}.forma-home__capabilities>div:last-child{border-right:0}
         .forma-home__capabilities span{color:#b95127;font-size:9px;font-weight:800}.forma-home__capabilities strong{font-size:11px;font-weight:750}.forma-home__capabilities i{color:#b95127;font-style:normal}
         @media(min-width:1600px){.forma-home__copy{left:7vw}.forma-home__product{left:16%}}
-        @media(max-width:1050px) and (min-width:761px){.forma-home__stage{min-height:660px}.forma-home__product{left:17%;opacity:.88}.forma-home__copy{left:4vw;width:48%;bottom:90px}.forma-home__copy h1{font-size:clamp(78px,10vw,120px)!important}.forma-home__summary{max-width:340px}.forma-home__product-note{right:4vw;width:190px}.forma-home__baseline{font-size:7px;padding-inline:4vw}}
+        @media(max-width:1050px) and (min-width:761px){.forma-home__stage{min-height:660px}.forma-home__product{left:17%;opacity:.88}.forma-home__copy{left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%);width:calc(100% - 64px)}.forma-home__copy h1{font-size:clamp(78px,10vw,120px)!important}.forma-home__summary{max-width:460px}.forma-home__product-note{right:4vw;width:190px}.forma-home__baseline{font-size:7px;padding-inline:4vw}}
         @media(max-width:760px){
           .forma-home__stage{height:auto;min-height:0;max-height:none;padding-top:64px;display:flex;flex-direction:column;overflow:hidden}
           .forma-home__top{position:absolute;top:0;left:0;right:0;min-height:58px;padding:0 17px;font-size:7px;letter-spacing:.08em}
           .forma-home__index{gap:7px}.forma-home__discipline{max-width:120px;line-height:1.6}
-          .forma-home__copy{position:relative;inset:auto;order:1;transform:none;width:auto;margin:34px 21px 20px;padding:0}
+          .forma-home__copy{position:relative;left:auto;top:auto;bottom:auto;inset:auto;order:1;transform:none;width:auto;margin:34px 21px 20px;padding:0;text-align:center;align-items:center}
           .forma-home__kicker{font-size:8px;margin-bottom:18px}
           .forma-home__copy h1{font-size:clamp(74px,17vw,118px)!important;line-height:.82!important;max-width:7ch}
-          .forma-home__summary{max-width:360px;margin-top:19px;font-size:13px}
-          .forma-home__actions{gap:16px;margin-top:20px}
+          .forma-home__summary{max-width:360px;margin:19px auto 0;font-size:13px}
+          .forma-home__actions{justify-content:center;gap:16px;margin-top:20px}
           .forma-home__primary{min-height:44px;padding:0 13px;gap:15px}
           .forma-home__product{position:relative;inset:auto;order:2;flex:none;width:100%;height:clamp(330px,94vw,490px);margin:0;overflow:hidden}
           .forma-home__product-halo{inset:0}
@@ -126,7 +126,7 @@ export const HeroSection = () => {
           .forma-home__capabilities>div:nth-child(2){border-right:0}
           .forma-home__capabilities strong{font-size:10px}
         }
-        @media(max-width:380px){.forma-home__top{padding-inline:11px;font-size:6px}.forma-home__copy{margin-inline:18px}.forma-home__copy h1{font-size:68px!important}.forma-home__actions{align-items:flex-start;flex-direction:column;gap:8px}.forma-home__baseline{padding-inline:11px}.forma-home__capabilities>div{grid-template-columns:auto 1fr;gap:8px}.forma-home__capabilities i{display:none}}
+        @media(max-width:380px){.forma-home__top{padding-inline:11px;font-size:6px}.forma-home__copy{margin-inline:18px}.forma-home__copy h1{font-size:68px!important}.forma-home__actions{align-items:center;flex-direction:column;gap:8px}.forma-home__baseline{padding-inline:11px}.forma-home__capabilities>div{grid-template-columns:auto 1fr;gap:8px}.forma-home__capabilities i{display:none}}
         @media(prefers-reduced-motion:reduce){.forma-home__primary,.forma-home__capabilities>div{transition:none}}
       `}</style>
     </section>
