@@ -85,10 +85,8 @@ const loginWithGoogle = async (idToken) => {
 const loginUser = (email, password) => {
   let user = null;
   if (email) {
-    user = db.data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
-  }
-  if (!user && db.data.users && db.data.users.length > 0) {
-    user = db.data.users[0];
+    const normalizedEmail = String(email).trim().toLowerCase();
+    user = db.data.users.find(u => String(u.email || '').trim().toLowerCase() === normalizedEmail);
   }
   if (!user) {
     return { error: 'Admin account not configured' };
