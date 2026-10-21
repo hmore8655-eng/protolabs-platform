@@ -298,7 +298,7 @@ function saveChatMessage(req, res) {
   db.save();
 
   res.status(201).json(newMessage);
-});
+}
 
 // Portfolio & Testimonials API
 app.get('/api/portfolio', (req, res) => res.json(db.data.portfolio));
