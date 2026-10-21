@@ -71,7 +71,7 @@ export const ProjectDetailPage = ({ projectId }) => {
         <a className="pl-product__back" href="/#catalog">← All projects</a>
       </nav>
       <section className="pl-product__hero">
-        <div className="pl-product__image" role="img" aria-label={`Engineering visual for ${project.title}`} />
+        {useConceptModel ? <div className="pl-product__model" aria-label={`Conceptual 3D electronics visualization for ${project.title}`}><Hero3DStructure /></div> : <div className="pl-product__image" role="img" aria-label={`Engineering visual for ${project.title}`} />}
         <div className="pl-product__grid" />
         <div className="pl-product__heroContent">
           <div className="pl-product__eyebrow">{project.category} / ProtoLabs Project</div>
