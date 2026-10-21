@@ -34,6 +34,8 @@ export const PortfolioSection = () => {
           {categories.map(cat => (
             <button
               key={cat}
+              type="button"
+              aria-pressed={activeCategory === cat}
               onClick={() => setActiveCategory(cat)}
               style={{
                 padding: '0.5rem 1.1rem',
