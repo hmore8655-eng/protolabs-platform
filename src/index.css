@@ -956,3 +956,65 @@ h1, h2, h3, h4, .section-title {
   #portfolio .container > div:nth-child(3) img { transition: none; }
   #portfolio .container > div:nth-child(3) > div:hover img { transform: none; }
 }
+
+
+/* Fifth design pass — visual hierarchy and accessible portfolio controls */
+#portfolio .container > div:nth-child(2) button[aria-pressed="true"] {
+  background: #343638 !important;
+  color: #f4ebdd !important;
+  border-color: #343638 !important;
+}
+#portfolio .container > div:nth-child(2) button[aria-pressed="false"]:hover {
+  background: #e9d8c3 !important;
+  color: #343638 !important;
+  border-color: #d96c36 !important;
+}
+header {
+  background: rgba(244, 235, 221, .94) !important;
+  border-bottom-color: #d8cec0 !important;
+  box-shadow: 0 1px 0 rgba(52,54,56,.025) !important;
+}
+header a, header button {
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+header a:hover {
+  color: #b95127 !important;
+}
+header .btn, header button {
+  border-radius: 3px;
+}
+footer {
+  border-top: 4px solid #d96c36;
+}
+#hero .badge {
+  border-radius: 3px !important;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+#hero .btn-primary {
+  background: #d96c36 !important;
+  border-color: #d96c36 !important;
+  color: #fffaf3 !important;
+}
+#hero .btn-primary:hover {
+  background: #b95127 !important;
+  border-color: #b95127 !important;
+}
+#hero .btn-outline {
+  background: transparent !important;
+  border: 1px solid #a79c8b !important;
+  color: #343638 !important;
+}
+#hero .btn-outline:hover {
+  background: #e9d8c3 !important;
+  border-color: #d96c36 !important;
+}
+@media (max-width: 767px) {
+  header { backdrop-filter: blur(10px); }
+  #portfolio .container > div:nth-child(2) button {
+    flex: 0 0 auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  header a, header button { transition: none; }
+}
