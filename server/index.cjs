@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const multer = require('multer');
 
 const db = require('./db.cjs');
@@ -264,25 +265,36 @@ app.delete('/api/inquiries/:id', verifyToken, (req, res) => {
 // Live Chat API Endpoints (Client - Admin real-time thread messages)
 app.get('/api/chat/threads', verifyToken, (req, res) => {
   if (!db.data.chatThreads) db.data.chatThreads = [];
-  res.json(db.data.chatThreads);
+  res.json(db.data.chatThreads.map(({ clientAccessTokenHash, ...thread }) => thread));
 });
+
+function hashChatAccessToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function hasChatAccess(req, thread) {
+  if (req.isAuthenticatedAdmin) return true;
+  const token = req.get('X-Chat-Token');
+  if (!thread || !thread.clientAccessTokenHash || typeof token !== 'string' || token.length < 32 || token.length > 200) return false;
+  const expected = Buffer.from(thread.clientAccessTokenHash, 'hex');
+  const actual = Buffer.from(hashChatAccessToken(token), 'hex');
+  return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+}
 
 app.get('/api/chat/messages/:threadId', (req, res) => {
   const { threadId } = req.params;
-
-  // Older thread IDs used timestamps (thr_<digits>) and are guessable.
-  // Keep those histories admin-only; new random IDs act as client-held access tokens.
-  if (/^thr_\d+$/.test(threadId)) {
-    return verifyToken(req, res, () => sendChatMessages(threadId, res));
+  if (/^thr_\d+$/.test(threadId) || req.headers.authorization) {
+    return verifyToken(req, res, () => { req.isAuthenticatedAdmin = true; sendChatMessages(threadId, req, res); });
   }
-  return sendChatMessages(threadId, res);
+  return sendChatMessages(threadId, req, res);
 });
 
-function sendChatMessages(threadId, res) {
+function sendChatMessages(threadId, req, res) {
   if (!db.data.chatThreads) db.data.chatThreads = [];
   if (!db.data.chatMessages) db.data.chatMessages = [];
-  const threadExists = db.data.chatThreads.some(thread => thread.id === threadId);
-  if (!threadExists) return res.status(404).json({ error: 'Chat thread not found.' });
+  const thread = db.data.chatThreads.find(item => item.id === threadId);
+  if (!thread) return res.status(404).json({ error: 'Chat thread not found.' });
+  if (!hasChatAccess(req, thread)) return res.status(403).json({ error: 'Chat access token is missing or invalid. Start a new conversation to continue.' });
   const messages = db.data.chatMessages.filter(message => message.threadId === threadId);
   res.set('Cache-Control', 'no-store');
   res.json(messages);
@@ -343,6 +355,14 @@ app.post('/api/chat/messages', limitChatWrites, (req, res) => {
     return res.status(403).json({ error: 'This chat thread requires administrator access. Please start a new conversation.' });
   }
 
+  const existingThread = (db.data.chatThreads || []).find(thread => thread.id === threadId);
+  const accessToken = req.get('X-Chat-Token');
+  if (existingThread) {
+    if (!hasChatAccess(req, existingThread)) return res.status(403).json({ error: 'Chat access token is missing or invalid. Start a new conversation to continue.' });
+  } else if (typeof accessToken !== 'string' || accessToken.length < 32 || accessToken.length > 200) {
+    return res.status(400).json({ error: 'A secure chat access token is required.' });
+  }
+
   return saveChatMessage(req, res);
 });
 
@@ -359,6 +379,7 @@ function saveChatMessage(req, res) {
   if (!thread) {
     thread = {
       id: threadId,
+      clientAccessTokenHash: sender === 'admin' ? undefined : hashChatAccessToken(req.get('X-Chat-Token')),
       clientName: resolvedName,
       clientEmail: resolvedEmail,
       lastMessage: text,
