@@ -25,7 +25,7 @@ const scenes = [
     kicker: 'BUILT TO DO MORE',
     title: <>From prototype<br /><em>to possibility.</em></>,
     note: 'Tested, refined and ready to leave the workbench. This is where your idea goes next.',
-    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3付f3b5a1?auto=format&fit=crop&w=2200&q=88',
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=2200&q=88',
     alt: 'Precision engineering and product development workspace',
     mode: 'dark'
   }
