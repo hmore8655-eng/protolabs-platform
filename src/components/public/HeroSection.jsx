@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowRightIcon } from '../common/Icons';
-import { Hero3DStructure } from './Hero3DStructure';
 
 export const HeroSection = () => {
   const goTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -22,12 +21,6 @@ export const HeroSection = () => {
             <button className="forma-home__primary" onClick={() => goTo('catalog')}>Explore projects <ArrowRightIcon size={16} /></button>
             <button className="forma-home__text-link" onClick={() => goTo('contact')}>Bring us a challenge <span>↗</span></button>
           </div>
-        </div>
-
-        <div className="forma-home__product" aria-label="Three-dimensional electronics development board">
-          <div className="forma-home__product-halo" />
-          <Hero3DStructure />
-          <div className="forma-home__product-note"><span>PL / 001</span><span>COMPUTE MODULE<br />ENGINEERING STUDY</span></div>
         </div>
 
         <div className="forma-home__baseline">
