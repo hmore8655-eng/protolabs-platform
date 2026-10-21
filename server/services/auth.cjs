@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../db.cjs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'protolabs_secret_key_2026_super_secure';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be configured as an environment variable with at least 32 characters.');
+}
 
 const https = require('https');
 
@@ -121,11 +125,6 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1];
-  if (token === 'admin_offline_token') {
-    req.user = { role: 'admin', name: 'ProtoLabs Engineer' };
-    return next();
-  }
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
