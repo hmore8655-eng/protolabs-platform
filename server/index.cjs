@@ -11,6 +11,12 @@ const { loginUser, loginWithGoogle, verifyToken, AUTHORIZED_ADMIN_EMAILS } = req
 const { sendInquiryConfirmation, sendQuoteProposalEmail } = require('./services/email.cjs');
 
 const app = express();
+
+// Public, non-sensitive liveness endpoint for hosting-platform health checks.
+app.get('/health', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.status(200).json({ status: 'ok' });
+});
 const PORT = process.env.PORT || 5000;
 
 // Lightweight in-process rate limit for public chat writes.
