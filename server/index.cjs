@@ -25,10 +25,46 @@ const storage = multer.diskStorage({
     cb(null, `${basename}_${Date.now()}${ext}`);
   }
 });
-const upload = multer({ storage });
+const ALLOWED_UPLOAD_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'application/pdf'
+]);
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+    files: 1
+  },
+  fileFilter: (req, file, cb) => {
+    if (!ALLOWED_UPLOAD_TYPES.has(file.mimetype)) {
+      const error = new Error('Unsupported file type. Upload a JPG, PNG, WEBP, GIF, or PDF file.');
+      error.status = 415;
+      return cb(error);
+    }
+    cb(null, true);
+  }
+});
 
 app.use(cors());
 app.use(express.json());
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    const status = err.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
+    return res.status(status).json({
+      error: err.code === 'LIMIT_FILE_SIZE'
+        ? 'File too large. Maximum upload size is 10 MB.'
+        : 'Upload rejected. Please try a single file no larger than 10 MB.'
+    });
+  }
+  if (err && err.status === 415) {
+    return res.status(415).json({ error: err.message });
+  }
+  next(err);
+});
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 app.use((req, res, next) => {
