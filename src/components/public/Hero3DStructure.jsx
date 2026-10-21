@@ -65,7 +65,7 @@ export const Hero3DStructure = () => {
       .pl3d-orbit{position:absolute;width:74%;height:52%;left:13%;top:24%;border:1px solid rgba(244,238,223,.12);border-radius:50%;transform:rotate(-28deg) rotateX(64deg)}
       .pl3d-orbit--two{width:91%;height:66%;left:4%;top:17%;border-color:rgba(217,108,54,.2);transform:rotate(23deg) rotateX(66deg)}
       .pl3d-board-wrap{position:absolute;inset:8% 0 7%;display:grid;place-items:center;perspective:1200px;animation:pl3d-float 7s ease-in-out infinite}
-      .pl3d-board{position:relative;width:min(76%,440px);aspect-ratio:1.22;transform:rotateX(calc(58deg + var(--pl3d-pointer-y))) rotateY(var(--pl3d-pointer-x)) rotateZ(-31deg);transform-style:preserve-3d;transition:transform .25s ease-out;border:1px solid #69816b;border-radius:9px;background:linear-gradient(135deg,#244b3c 0%,#153528 58%,#10271f 100%);box-shadow:0 22px 0 #10251d,0 26px 0 #0a1914,0 46px 55px rgba(0,0,0,.55),inset 0 0 0 8px rgba(8,24,17,.35),inset 0 0 0 10px rgba(154,179,132,.12)}
+      .pl3d-board{position:relative;width:min(84%,520px);aspect-ratio:1.22;transform:rotateX(calc(58deg + var(--pl3d-pointer-y))) rotateY(var(--pl3d-pointer-x)) rotateZ(-31deg);transform-style:preserve-3d;transition:transform .25s ease-out;border:1px solid #69816b;border-radius:9px;background:linear-gradient(135deg,#244b3c 0%,#153528 58%,#10271f 100%);box-shadow:0 22px 0 #10251d,0 26px 0 #0a1914,0 46px 55px rgba(0,0,0,.55),inset 0 0 0 8px rgba(8,24,17,.35),inset 0 0 0 10px rgba(154,179,132,.12)}
       .pl3d-board:before{content:"";position:absolute;inset:5%;border:1px solid rgba(209,185,116,.3);border-radius:4px;background-image:radial-gradient(circle,rgba(220,188,110,.6) 1px,transparent 1.8px);background-size:18px 18px;opacity:.65}
       .pl3d-board:after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(130deg,rgba(255,255,255,.12),transparent 28%,transparent 68%,rgba(0,0,0,.15));pointer-events:none}
       .pl3d-board-edge{position:absolute;inset:0;transform:translateZ(-12px);border-radius:9px;background:#0b2118;box-shadow:0 12px 0 #08170f}
@@ -114,7 +114,7 @@ export const Hero3DStructure = () => {
       .pl3d-axis{position:absolute;right:7%;bottom:15%;display:flex;gap:8px;color:rgba(244,238,223,.4);font-size:.58rem}
       .pl3d-axis i{position:absolute;width:22px;height:22px;border:1px solid rgba(217,108,54,.45);border-radius:50%;right:-9px;top:-8px}
       @keyframes pl3d-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
-      @media(max-width:900px){.pl3d-board{width:min(72%,390px)}.pl3d-caption--top{top:18%;right:0}.pl3d-caption--bottom{bottom:12%;left:0}.pl3d-axis{display:none}}
+      @media(max-width:900px){.pl3d-board{width:min(78%,430px)}.pl3d-caption--top{top:18%;right:0}.pl3d-caption--bottom{bottom:12%;left:0}.pl3d-axis{display:none}}
       @media(max-width:560px){.pl3d-stage{opacity:.65}.pl3d-board-wrap{inset:15% -14% 9% 8%}.pl3d-board{width:88%}.pl3d-caption{font-size:.48rem}.pl3d-caption--top{top:22%}.pl3d-caption--bottom{bottom:10%}.pl3d-orbit{width:100%;left:0}}
       @media(prefers-reduced-motion:reduce){.pl3d-board-wrap{animation:none}.pl3d-board{transition:none}}
     `}</style>
