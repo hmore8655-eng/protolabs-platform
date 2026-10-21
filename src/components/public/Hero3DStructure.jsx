@@ -163,46 +163,24 @@ export const Hero3DStructure = () => {
         grid.material.opacity = 0.18;
         scene.add(grid);
 
-        let pointerX = 0;
-        let pointerY = 0;
-        let targetX = 0;
-        let targetY = 0;
-        const onPointerMove = event => {
-          const rect = mount.getBoundingClientRect();
-          targetY = ((event.clientX - rect.left) / rect.width - 0.5) * 0.28;
-          targetX = ((event.clientY - rect.top) / rect.height - 0.5) * 0.16;
-        };
-        const onPointerLeave = () => { targetX = 0; targetY = 0; };
-        mount.addEventListener('pointermove', onPointerMove);
-        mount.addEventListener('pointerleave', onPointerLeave);
+        // Keep the product framing calm and deliberate: no idle bobbing or
+        // pointer-driven rotation that makes the hardware drift around the hero.
+        board.rotation.set(-0.07, 0.08, 0);
+        board.position.set(0, 0, 0);
+        orbit.rotation.z = -0.28;
 
         const resize = () => {
           if (!mount.clientWidth || !mount.clientHeight) return;
           camera.aspect = mount.clientWidth / mount.clientHeight;
           camera.updateProjectionMatrix();
           renderer.setSize(mount.clientWidth, mount.clientHeight);
+          renderer.render(scene, camera);
         };
         observer = new ResizeObserver(resize);
         observer.observe(mount);
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const clock = new THREE.Clock();
-        const animate = () => {
-          if (disposed) return;
-          frameId = requestAnimationFrame(animate);
-          const t = clock.getElapsedTime();
-          pointerX += (targetX - pointerX) * 0.035;
-          pointerY += (targetY - pointerY) * 0.035;
-          board.rotation.y = (reducedMotion ? 0.08 : Math.sin(t * 0.22) * 0.08) + pointerX;
-          board.rotation.x = -0.07 + pointerY;
-          board.position.y = reducedMotion ? 0 : Math.sin(t * 0.7) * 0.08;
-          orbit.rotation.z = -0.28 + (reducedMotion ? 0 : t * 0.025);
-          renderer.render(scene, camera);
-        };
-        animate();
+        renderer.render(scene, camera);
 
         cleanup = () => {
-          mount.removeEventListener('pointermove', onPointerMove);
-          mount.removeEventListener('pointerleave', onPointerLeave);
           observer?.disconnect();
           if (frameId) cancelAnimationFrame(frameId);
           scene.traverse(object => {
