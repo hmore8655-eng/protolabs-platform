@@ -21,7 +21,7 @@ import { LiveChatWidget } from './components/common/LiveChatWidget';
 const MainAppContent = () => {
   const { isAdminView, isAdminLoggedIn, toggleView, logoutAdmin } = useApp();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState('');
+  const [selectedProject, setSelectedProject] = useState(() => new URLSearchParams(window.location.search).get('project') || '');
 
   useEffect(() => {
     const handleKeyDown = (e) => {
