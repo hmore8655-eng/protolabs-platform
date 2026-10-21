@@ -192,7 +192,7 @@ app.delete('/api/inquiries/:id', verifyToken, (req, res) => {
 });
 
 // Live Chat API Endpoints (Client - Admin real-time thread messages)
-app.get('/api/chat/threads', (req, res) => {
+app.get('/api/chat/threads', verifyToken, (req, res) => {
   if (!db.data.chatThreads) db.data.chatThreads = [];
   res.json(db.data.chatThreads);
 });
@@ -235,6 +235,17 @@ app.delete('/api/chat/threads/:id', verifyToken, (req, res) => {
 app.post('/api/chat/messages', (req, res) => {
   const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
   if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
+  if (sender === 'admin') {
+    return verifyToken(req, res, () => {
+      req.isAuthenticatedAdmin = true;
+      saveChatMessage(req, res);
+    });
+  }
+  return saveChatMessage(req, res);
+});
+
+function saveChatMessage(req, res) {
+  const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
 
   if (!db.data.chatThreads) db.data.chatThreads = [];
   if (!db.data.chatMessages) db.data.chatMessages = [];
