@@ -84,7 +84,12 @@ export const HeroSection = () => {
         .pl-hero__proof{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:2.8rem;padding-top:1.25rem;border-top:1px solid rgba(245,242,237,.2);color:rgba(245,242,237,.67);font-size:.74rem}
         .pl-hero__proof span{display:inline-flex;align-items:center;gap:.45rem}
         .pl-hero__proof svg{color:var(--pl-orange)}
-        .pl-hero__visual{position:relative;min-height:480px;align-self:stretch;isolation:isolate}
+        .pl-hero__visual{position:relative;min-height:520px;align-self:stretch;isolation:isolate}
+        .pl-hero__visual:before{content:'';position:absolute;inset:8% 0 7%;background:radial-gradient(ellipse at 52% 48%,rgba(116,143,105,.17),transparent 53%);pointer-events:none}
+        .pl-hero__visual:after{content:'';position:absolute;inset:7% 2% 8% 0;border:1px solid rgba(244,241,235,.09);pointer-events:none;mask-image:linear-gradient(135deg,black,transparent 72%)}
+        .pl-hero__visual-label{z-index:3}
+        .pl-hero__callout{z-index:3}
+        .pl-hero__visual-index{z-index:3}
         .pl-hero__visual-label{position:absolute;right:0;top:1rem;display:flex;align-items:center;gap:.55rem;color:rgba(245,242,237,.72);font-size:.62rem;letter-spacing:.18em}
         .pl-live-dot{width:7px;height:7px;border-radius:50%;background:var(--pl-orange);box-shadow:0 0 18px rgba(240,107,61,.8)}
         .pl-hero__callout{position:absolute;display:flex;align-items:center;gap:.7rem;color:rgba(245,242,237,.7);font-size:.6rem;letter-spacing:.16em}
@@ -107,8 +112,8 @@ export const HeroSection = () => {
         .pl-capability__arrow{margin-left:auto;color:rgba(245,242,237,.45);transition:color .2s,transform .2s}
         .pl-capability:hover .pl-capability__arrow{color:var(--pl-orange);transform:translate(2px,-2px)}
         @keyframes pl-hero-drift{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.09) translate3d(-1.2%,.6%,0)}}
-        @media(max-width:900px){.pl-hero{padding-top:5rem;min-height:unset}.pl-hero__inner{grid-template-columns:1fr;min-height:unset}.pl-hero__copy{padding:1rem 0 2rem}.pl-hero__visual{position:absolute;inset:0 0 auto 25%;min-height:540px;opacity:.82;z-index:0;pointer-events:none}.pl-hero__visual>*:not(.pl3d-stage){pointer-events:auto}.pl-hero__image{left:0}.pl-hero__shade{background:linear-gradient(90deg,#151714 0%,rgba(21,23,20,.91) 48%,rgba(21,23,20,.45) 100%),linear-gradient(0deg,#151714 0%,transparent 60%)}.pl-hero__proof{gap:.8rem}.pl-hero__capabilities-inner{grid-template-columns:1fr}.pl-capability,.pl-capability+.pl-capability{padding:1.15rem 0;border-right:0;border-bottom:1px solid rgba(245,242,237,.14)}.pl-capability:last-child{border-bottom:0}.pl-capability__text small{max-width:unset}}
-        @media(max-width:560px){.pl-hero h1{font-size:clamp(3rem,13vw,4.5rem)}.pl-hero__eyebrow{font-size:.58rem;letter-spacing:.14em}.pl-hero__proof{display:grid;grid-template-columns:1fr 1fr;font-size:.68rem}.pl-hero__visual-label{right:0;top:0}.pl-hero__callout--top{top:30%;right:0}.pl-hero__callout--bottom{bottom:25%;right:0}.pl-hero__visual-index{display:none}}
+        @media(max-width:900px){.pl-hero{padding-top:5rem;min-height:unset}.pl-hero__inner{grid-template-columns:1fr;min-height:unset}.pl-hero__copy{padding:1rem 0 2rem}.pl-hero__visual{position:absolute;inset:0 0 auto 22%;min-height:580px;opacity:.86;z-index:0;pointer-events:none}.pl-hero__visual>*:not(.pl3d-stage){pointer-events:auto}.pl-hero__image{left:0}.pl-hero__shade{background:linear-gradient(90deg,#151714 0%,rgba(21,23,20,.91) 48%,rgba(21,23,20,.45) 100%),linear-gradient(0deg,#151714 0%,transparent 60%)}.pl-hero__proof{gap:.8rem}.pl-hero__capabilities-inner{grid-template-columns:1fr}.pl-capability,.pl-capability+.pl-capability{padding:1.15rem 0;border-right:0;border-bottom:1px solid rgba(245,242,237,.14)}.pl-capability:last-child{border-bottom:0}.pl-capability__text small{max-width:unset}}
+        @media(max-width:560px){.pl-hero h1{font-size:clamp(3rem,13vw,4.5rem)}.pl-hero__eyebrow{font-size:.58rem;letter-spacing:.14em}.pl-hero__proof{display:grid;grid-template-columns:1fr 1fr;font-size:.68rem}.pl-hero__visual-label{right:0;top:0}.pl-hero__visual:after{inset:10% 0 12% 0}.pl-hero__callout--top{top:30%;right:0}.pl-hero__callout--bottom{bottom:25%;right:0}.pl-hero__visual-index{display:none}}
         @media(prefers-reduced-motion:reduce){.pl-hero__image{animation:none}.pl-button{transition:none}}
       `}</style>
     </section>
