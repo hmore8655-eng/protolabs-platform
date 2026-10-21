@@ -476,8 +476,34 @@ app.put('/api/settings', verifyToken, (req, res) => {
   res.json({ hero: db.data.hero, settings: db.data.settings });
 });
 
+function matchesAllowedFileSignature(filePath, mimetype) {
+  const fd = fs.openSync(filePath, 'r');
+  const header = Buffer.alloc(16);
+  let bytesRead;
+  try {
+    bytesRead = fs.readSync(fd, header, 0, header.length, 0);
+  } finally {
+    fs.closeSync(fd);
+  }
+  const bytes = header.subarray(0, bytesRead);
+
+  if (mimetype === 'image/jpeg') return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimetype === 'image/png') return bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  if (mimetype === 'image/gif') return bytes.length >= 6 && ['GIF87a', 'GIF89a'].includes(bytes.toString('ascii', 0, 6));
+  if (mimetype === 'image/webp') return bytes.length >= 12 && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
+  if (mimetype === 'application/pdf') return bytes.length >= 5 && bytes.toString('ascii', 0, 5) === '%PDF-';
+  return false;
+}
+
 app.post('/api/upload', verifyToken, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  // MIME type alone is user-controlled; confirm the uploaded bytes match it.
+  if (!matchesAllowedFileSignature(req.file.path, req.file.mimetype)) {
+    fs.unlink(req.file.path, () => {});
+    return res.status(415).json({ error: 'File contents do not match an allowed image or PDF type.' });
+  }
+
   const fileUrl = `/uploads/${req.file.filename}`;
   res.json({ success: true, fileUrl, filename: req.file.filename });
 });
