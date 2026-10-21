@@ -9,6 +9,10 @@ export const Header = () => {
 
   const scrollToSection = (id) => {
     setIsMobileMenuOpen(false);
+    if (id === 'why-us') {
+      window.location.href = '/capabilities';
+      return;
+    }
     if (id === 'portfolio') {
       window.location.href = '/portfolio';
       return;
