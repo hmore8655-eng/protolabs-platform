@@ -258,10 +258,24 @@ app.get('/api/chat/threads', verifyToken, (req, res) => {
 
 app.get('/api/chat/messages/:threadId', (req, res) => {
   const { threadId } = req.params;
-  if (!db.data.chatMessages) db.data.chatMessages = [];
-  const messages = db.data.chatMessages.filter(m => m.threadId === threadId);
-  res.json(messages);
+
+  // Older thread IDs used timestamps (thr_<digits>) and are guessable.
+  // Keep those histories admin-only; new random IDs act as client-held access tokens.
+  if (/^thr_\d+$/.test(threadId)) {
+    return verifyToken(req, res, () => sendChatMessages(threadId, res));
+  }
+  return sendChatMessages(threadId, res);
 });
+
+function sendChatMessages(threadId, res) {
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  if (!db.data.chatMessages) db.data.chatMessages = [];
+  const threadExists = db.data.chatThreads.some(thread => thread.id === threadId);
+  if (!threadExists) return res.status(404).json({ error: 'Chat thread not found.' });
+  const messages = db.data.chatMessages.filter(message => message.threadId === threadId);
+  res.set('Cache-Control', 'no-store');
+  res.json(messages);
+}
 
 app.put('/api/chat/threads/:id/seen', verifyToken, (req, res) => {
   const { id } = req.params;
