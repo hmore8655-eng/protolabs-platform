@@ -17,7 +17,7 @@ export const PortfolioPage = () => {
     <div className="portfolio-page">
       <style>{`
         .portfolio-page{--pp-paper:#f4eedf;--pp-ink:#292b29;--pp-muted:#77786f;--pp-orange:#d96c36;--pp-line:#d9d0c0;background:var(--pp-paper);color:var(--pp-ink);min-height:100vh}
-        .pp-wrap{width:min(1440px,100% - 9vw);margin-inline:auto}
+        .pp-wrap{width:min(1440px,calc(100% - 9vw));margin-inline:auto}
         .pp-nav{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--pp-line)}
         .pp-nav__links{display:flex;align-items:center;gap:clamp(1rem,2.5vw,2.6rem);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
         .pp-nav__links a{transition:color .2s}.pp-nav__links a:hover,.pp-nav__links a[aria-current="page"]{color:var(--pp-orange)}
