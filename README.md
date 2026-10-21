@@ -33,6 +33,7 @@ ProtoLabs is a full-stack engineering marketplace, hardware showcase, and propos
 
 ```text
 protolabs-platform/
+├── mcp/                    # Claude Desktop MCP configuration & setup (GitHub & Render integration)
 ├── public/                 # Static assets, sitemap.xml, robots.txt, favicon.svg
 ├── server/
 │   ├── data/               # Local JSON database failover cache
@@ -52,6 +53,14 @@ protolabs-platform/
 ├── package.json            # Node.js dependencies and scripts
 └── vite.config.js          # Vite build configuration
 ```
+
+---
+
+## 🤖 Claude Desktop & MCP Integration
+
+ProtoLabs includes preconfigured Model Context Protocol (MCP) definitions for Claude Desktop to connect with GitHub and Render:
+- **Configuration**: [`mcp/claude_desktop_config.github.json`](mcp/claude_desktop_config.github.json)
+- **Setup Guide**: [`mcp/README.md`](mcp/README.md) (covers both official Docker and direct NPX setup)
 
 ---
 
