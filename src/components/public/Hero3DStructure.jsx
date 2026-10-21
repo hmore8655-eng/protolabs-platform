@@ -106,4 +106,5 @@ export const Hero3DStructure = () => {
       @media(prefers-reduced-motion:reduce){.pl3d-board-wrap{animation:none}.pl3d-board{transition:none}}
     `}</style>
   </div>
-);
+  );
+};
