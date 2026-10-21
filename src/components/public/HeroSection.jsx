@@ -37,12 +37,12 @@ const InteractiveCircuitShield = () => {
       <div
         style={{
           width: '100%',
-          backgroundColor: '#0B0F19',
-          borderRadius: 'var(--radius-lg)',
+          backgroundColor: '#343638',
+          borderRadius: '4px',
           padding: '1.75rem',
           boxShadow: tilt.isHovered 
-            ? '0 30px 60px -15px rgba(255, 149, 0, 0.35), 0 0 0 2px var(--accent-orange)' 
-            : '0 20px 45px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 149, 0, 0.2)',
+            ? '0 30px 60px -15px rgba(52, 54, 56, 0.24), 0 0 0 1px var(--accent-orange)' 
+            : '0 24px 55px -18px rgba(52, 54, 56, 0.35), 0 0 0 1px rgba(52, 54, 56, 0.12)',
           position: 'relative',
           overflow: 'hidden',
           transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${tilt.isHovered ? 1.02 : 1}, ${tilt.isHovered ? 1.02 : 1}, 1)`,
@@ -85,7 +85,7 @@ const InteractiveCircuitShield = () => {
 
         {/* Animated Circuit Matrix SVG */}
         <div style={{
-          backgroundColor: '#070A10',
+          backgroundColor: '#292B2D',
           borderRadius: 'var(--radius-md)',
           padding: '1.25rem 1rem',
           border: '1px solid rgba(255, 149, 0, 0.25)',
@@ -200,8 +200,8 @@ export const HeroSection = ({ onOpenAuthModal }) => {
   return (
     <section id="hero" style={{
       position: 'relative',
-      padding: '5rem 0 6rem 0',
-      background: 'linear-gradient(135deg, #FFFFFF 0%, var(--accent-light-orange) 100%)',
+      padding: 'clamp(3.5rem, 7vw, 6.75rem) 0 clamp(4rem, 8vw, 7rem)',
+      background: 'var(--primary-bg)',
       overflow: 'hidden',
       borderBottom: '1px solid var(--border-color)'
     }}>
@@ -210,10 +210,10 @@ export const HeroSection = ({ onOpenAuthModal }) => {
         position: 'absolute',
         top: '-120px',
         right: '-120px',
-        width: '500px',
+        width: '420px',
         height: '500px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,149,0,0.15) 0%, rgba(255,255,255,0) 70%)',
+        background: 'radial-gradient(circle, rgba(183,182,154,0.22) 0%, rgba(244,235,221,0) 72%)',
         pointerEvents: 'none'
       }} />
 
@@ -232,8 +232,8 @@ export const HeroSection = ({ onOpenAuthModal }) => {
             </div>
 
             <h1 className="animate-fade-up" style={{
-              fontSize: '2.6rem',
-              letterSpacing: '-0.5px',
+              fontSize: 'clamp(2.75rem, 5vw, 5.2rem)',
+              letterSpacing: '-0.065em',
               marginBottom: '1.25rem',
               color: 'var(--text-dark)'
             }}>
@@ -244,7 +244,7 @@ export const HeroSection = ({ onOpenAuthModal }) => {
               fontSize: '1.125rem',
               color: 'var(--text-muted)',
               marginBottom: '2rem',
-              maxWidth: '600px',
+              maxWidth: '540px',
               lineHeight: 1.65
             }}>
               {hero.subheading}
