@@ -1062,3 +1062,40 @@ main.reveal-ready > .scroll-reveal.is-visible {
     animation: none;
   }
 }
+
+
+/* Forma T1-inspired site-wide art direction — dark, cinematic, restrained */
+header {
+  background: rgba(8, 9, 8, .94) !important;
+  color: #f4eedf !important;
+  border-bottom: 1px solid rgba(244,238,223,.16) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(18px) saturate(90%) !important;
+}
+header .container { height: 76px !important; }
+header nav button { color: rgba(244,238,223,.78) !important; }
+header nav button:hover { color: #e36e36 !important; }
+header .mobile-toggle { color: #f4eedf !important; border-color: rgba(244,238,223,.24) !important; }
+header .mobile-toggle svg { color: #f4eedf !important; }
+header > div + div {
+  background: #111210 !important;
+  color: #f4eedf !important;
+  border-color: rgba(244,238,223,.16) !important;
+}
+#hero.forma-home .forma-home__copy h1 {
+  font-size: clamp(82px, 11.5vw, 176px) !important;
+  line-height: .78 !important;
+  letter-spacing: -.09em !important;
+  font-weight: 400 !important;
+  color: #f4f1e9 !important;
+}
+#hero.forma-home .forma-home__copy h1 em { color: #e36e36 !important; }
+#hero.forma-home .forma-home__summary { max-width: 390px !important; }
+#hero.forma-home .forma-home__product {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+@media (max-width: 760px) {
+  header .container { height: 68px !important; }
+  #hero.forma-home .forma-home__copy h1 { font-size: clamp(74px, 17vw, 118px) !important; }
+}
