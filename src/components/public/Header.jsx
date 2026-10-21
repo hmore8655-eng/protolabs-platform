@@ -40,10 +40,9 @@ export const Header = () => {
         <nav style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
           <button onClick={() => scrollToSection('hero')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Home</button>
           <button onClick={() => scrollToSection('catalog')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Projects Catalog</button>
-          <button onClick={() => scrollToSection('process')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>How It Works</button>
           <button onClick={() => scrollToSection('why-us')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Services</button>
-          <button onClick={() => scrollToSection('portfolio')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Portfolio</button>
           <button onClick={() => scrollToSection('contact')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Contact</button>
+          <button onClick={() => scrollToSection('portfolio')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Portfolio</button>
         </nav>
 
         {/* Action Controls */}
@@ -85,10 +84,9 @@ export const Header = () => {
         }}>
           <button onClick={() => scrollToSection('hero')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Home</button>
           <button onClick={() => scrollToSection('catalog')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Projects Catalog</button>
-          <button onClick={() => scrollToSection('process')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>How It Works</button>
           <button onClick={() => scrollToSection('why-us')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Services</button>
+          <button onClick={() => scrollToSection('contact')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Contact</button>
           <button onClick={() => scrollToSection('portfolio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Portfolio & Reviews</button>
-          <button onClick={() => scrollToSection('contact')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Contact Form</button>
         </div>
       )}
 
