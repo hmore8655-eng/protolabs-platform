@@ -18,10 +18,21 @@ const chatWriteWindows = new Map();
 const CHAT_WINDOW_MS = 60 * 1000;
 const CHAT_MAX_WRITES_PER_WINDOW = 20;
 function limitChatWrites(req, res, next) {
-  const forwardedFor = req.headers['x-forwarded-for'];
-  const clientKey = (typeof forwardedFor === 'string' ? forwardedFor.split(',')[0].trim() : '') ||
-    req.socket.remoteAddress || 'unknown';
+  // Do not trust arbitrary X-Forwarded-For values: clients can spoof that header
+  // unless the deployment's proxy chain is configured and validated explicitly.
+  const clientKey = req.socket.remoteAddress || 'unknown';
   const now = Date.now();
+
+  // Keep the in-memory limiter bounded when many distinct source addresses hit it.
+  if (chatWriteWindows.size > 10000) {
+    for (const [key, entry] of chatWriteWindows) {
+      if (now - entry.startedAt >= CHAT_WINDOW_MS) chatWriteWindows.delete(key);
+    }
+    if (chatWriteWindows.size > 10000) {
+      return res.status(503).json({ error: 'Chat is temporarily busy. Please try again shortly.' });
+    }
+  }
+
   let window = chatWriteWindows.get(clientKey);
   if (!window || now - window.startedAt >= CHAT_WINDOW_MS) {
     window = { startedAt: now, count: 0 };
