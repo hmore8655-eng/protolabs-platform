@@ -1,123 +1,263 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
- * Lightweight CSS 3D hero object.
- * This is constructed from actual DOM geometry rather than a background image,
- * so it renders locally without a 3D service, external model or WebGL dependency.
+ * Interactive WebGL electronics board. Three.js is loaded on demand so it does
+ * not increase the initial JavaScript bundle; a CSS fallback is shown if WebGL
+ * or the CDN is unavailable.
  */
 export const Hero3DStructure = () => {
-  const stageRef = useRef(null);
+  const mountRef = useRef(null);
+  const [failed, setFailed] = useState(false);
 
-  const handlePointerMove = (event) => {
-    if (!stageRef.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const bounds = stageRef.current.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
-    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
-    stageRef.current.style.setProperty('--pl3d-pointer-x', (x * 3.5).toFixed(2) + 'deg');
-    stageRef.current.style.setProperty('--pl3d-pointer-y', (y * -3).toFixed(2) + 'deg');
-  };
+  useEffect(() => {
+    let disposed = false;
+    let renderer;
+    let frameId;
+    let observer;
+    let cleanup = () => {};
 
-  const resetPointer = () => {
-    if (!stageRef.current) return;
-    stageRef.current.style.setProperty('--pl3d-pointer-x', '0deg');
-    stageRef.current.style.setProperty('--pl3d-pointer-y', '0deg');
-  };
+    const boot = async () => {
+      try {
+        const THREE = await import(/* @vite-ignore */ 'https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js');
+        if (disposed || !mountRef.current) return;
+
+        const mount = mountRef.current;
+        const scene = new THREE.Scene();
+        scene.background = null;
+        const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+        camera.position.set(7.8, 7.2, 9.5);
+        camera.lookAt(0, 0, 0);
+
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+        renderer.setSize(mount.clientWidth || 600, mount.clientHeight || 520);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.25;
+        renderer.domElement.className = 'pl3d-webgl-canvas';
+        renderer.domElement.setAttribute('aria-hidden', 'true');
+        mount.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xc5d8c4, 1.7));
+        const key = new THREE.DirectionalLight(0xffe0b5, 3.2);
+        key.position.set(5, 8, 4);
+        scene.add(key);
+        const rim = new THREE.PointLight(0xe86e42, 16, 18);
+        rim.position.set(-5, 3, -3);
+        scene.add(rim);
+        const fill = new THREE.PointLight(0x6e9d78, 9, 16);
+        fill.position.set(2, 1, 6);
+        scene.add(fill);
+
+        const board = new THREE.Group();
+        scene.add(board);
+        const mat = (color, roughness = 0.55, metalness = 0.15) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
+        const pcb = mat(0x214b39, 0.42, 0.32);
+        const edge = mat(0x10291e, 0.5, 0.18);
+        const copper = mat(0xc99c52, 0.34, 0.72);
+        const dark = mat(0x101512, 0.34, 0.48);
+        const chipTop = mat(0x242925, 0.3, 0.3);
+        const silver = mat(0x9ba397, 0.26, 0.72);
+        const white = mat(0xd4d0b9, 0.4, 0.25);
+        const orange = mat(0xe86e42, 0.3, 0.35);
+
+        const addBox = (parent, size, position, material, bevel = false) => {
+          const geometry = new THREE.BoxGeometry(size[0], size[1], size[2]);
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.position.set(...position);
+          mesh.castShadow = false;
+          mesh.receiveShadow = true;
+          parent.add(mesh);
+          return mesh;
+        };
+
+        // Layered PCB core and fine copper perimeter.
+        addBox(board, [6.2, 0.24, 4.65], [0, 0, 0], edge);
+        addBox(board, [6.15, 0.12, 4.6], [0, 0.17, 0], pcb);
+        const perimeter = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.018, 4.45), copper);
+        perimeter.position.y = 0.235;
+        board.add(perimeter);
+        addBox(board, [5.94, 0.025, 4.39], [0, 0.252, 0], pcb);
+
+        // Circuit traces are raised metallic tracks with deliberate right angles.
+        const trace = (points, radius = 0.025) => {
+          const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(p[0], 0.278, p[1])));
+          const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, points.length * 8, radius, 5, false), copper);
+          board.add(mesh);
+        };
+        trace([[-2.6, -1.45], [-1.8, -1.45], [-1.8, -0.8], [-0.7, -0.8]]);
+        trace([[2.75, -1.25], [1.9, -1.25], [1.9, -0.72], [1.25, -0.72]]);
+        trace([[-2.7, 1.15], [-1.75, 1.15], [-1.75, 0.72], [-1.1, 0.72]]);
+        trace([[2.65, 1.5], [2.1, 1.5], [2.1, 0.95], [1.35, 0.95]]);
+        trace([[-2.75, 0.05], [-2.15, 0.05], [-2.15, -0.35], [-1.65, -0.35]]);
+        trace([[0.1, -2.0], [0.1, -1.5], [0.75, -1.5], [0.75, -1.1]]);
+        trace([[-0.8, 2.0], [-0.8, 1.45], [-0.2, 1.45]]);
+
+        // Main processor package with pins around all four sides.
+        addBox(board, [1.72, 0.16, 1.55], [-0.05, 0.36, 0.05], silver);
+        addBox(board, [1.53, 0.23, 1.36], [-0.05, 0.53, 0.05], dark);
+        addBox(board, [1.35, 0.045, 1.18], [-0.05, 0.67, 0.05], chipTop);
+        addBox(board, [0.72, 0.012, 0.34], [-0.05, 0.701, 0.05], mat(0x353d35, 0.4, 0.2));
+        for (let i = 0; i < 9; i++) {
+          const p = -0.58 + i * 0.145;
+          addBox(board, [0.065, 0.06, 0.09], [p, 0.49, -0.79], silver);
+          addBox(board, [0.065, 0.06, 0.09], [p, 0.49, 0.89], silver);
+          addBox(board, [0.09, 0.06, 0.065], [-0.94, 0.49, p], silver);
+          addBox(board, [0.09, 0.06, 0.065], [0.84, 0.49, p], silver);
+        }
+
+        // Memory and RF modules.
+        addBox(board, [0.9, 0.13, 0.65], [-1.85, 0.36, -0.8], silver);
+        addBox(board, [0.78, 0.16, 0.53], [-1.85, 0.48, -0.8], dark);
+        for (let i = 0; i < 4; i++) addBox(board, [0.12, 0.02, 0.36], [-2.12 + i * 0.18, 0.57, -0.8], mat(0x454b43, 0.35, 0.45));
+        addBox(board, [0.95, 0.14, 0.72], [1.85, 0.35, 0.85], silver);
+        addBox(board, [0.82, 0.18, 0.58], [1.85, 0.49, 0.85], dark);
+        addBox(board, [0.58, 0.02, 0.28], [1.85, 0.59, 0.85], mat(0x303a31, 0.35, 0.4));
+
+        // Port housings and metal contact blades along the board edge.
+        for (let i = 0; i < 3; i++) {
+          const x = -2.15 + i * 0.78;
+          addBox(board, [0.57, 0.38, 0.68], [x, 0.43, -1.73], silver);
+          addBox(board, [0.46, 0.24, 0.51], [x, 0.46, -1.7], dark);
+          addBox(board, [0.32, 0.1, 0.035], [x, 0.46, -1.43], mat(0x080b09, 0.25, 0.2));
+        }
+        for (let i = 0; i < 12; i++) {
+          const x = -2.5 + i * 0.455;
+          addBox(board, [0.19, 0.055, 0.12], [x, 0.34, 2.12], copper);
+          addBox(board, [0.1, 0.055, 0.16], [x, 0.34, 2.18], silver);
+        }
+
+        // Capacitors, resistors, indicator LEDs and mounting holes.
+        for (let i = 0; i < 6; i++) {
+          const x = -2.3 + i * 0.34;
+          addBox(board, [0.19, 0.16, 0.22], [x, 0.39, 1.45], dark);
+          addBox(board, [0.2, 0.035, 0.23], [x, 0.48, 1.45], silver);
+        }
+        const ledGeometry = new THREE.SphereGeometry(0.075, 14, 10);
+        [[-2.45, 0.62, 0.72], [-2.1, 0.62, 0.72], [2.52, 0.62, -0.25]].forEach((p, i) => {
+          const led = new THREE.Mesh(ledGeometry, i === 2 ? orange : mat(0x9ccf8b, 0.2, 0.1));
+          led.position.set(...p);
+          board.add(led);
+        });
+        const holeMat = mat(0x0b1811, 0.65, 0.1);
+        const ringGeo = new THREE.TorusGeometry(0.16, 0.035, 8, 24);
+        [[-2.78, -2.0], [2.78, -2.0], [-2.78, 2.0], [2.78, 2.0]].forEach(([x, z]) => {
+          const ring = new THREE.Mesh(ringGeo, copper);
+          ring.rotation.x = Math.PI / 2;
+          ring.position.set(x, 0.27, z);
+          board.add(ring);
+          const hole = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.025, 24), holeMat);
+          hole.position.set(x, 0.29, z);
+          board.add(hole);
+        });
+
+        // A restrained technical orbit and floor grid anchor the product in space.
+        const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xc88b57, transparent: true, opacity: 0.42 });
+        const orbit = new THREE.Mesh(new THREE.TorusGeometry(4.5, 0.008, 4, 120), orbitMaterial);
+        orbit.rotation.set(1.05, 0.1, -0.28);
+        orbit.position.y = -0.65;
+        scene.add(orbit);
+        const grid = new THREE.GridHelper(15, 30, 0x55715c, 0x35483a);
+        grid.position.y = -1.05;
+        grid.material.transparent = true;
+        grid.material.opacity = 0.18;
+        scene.add(grid);
+
+        let pointerX = 0;
+        let pointerY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const onPointerMove = event => {
+          const rect = mount.getBoundingClientRect();
+          targetY = ((event.clientX - rect.left) / rect.width - 0.5) * 0.28;
+          targetX = ((event.clientY - rect.top) / rect.height - 0.5) * 0.16;
+        };
+        const onPointerLeave = () => { targetX = 0; targetY = 0; };
+        mount.addEventListener('pointermove', onPointerMove);
+        mount.addEventListener('pointerleave', onPointerLeave);
+
+        const resize = () => {
+          if (!mount.clientWidth || !mount.clientHeight) return;
+          camera.aspect = mount.clientWidth / mount.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(mount.clientWidth, mount.clientHeight);
+        };
+        observer = new ResizeObserver(resize);
+        observer.observe(mount);
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const clock = new THREE.Clock();
+        const animate = () => {
+          if (disposed) return;
+          frameId = requestAnimationFrame(animate);
+          const t = clock.getElapsedTime();
+          pointerX += (targetX - pointerX) * 0.035;
+          pointerY += (targetY - pointerY) * 0.035;
+          board.rotation.y = (reducedMotion ? 0.08 : Math.sin(t * 0.22) * 0.08) + pointerX;
+          board.rotation.x = -0.07 + pointerY;
+          board.position.y = reducedMotion ? 0 : Math.sin(t * 0.7) * 0.08;
+          orbit.rotation.z = -0.28 + (reducedMotion ? 0 : t * 0.025);
+          renderer.render(scene, camera);
+        };
+        animate();
+
+        cleanup = () => {
+          mount.removeEventListener('pointermove', onPointerMove);
+          mount.removeEventListener('pointerleave', onPointerLeave);
+          observer?.disconnect();
+          if (frameId) cancelAnimationFrame(frameId);
+          scene.traverse(object => {
+            if (object.geometry) object.geometry.dispose();
+            if (object.material) {
+              const materials = Array.isArray(object.material) ? object.material : [object.material];
+              materials.forEach(material => material.dispose());
+            }
+          });
+          renderer?.dispose();
+          renderer?.domElement?.remove();
+        };
+      } catch (error) {
+        console.warn('Interactive 3D hero unavailable; showing the CSS fallback.', error);
+        if (!disposed) setFailed(true);
+      }
+    };
+
+    boot();
+    return () => {
+      disposed = true;
+      cleanup();
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, []);
 
   return (
-  <div ref={stageRef} className="pl3d-stage" onPointerMove={handlePointerMove} onPointerLeave={resetPointer} role="img" aria-label="Three-dimensional conceptual electronics development board with processor, components, connectors and circuit traces">
-    <div className="pl3d-orbit pl3d-orbit--one" />
-    <div className="pl3d-orbit pl3d-orbit--two" />
-    <div className="pl3d-board-wrap">
-      <div className="pl3d-board">
-        <div className="pl3d-board-edge" />
-        <div className="pl3d-trace pl3d-trace--a" />
-        <div className="pl3d-trace pl3d-trace--b" />
-        <div className="pl3d-trace pl3d-trace--c" />
-        <div className="pl3d-trace pl3d-trace--d" />
-        <div className="pl3d-trace pl3d-trace--e" />
-        <div className="pl3d-trace pl3d-trace--f" />
-        <div className="pl3d-contact pl3d-contact--left" />
-        <div className="pl3d-contact pl3d-contact--right" />
-        <div className="pl3d-mount pl3d-mount--tl"><i /></div>
-        <div className="pl3d-mount pl3d-mount--tr"><i /></div>
-        <div className="pl3d-mount pl3d-mount--bl"><i /></div>
-        <div className="pl3d-mount pl3d-mount--br"><i /></div>
-        <div className="pl3d-pin-header"><i /><i /><i /><i /><i /><i /><i /><i /></div>
-        <div className="pl3d-antenna"><i /><i /><i /></div>
-        <div className="pl3d-chip pl3d-chip--main"><span>PL</span><i /><b /></div>
-        <div className="pl3d-chip pl3d-chip--memory"><i /><i /><i /><i /></div>
-        <div className="pl3d-chip pl3d-chip--radio"><span>RF</span></div>
-        <div className="pl3d-chip pl3d-chip--small" />
-        <div className="pl3d-port pl3d-port--one"><i /><i /><i /><i /><i /><i /></div>
-        <div className="pl3d-port pl3d-port--two"><i /><i /><i /><i /></div>
-        <div className="pl3d-capacitors"><i /><i /><i /><i /><i /></div>
-        <div className="pl3d-led pl3d-led--one" />
-        <div className="pl3d-led pl3d-led--two" />
-        <div className="pl3d-board-mark">PROTO / LABS <span>REV. 01</span></div>
-      </div>
+    <div className="pl3d-stage" role="img" aria-label="Interactive three-dimensional electronics development board with processor, memory modules, connectors and circuit traces">
+      <div ref={mountRef} className="pl3d-webgl-mount" />
+      {failed && <div className="pl3d-fallback" aria-hidden="true">
+        <div className="pl3d-fallback-board"><span>PL</span><i /><b /><small>PROTO / LABS · REV 01</small></div>
+      </div>}
+      <div className="pl3d-caption pl3d-caption--top"><span className="pl3d-caption__line" /><span>01 / COMPUTE MODULE</span></div>
+      <div className="pl3d-caption pl3d-caption--bottom"><span>ENGINEERED FROM THE BOARD UP</span><span className="pl3d-caption__line" /></div>
+      <div className="pl3d-axis"><span>X</span><span>Y</span><span>Z</span><i /></div>
+      <style>{`
+        .pl3d-stage{position:absolute;inset:0;overflow:hidden;perspective:1100px;isolation:isolate;touch-action:pan-y}
+        .pl3d-stage:before{content:"";position:absolute;width:76%;aspect-ratio:1;left:12%;top:5%;border-radius:50%;background:radial-gradient(circle,rgba(217,108,54,.17),rgba(217,108,54,.035) 43%,transparent 70%);filter:blur(15px);pointer-events:none}
+        .pl3d-webgl-mount{position:absolute;inset:4% 0 3%;z-index:1}
+        .pl3d-webgl-canvas{display:block;width:100%;height:100%;outline:none}
+        .pl3d-caption{position:absolute;z-index:3;display:flex;align-items:center;gap:.65rem;color:rgba(244,241,235,.58);font-size:.58rem;font-weight:700;letter-spacing:.18em}
+        .pl3d-caption__line{display:block;width:28px;height:1px;background:#d96c36}
+        .pl3d-caption--top{top:14%;left:2%}
+        .pl3d-caption--bottom{bottom:12%;right:2%}
+        .pl3d-axis{position:absolute;z-index:3;left:5%;bottom:13%;display:flex;align-items:center;gap:.35rem;color:rgba(244,241,235,.52);font-size:.55rem;letter-spacing:.1em}
+        .pl3d-axis span{border:1px solid rgba(244,241,235,.2);padding:.22rem .3rem}
+        .pl3d-axis i{display:block;width:26px;height:1px;background:#d96c36;margin-left:.3rem}
+        .pl3d-fallback{position:absolute;inset:18% 12%;display:grid;place-items:center;perspective:900px}
+        .pl3d-fallback-board{position:relative;width:70%;aspect-ratio:1.3;display:grid;place-items:center;border:1px solid #728d6b;border-radius:8px;background:linear-gradient(135deg,#244b3c,#10271f);box-shadow:0 18px 0 #0b1c13,0 35px 45px #0007;transform:rotateX(58deg) rotateZ(-28deg);color:#e9c57c;font-size:3rem;font-weight:800}
+        .pl3d-fallback-board i,.pl3d-fallback-board b{position:absolute;width:24%;height:24%;border:5px solid #899186;background:#181d18;box-shadow:0 6px 0 #0a110d}
+        .pl3d-fallback-board b{width:15%;height:18%;right:12%;top:15%}
+        .pl3d-fallback-board small{position:absolute;bottom:10%;font-size:.35rem;letter-spacing:.18em;color:#c4c8b9}
+        @media(max-width:700px){.pl3d-caption{font-size:.48rem}.pl3d-caption--top{top:9%}.pl3d-caption--bottom{bottom:8%}.pl3d-axis{bottom:8%}}
+        @media(prefers-reduced-motion:reduce){.pl3d-stage *{animation:none!important;transition:none!important}}
+      `}</style>
     </div>
-    <div className="pl3d-caption pl3d-caption--top"><span className="pl3d-caption__line" /><span>01 / COMPUTE MODULE</span></div>
-    <div className="pl3d-caption pl3d-caption--bottom"><span>ENGINEERED FROM THE BOARD UP</span><span className="pl3d-caption__line" /></div>
-    <div className="pl3d-axis"><span>X</span><span>Y</span><span>Z</span><i /></div>
-    <style>{`
-      .pl3d-stage{--pl3d-pointer-x:0deg;--pl3d-pointer-y:0deg;position:absolute;inset:0;overflow:hidden;perspective:1100px;isolation:isolate;touch-action:pan-y}
-      .pl3d-stage:before{content:"";position:absolute;width:74%;aspect-ratio:1;left:14%;top:7%;border-radius:50%;background:radial-gradient(circle,rgba(217,108,54,.16),rgba(217,108,54,.035) 40%,transparent 70%);filter:blur(12px)}
-      .pl3d-orbit{position:absolute;width:74%;height:52%;left:13%;top:24%;border:1px solid rgba(244,238,223,.12);border-radius:50%;transform:rotate(-28deg) rotateX(64deg)}
-      .pl3d-orbit--two{width:91%;height:66%;left:4%;top:17%;border-color:rgba(217,108,54,.2);transform:rotate(23deg) rotateX(66deg)}
-      .pl3d-board-wrap{position:absolute;inset:8% 0 7%;display:grid;place-items:center;perspective:1200px;animation:pl3d-float 7s ease-in-out infinite}
-      .pl3d-board{position:relative;width:min(84%,520px);aspect-ratio:1.22;transform:rotateX(calc(58deg + var(--pl3d-pointer-y))) rotateY(var(--pl3d-pointer-x)) rotateZ(-31deg);transform-style:preserve-3d;transition:transform .25s ease-out;border:1px solid #69816b;border-radius:9px;background:linear-gradient(135deg,#244b3c 0%,#153528 58%,#10271f 100%);box-shadow:0 22px 0 #10251d,0 26px 0 #0a1914,0 46px 55px rgba(0,0,0,.55),inset 0 0 0 8px rgba(8,24,17,.35),inset 0 0 0 10px rgba(154,179,132,.12)}
-      .pl3d-board:before{content:"";position:absolute;inset:5%;border:1px solid rgba(209,185,116,.3);border-radius:4px;background-image:radial-gradient(circle,rgba(220,188,110,.6) 1px,transparent 1.8px);background-size:18px 18px;opacity:.65}
-      .pl3d-board:after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(130deg,rgba(255,255,255,.12),transparent 28%,transparent 68%,rgba(0,0,0,.15));pointer-events:none}
-      .pl3d-board-edge{position:absolute;inset:0;transform:translateZ(-12px);border-radius:9px;background:#0b2118;box-shadow:0 12px 0 #08170f}
-      .pl3d-trace{position:absolute;height:3px;background:linear-gradient(90deg,transparent,#c39a51 12%,#e3bd72 52%,#b88a45 88%,transparent);opacity:.9;transform:translateZ(3px);border-radius:2px}
-      .pl3d-trace:after{content:"";position:absolute;right:-2px;top:-3px;width:8px;height:8px;border-radius:50%;background:#e8c77e;box-shadow:0 0 9px rgba(232,199,126,.6)}
-      .pl3d-trace--a{left:12%;top:27%;width:34%;transform:translateZ(3px) rotate(0deg)}
-      .pl3d-trace--b{left:40%;top:18%;width:37%;transform:translateZ(3px) rotate(90deg);transform-origin:left}
-      .pl3d-trace--c{left:47%;top:68%;width:37%;transform:translateZ(3px) rotate(-90deg);transform-origin:left}
-      .pl3d-trace--d{left:15%;top:73%;width:28%;transform:translateZ(3px)}
-      .pl3d-trace--e{left:72%;top:42%;width:19%;transform:translateZ(3px)}
-      .pl3d-trace--f{left:25%;top:48%;width:26%;transform:translateZ(3px) rotate(90deg);transform-origin:left}
-      .pl3d-chip{position:absolute;transform-style:preserve-3d;background:#1b1e1b;border:1px solid #7b8174;box-shadow:0 5px 0 #0b110e,0 7px 0 #080d0a,0 10px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.22)}
-      .pl3d-chip:before,.pl3d-chip:after{content:"";position:absolute;inset:0;pointer-events:none}
-      .pl3d-chip:before{transform:translateZ(-5px);background:#111713}
-      .pl3d-chip--main{width:30%;height:34%;left:34%;top:32%;transform:translateZ(13px);display:grid;place-items:center;background:linear-gradient(145deg,#323832,#101411);border:2px solid #8d917e;box-shadow:0 6px 0 #0c1510,0 10px 0 #08110c,0 16px 22px rgba(0,0,0,.5),inset 0 0 0 5px #202720}
-      .pl3d-chip--main span{font-size:clamp(12px,1.4vw,19px);font-weight:800;letter-spacing:.18em;color:#d5b46d;text-shadow:0 1px 0 #000}
-      .pl3d-chip--main i{position:absolute;inset:-6px 8px;border-left:2px solid #b7b6a0;border-right:2px solid #b7b6a0}
-      .pl3d-chip--main b{position:absolute;inset:8px -6px;border-top:2px solid #b7b6a0;border-bottom:2px solid #b7b6a0}
-      .pl3d-chip--memory{width:18%;height:18%;left:12%;top:19%;transform:translateZ(8px);display:grid;grid-template-columns:repeat(2,1fr);gap:5px;padding:8px;background:#252925}
-      .pl3d-chip--memory i{background:#3c443c;border:1px solid #697060;box-shadow:0 2px 0 #0b110d}
-      .pl3d-chip--radio{width:20%;height:17%;right:10%;top:20%;transform:translateZ(8px);display:grid;place-items:center;background:linear-gradient(135deg,#55584e,#242822)}
-      .pl3d-chip--radio span{font-size:clamp(9px,1vw,13px);font-weight:800;letter-spacing:.1em;color:#d9d1b9}
-      .pl3d-chip--small{width:15%;height:13%;left:16%;bottom:15%;transform:translateZ(6px);background:linear-gradient(145deg,#41473d,#171d17)}
-      .pl3d-port{position:absolute;display:flex;gap:4px;padding:5px;background:#141a15;border:1px solid #a8a58b;box-shadow:0 5px 0 #09110c,0 7px 8px rgba(0,0,0,.4);transform:translateZ(9px)}
-      .pl3d-port i{display:block;width:7px;height:12px;background:linear-gradient(90deg,#8c8c79,#d4c79c,#686d5e);box-shadow:0 1px 0 #111}
-      .pl3d-port--one{right:5%;top:53%;transform:translateZ(9px) rotate(90deg);transform-origin:center}
-      .pl3d-port--two{left:9%;top:51%;transform:translateZ(9px) rotate(90deg)}
-      .pl3d-capacitors{position:absolute;right:17%;bottom:13%;display:flex;gap:7px;transform:translateZ(8px)}
-      .pl3d-capacitors i{width:10px;height:18px;border-radius:2px;background:linear-gradient(90deg,#8d8e7d,#d2c8a2,#646858);box-shadow:0 4px 0 #141914,0 6px 5px #07110b}
-      .pl3d-led{position:absolute;width:7px;height:7px;border-radius:50%;background:#f06b3d;box-shadow:0 0 9px 3px rgba(240,107,61,.3);transform:translateZ(10px)}
-      .pl3d-led--one{left:26%;top:25%}.pl3d-led--two{right:26%;bottom:23%;background:#e2c06e;box-shadow:0 0 8px 2px rgba(226,192,110,.28)}
-      .pl3d-contact{position:absolute;top:8%;bottom:8%;width:7px;background:repeating-linear-gradient(180deg,#d8b66b 0 7px,transparent 7px 13px);opacity:.8;transform:translateZ(2px)}
-      .pl3d-contact--left{left:3%}.pl3d-contact--right{right:3%}
-      .pl3d-mount{position:absolute;width:18px;height:18px;border-radius:50%;background:linear-gradient(145deg,#d9c995,#7e806b 55%,#373e32);border:2px solid #7f876d;box-shadow:0 3px 0 #0a1b12,0 5px 6px rgba(0,0,0,.35);transform:translateZ(5px);display:grid;place-items:center;z-index:2}
-      .pl3d-mount i{display:block;width:7px;height:7px;border-radius:50%;background:#17271c;border:1px solid rgba(235,219,166,.5);box-shadow:inset 0 1px 2px #050b07}
-      .pl3d-mount--tl{left:6%;top:7%}.pl3d-mount--tr{right:6%;top:7%}.pl3d-mount--bl{left:6%;bottom:7%}.pl3d-mount--br{right:6%;bottom:7%}
-      .pl3d-pin-header{position:absolute;left:48%;top:7%;display:flex;gap:5px;transform:translateZ(7px)}
-      .pl3d-pin-header i{width:4px;height:19px;background:linear-gradient(90deg,#7e806f,#d7cda7,#737b68);box-shadow:0 3px 0 #0b1710}
-      .pl3d-antenna{position:absolute;right:14%;top:41%;display:flex;gap:5px;transform:translateZ(6px) rotate(90deg);transform-origin:center}
-      .pl3d-antenna i{display:block;width:5px;height:23px;background:linear-gradient(90deg,#888b79,#e0d4b0,#777b68);box-shadow:0 2px 0 #0b1710}
-      .pl3d-board-mark{position:absolute;left:9%;bottom:5%;font-size:clamp(6px,.65vw,9px);letter-spacing:.2em;color:rgba(230,222,184,.7);transform:translateZ(4px)}
-      .pl3d-board-mark span{margin-left:12px;color:rgba(230,222,184,.42)}
-      .pl3d-caption{position:absolute;z-index:2;display:flex;align-items:center;gap:.7rem;color:rgba(244,238,223,.65);font-size:.58rem;letter-spacing:.16em}
-      .pl3d-caption__line{display:block;width:42px;height:1px;background:#d96c36}
-      .pl3d-caption--top{right:1%;top:22%}.pl3d-caption--bottom{left:4%;bottom:14%}
-      .pl3d-axis{position:absolute;right:7%;bottom:15%;display:flex;gap:8px;color:rgba(244,238,223,.4);font-size:.58rem}
-      .pl3d-axis i{position:absolute;width:22px;height:22px;border:1px solid rgba(217,108,54,.45);border-radius:50%;right:-9px;top:-8px}
-      @keyframes pl3d-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
-      @media(max-width:900px){.pl3d-board{width:min(78%,430px)}.pl3d-caption--top{top:18%;right:0}.pl3d-caption--bottom{bottom:12%;left:0}.pl3d-axis{display:none}}
-      @media(max-width:560px){.pl3d-stage{opacity:.65}.pl3d-board-wrap{inset:15% -14% 9% 8%}.pl3d-board{width:88%}.pl3d-caption{font-size:.48rem}.pl3d-caption--top{top:22%}.pl3d-caption--bottom{bottom:10%}.pl3d-orbit{width:100%;left:0}}
-      @media(prefers-reduced-motion:reduce){.pl3d-board-wrap{animation:none}.pl3d-board{transition:none}}
-    `}</style>
-  </div>
   );
 };
