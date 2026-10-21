@@ -151,23 +151,11 @@ export const Hero3DStructure = () => {
           board.add(hole);
         });
 
-        // A restrained technical orbit and floor grid anchor the product in space.
-        const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xc88b57, transparent: true, opacity: 0.42 });
-        const orbit = new THREE.Mesh(new THREE.TorusGeometry(4.5, 0.008, 4, 120), orbitMaterial);
-        orbit.rotation.set(1.05, 0.1, -0.28);
-        orbit.position.y = -0.65;
-        scene.add(orbit);
-        const grid = new THREE.GridHelper(15, 30, 0x55715c, 0x35483a);
-        grid.position.y = -1.05;
-        grid.material.transparent = true;
-        grid.material.opacity = 0.18;
-        scene.add(grid);
-
-        // Keep the product framing calm and deliberate: no idle bobbing or
-        // pointer-driven rotation that makes the hardware drift around the hero.
+        // Keep the product itself as the hero: no orbit ring or floor grid.
+        // Those decorative overlays competed with the hardware and made it
+        // feel like a generic tech demo rather than a photographed prototype.
         board.rotation.set(-0.07, 0.08, 0);
         board.position.set(0, 0, 0);
-        orbit.rotation.z = -0.28;
 
         const resize = () => {
           if (!mount.clientWidth || !mount.clientHeight) return;
