@@ -105,7 +105,7 @@ const ProjectCard = ({ proj, idx, onQuickStart }) => {
         </div>
 
         <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', lineHeight: 1.35, color: 'var(--text-dark)' }}>
-          <a href={`/project/${encodeURIComponent(proj.id)}`} style={{color:'inherit',textDecoration:'none'}} aria-label={`View ${proj.title} project details}>{proj.title}<span style={{color:'var(--accent-orange)',marginLeft:'.4rem'}}>↗</span></a>
+          <a href={`/project/${encodeURIComponent(proj.id)}`} style={{color:'inherit',textDecoration:'none'}} aria-label={`View ${proj.title} project details`}>{proj.title}<span style={{color:'var(--accent-orange)',marginLeft:'.4rem'}}>↗</span></a>
         </h3>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem', marginBottom: '1.35rem', minHeight: '3.6em', lineHeight: 1.6 }}>
