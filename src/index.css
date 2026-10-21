@@ -666,3 +666,74 @@ footer a:hover { color: #e9a17d !important; }
   #catalog .card-hover { padding: 1.2rem !important; }
   #portfolio .container > div:nth-child(3) { gap: 1rem !important; }
 }
+
+
+/* Responsive and accessibility hardening */
+html { scroll-behavior: smooth; }
+body { overflow-wrap: anywhere; }
+img, video, canvas, svg { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #d96c36;
+  outline-offset: 3px;
+}
+#hero {
+  background: #f4eedf !important;
+}
+#hero h1 {
+  max-width: 13ch;
+  font-size: clamp(2.8rem, 6.3vw, 6rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.075em !important;
+  text-wrap: balance;
+}
+#hero p { max-width: 58ch; }
+#hero .container { position: relative; z-index: 1; }
+#hero .container > .hero-grid { gap: clamp(2rem, 5vw, 5rem) !important; }
+#hero button, #catalog button, #portfolio button, #contact button {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+#catalog .container > div:nth-child(3) {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)) !important;
+  gap: clamp(1rem, 2vw, 1.5rem) !important;
+}
+#catalog .card-hover { min-width: 0; }
+#catalog .card-hover p { overflow-wrap: anywhere; }
+#contact .container > div:nth-child(2) {
+  padding: clamp(1rem, 4vw, 2.5rem) !important;
+}
+#contact form input, #contact form textarea, #contact form select {
+  max-width: 100%;
+  min-width: 0;
+}
+@media (max-width: 767px) {
+  #hero { padding: 3.5rem 0 4rem !important; }
+  #hero h1 { font-size: clamp(2.7rem, 12vw, 4.4rem) !important; }
+  #hero .container > .hero-grid { gap: 2.25rem !important; }
+  #hero .container > .hero-grid > div:last-child { min-width: 0; }
+  #hero .container > .hero-grid > div:last-child > div { max-width: 100% !important; }
+  #hero .container > .hero-grid > div:last-child > div > div:first-child { padding: 1rem !important; }
+  #hero .container > .hero-grid > div:first-child > div:last-child { gap: .75rem !important; }
+  #catalog .container > div:nth-child(2) > div:first-child { align-items: stretch !important; }
+  #catalog .container > div:nth-child(2) > div:first-child > div:first-child { max-width: none !important; flex-basis: 100% !important; }
+  #catalog .container > div:nth-child(2) select { max-width: 100%; }
+  #catalog .card-hover > div:last-child { flex-wrap: wrap; gap: 1rem; }
+  #catalog .card-hover > div:last-child > button { white-space: normal; }
+  #contact .container > div:nth-child(2) { border-radius: 4px !important; }
+}
+@media (max-width: 380px) {
+  .container { padding-left: 1rem !important; padding-right: 1rem !important; }
+  #hero h1 { font-size: 2.55rem !important; }
+  #hero .badge { font-size: .72rem !important; }
+  #catalog .card-hover > div:last-child > div { max-width: 100%; }
+  #catalog .card-hover > div:last-child > button { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
