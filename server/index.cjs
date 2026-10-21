@@ -12,6 +12,29 @@ const { sendInquiryConfirmation, sendQuoteProposalEmail } = require('./services/
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Lightweight in-process rate limit for public chat writes.
+// This limits accidental floods; use a shared store for multi-instance deployments.
+const chatWriteWindows = new Map();
+const CHAT_WINDOW_MS = 60 * 1000;
+const CHAT_MAX_WRITES_PER_WINDOW = 20;
+function limitChatWrites(req, res, next) {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const clientKey = (typeof forwardedFor === 'string' ? forwardedFor.split(',')[0].trim() : '') ||
+    req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  let window = chatWriteWindows.get(clientKey);
+  if (!window || now - window.startedAt >= CHAT_WINDOW_MS) {
+    window = { startedAt: now, count: 0 };
+    chatWriteWindows.set(clientKey, window);
+  }
+  window.count += 1;
+  if (window.count > CHAT_MAX_WRITES_PER_WINDOW) {
+    res.set('Retry-After', String(Math.ceil((CHAT_WINDOW_MS - (now - window.startedAt)) / 1000)));
+    return res.status(429).json({ error: 'Too many chat messages. Please wait a minute and try again.' });
+  }
+  next();
+}
+
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) {
   fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -268,7 +291,7 @@ app.delete('/api/chat/threads/:id', verifyToken, (req, res) => {
   res.json({ success: true, deleted: initialCount !== db.data.chatThreads.length });
 });
 
-app.post('/api/chat/messages', (req, res) => {
+app.post('/api/chat/messages', limitChatWrites, (req, res) => {
   const { threadId, sender, text } = req.body || {};
   if (typeof threadId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(threadId)) {
     return res.status(400).json({ error: 'A valid threadId is required.' });
