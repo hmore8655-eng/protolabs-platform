@@ -9,6 +9,10 @@ export const Header = () => {
 
   const scrollToSection = (id) => {
     setIsMobileMenuOpen(false);
+    if (id === 'portfolio') {
+      window.location.href = '/portfolio';
+      return;
+    }
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -32,7 +36,7 @@ export const Header = () => {
         height: '80px'
       }}>
         {/* ProtoLabs Logo */}
-        <a href="#" style={{ display: 'flex', alignItems: 'center' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center' }}>
           <ProtoLabsLogoHorizontal size={38} showTagline={true} />
         </a>
 
