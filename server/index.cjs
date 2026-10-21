@@ -362,8 +362,10 @@ function saveChatMessage(req, res) {
     };
     db.data.chatThreads.unshift(thread);
   } else {
-    if (clientName) thread.clientName = clientName;
-    if (clientEmail) thread.clientEmail = clientEmail;
+    // Public clients must not be able to rename or reassign an existing thread.
+    // Only authenticated admins may edit the contact identity stored on a thread.
+    if (req.isAuthenticatedAdmin && clientName) thread.clientName = clientName;
+    if (req.isAuthenticatedAdmin && clientEmail) thread.clientEmail = clientEmail;
     thread.lastMessage = text;
     thread.lastActivity = new Date().toISOString();
     thread.updatedAt = new Date().toISOString();
