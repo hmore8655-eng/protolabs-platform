@@ -24,5 +24,7 @@ jobs:
         run: npm ci
       - name: Lint frontend
         run: npx oxlint src
+      - name: Check backend JavaScript syntax
+        run: node --check server/index.cjs && node --check server/services/auth.cjs && node --check server/db.cjs
       - name: Build frontend
         run: npm run build
