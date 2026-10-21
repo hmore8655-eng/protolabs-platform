@@ -534,3 +534,135 @@ footer a:hover { color: #e9a17d !important; }
   header .container { height: 68px !important; }
   #catalog .container { padding-top: 3.25rem; padding-bottom: 3.25rem; }
 }
+
+
+/* Second pass — clearer editorial rhythm and engineered catalogue */
+#catalog .container > div:first-child,
+#process .container > div:first-child,
+#why-us .container > div:first-child,
+#portfolio .container > div:first-child,
+#contact .container > div:first-child {
+  text-align: left !important;
+  max-width: 850px !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  margin-bottom: clamp(2rem, 4vw, 3.5rem) !important;
+}
+#catalog .container > div:first-child h2,
+#process .container > div:first-child h2,
+#why-us .container > div:first-child h2,
+#portfolio .container > div:first-child h2,
+#contact .container > div:first-child h2 {
+  font-size: clamp(2.4rem, 5vw, 4.6rem) !important;
+  letter-spacing: -.07em !important;
+  max-width: 780px;
+  margin-bottom: 1.15rem !important;
+}
+#catalog .container > div:first-child p,
+#process .container > div:first-child p,
+#why-us .container > div:first-child p,
+#portfolio .container > div:first-child p,
+#contact .container > div:first-child p {
+  max-width: 620px;
+  font-size: 1rem !important;
+  line-height: 1.75;
+}
+#catalog .container > div:first-child .badge,
+#process .container > div:first-child .badge,
+#why-us .container > div:first-child .badge,
+#portfolio .container > div:first-child .badge,
+#contact .container > div:first-child .badge {
+  margin-bottom: 1.1rem !important;
+}
+#catalog .container > div:nth-child(2) {
+  border-radius: 4px !important;
+  background: #f4eedf !important;
+  border-color: #d9d0c0 !important;
+  padding: clamp(.8rem, 2vw, 1.25rem) !important;
+}
+#catalog .card-hover {
+  min-height: 100%;
+  transform-style: preserve-3d;
+}
+#catalog .card-hover h3 {
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem) !important;
+  letter-spacing: -.045em;
+  line-height: 1.15 !important;
+}
+#catalog .card-hover .badge { font-size: .62rem; }
+#catalog .card-hover button { font-size: .68rem !important; padding: .72rem .85rem !important; }
+#catalog .card-hover > div:last-child {
+  margin-top: auto;
+  align-items: end !important;
+}
+#catalog .card-hover > div:last-child > div > div:nth-child(2) {
+  font-size: clamp(1.25rem, 2vw, 1.7rem) !important;
+  letter-spacing: -.055em;
+}
+#catalog .card-hover svg { flex-shrink: 0; }
+#process .container > div:nth-child(2) > div {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  background: #fffaf0 !important;
+  border-color: #d9d0c0 !important;
+  padding: clamp(1.4rem, 3vw, 2.2rem) !important;
+}
+#process .container > div:nth-child(2) > div > div:first-child > span {
+  font-size: clamp(3rem, 5vw, 4.5rem) !important;
+  letter-spacing: -.08em;
+}
+#why-us .card-hover {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 1px solid #d9d0c0 !important;
+}
+#why-us .card-hover:hover { background: #fffaf0 !important; }
+#why-us .card-hover > div:first-child {
+  box-shadow: none !important;
+  border-radius: 3px !important;
+}
+#portfolio .container > div:nth-child(2) button {
+  border-radius: 3px !important;
+  text-transform: uppercase;
+  font-size: .68rem !important;
+  letter-spacing: .04em;
+}
+#portfolio .container > div:nth-child(3) > div {
+  border-radius: 4px !important;
+  box-shadow: none !important;
+  border-color: #d9d0c0 !important;
+  background: #fffaf0 !important;
+}
+#portfolio .container > div:nth-child(3) img {
+  filter: saturate(.82);
+  transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+}
+#portfolio .container > div:nth-child(3) > div:hover img {
+  transform: scale(1.035);
+  filter: saturate(1);
+}
+#portfolio .container > div:nth-child(3) > div > div:first-child { background: #d8d0bf !important; }
+#portfolio .container > div:nth-child(4) {
+  border-radius: 4px !important;
+  background: #e8e1d2 !important;
+  border-color: #d9d0c0 !important;
+}
+#portfolio .container > div:nth-child(4) > div > div {
+  border-radius: 3px !important;
+  box-shadow: none !important;
+  background: #fffaf0 !important;
+  border-color: #d9d0c0 !important;
+}
+#contact input, #contact textarea, #contact select { border-radius: 3px !important; }
+#contact button { min-height: 46px; }
+@media (max-width: 767px) {
+  #catalog .container > div:first-child h2,
+  #process .container > div:first-child h2,
+  #why-us .container > div:first-child h2,
+  #portfolio .container > div:first-child h2,
+  #contact .container > div:first-child h2 { font-size: clamp(2.2rem, 10vw, 3.3rem) !important; }
+  #catalog .container > div:nth-child(2) { gap: .75rem !important; }
+  #catalog .card-hover { padding: 1.2rem !important; }
+  #portfolio .container > div:nth-child(3) { gap: 1rem !important; }
+}
