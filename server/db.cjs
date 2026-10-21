@@ -417,8 +417,12 @@ class Database {
   }
 
   async initCloud() {
-    const FALLBACK_MONGO_URI = 'mongodb+srv://protolabs26_db_user:nzPpm8XB6R687Ot3@cluster0.7hkrpyd.mongodb.net/?appName=Cluster0';
-    const mongoUri = process.env.MONGODB_URI || FALLBACK_MONGO_URI;
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      this.cloudError = 'MONGODB_URI is not configured';
+      console.warn('[MongoDB Atlas] MONGODB_URI is not configured; using local storage.');
+      return false;
+    }
 
     try {
       console.log('[MongoDB Atlas] Connecting to cluster...');
