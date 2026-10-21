@@ -4,7 +4,6 @@ import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/public/Header';
 import { HeroSection } from './components/public/HeroSection';
 import { ProjectCatalog } from './components/public/ProjectCatalog';
-import { HowItWorksSection } from './components/public/HowItWorksSection';
 import { WhyChooseUsSection } from './components/public/WhyChooseUsSection';
 import { ContactSection } from './components/public/ContactSection';
 import { PortfolioSection } from './components/public/PortfolioSection';
@@ -54,6 +53,27 @@ const MainAppContent = () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, [isAdminLoggedIn, toggleView]);
+
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (!main || !('IntersectionObserver' in window)) return;
+    main.classList.add('reveal-ready');
+    const targets = Array.from(main.children);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -45px 0px' });
+    targets.forEach((target, index) => {
+      target.classList.add('scroll-reveal');
+      target.style.setProperty('--reveal-delay', `${Math.min(index * 90, 270)}ms`);
+      observer.observe(target);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const handleSelectProject = (projectTitle) => {
     setSelectedProject(projectTitle);
@@ -129,7 +149,6 @@ const MainAppContent = () => {
       <main style={{ flex: 1 }}>
         <HeroSection />
         <ProjectCatalog onSelectProjectForInquiry={handleSelectProject} />
-        <HowItWorksSection />
         <WhyChooseUsSection />
         <ContactSection
           selectedProjectTitle={selectedProject}
