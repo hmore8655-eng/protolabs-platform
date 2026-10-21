@@ -1,319 +1,113 @@
-import React, { useState } from 'react';
-import { ArrowRightIcon, CheckCircleIcon, SparklesIcon } from '../common/Icons';
-import { ProtoLabsIcon } from '../common/ProtoLabsLogo';
+import React from 'react';
+import { ArrowRightIcon, CheckCircleIcon } from '../common/Icons';
 import { useApp } from '../../context/AppContext';
 
-const InteractiveCircuitShield = () => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
+const capabilities = [
+  { number: '01', title: 'Custom electronics', detail: 'From circuit architecture to production-ready hardware.' },
+  { number: '02', title: 'Rapid prototyping', detail: 'Turn a promising idea into a testable physical product.' },
+  { number: '03', title: 'Embedded intelligence', detail: 'Hardware and software designed to work as one.' },
+];
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -10;
-    const rotateY = ((x - centerX) / centerX) * 10;
-    const glareX = (x / rect.width) * 100;
-    const glareY = (y / rect.height) * 100;
-    setTilt({ x: rotateX, y: rotateY, glareX, glareY, isHovered: true });
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50, isHovered: false });
-  };
-
-  return (
-    <div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        width: '100%',
-        maxWidth: '540px',
-        perspective: '1000px',
-        cursor: 'pointer'
-      }}
-    >
-      <div
-        style={{
-          width: '100%',
-          backgroundColor: '#343638',
-          borderRadius: '4px',
-          padding: '1.75rem',
-          boxShadow: tilt.isHovered 
-            ? '0 30px 60px -15px rgba(52, 54, 56, 0.24), 0 0 0 1px var(--accent-orange)' 
-            : '0 24px 55px -18px rgba(52, 54, 56, 0.35), 0 0 0 1px rgba(52, 54, 56, 0.12)',
-          position: 'relative',
-          overflow: 'hidden',
-          transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale3d(${tilt.isHovered ? 1.02 : 1}, ${tilt.isHovered ? 1.02 : 1}, 1)`,
-          transition: tilt.isHovered ? 'transform 0.1s ease-out, box-shadow 0.2s ease-out' : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease-out',
-          transformStyle: 'preserve-3d'
-        }}
-      >
-        {/* Dynamic Specular Glare Follower */}
-        {tilt.isHovered && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 180, 0, 0.18) 0%, transparent 65%)`,
-              pointerEvents: 'none',
-              zIndex: 10,
-              borderRadius: 'inherit'
-            }}
-          />
-        )}
-
-        {/* Top Telemetry Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <ProtoLabsIcon size={26} />
-            <span style={{ fontWeight: 800, fontSize: '1.05rem', color: '#FFFFFF' }}>
-              Proto<span style={{ color: 'var(--accent-orange)' }}>Labs</span>
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(16, 185, 129, 0.12)', padding: '0.25rem 0.65rem', borderRadius: '999px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-            <span className="animate-pulse-radar" style={{ width: '8px', height: '8px', backgroundColor: '#10B981', borderRadius: '50%' }} />
-            <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#10B981', letterSpacing: '0.5px' }}>
-              LAB STREAM • 28GHz ACTIVE
-            </span>
-          </div>
-        </div>
-
-        {/* Animated Circuit Matrix SVG */}
-        <div style={{
-          backgroundColor: '#292B2D',
-          borderRadius: 'var(--radius-md)',
-          padding: '1.25rem 1rem',
-          border: '1px solid rgba(255, 149, 0, 0.25)',
-          position: 'relative'
-        }}>
-          <svg viewBox="0 0 460 260" style={{ width: '100%', height: 'auto', display: 'block' }}>
-            {/* Grid Pattern */}
-            <defs>
-              <pattern id="circuitGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255, 149, 0, 0.05)" strokeWidth="1" />
-              </pattern>
-              <linearGradient id="glowOrange" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#FF7F00" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#FF9500" stopOpacity="1" />
-              </linearGradient>
-            </defs>
-
-            <rect width="460" height="260" fill="url(#circuitGrid)" />
-
-            {/* Circuit Traces */}
-            <path d="M 40 70 L 120 70 L 160 130 L 300 130 L 340 70 L 420 70" fill="none" stroke="rgba(255, 149, 0, 0.2)" strokeWidth="2" />
-            <path d="M 40 190 L 120 190 L 160 130 L 300 130 L 340 190 L 420 190" fill="none" stroke="rgba(255, 149, 0, 0.2)" strokeWidth="2" />
-            <path d="M 230 30 L 230 230" fill="none" stroke="rgba(255, 149, 0, 0.25)" strokeWidth="2" strokeDasharray="4 4" />
-
-            {/* Active Glowing Copper Bus */}
-            <path d="M 60 130 L 400 130" fill="none" stroke="url(#glowOrange)" strokeWidth="3" />
-
-            {/* Central Microprocessor Core */}
-            <g transform="translate(190, 90)">
-              <rect width="80" height="80" rx="12" fill="#111827" stroke="#FF9500" strokeWidth="3" />
-              <rect x="10" y="10" width="60" height="60" rx="8" fill="rgba(255, 149, 0, 0.15)" stroke="#FF7F00" strokeWidth="1" />
-              <circle cx="40" cy="40" r="14" fill="#FF9500" />
-              <text x="40" y="44" fill="#0B0F19" fontSize="10" fontWeight="900" textAnchor="middle">STM32</text>
-              <text x="40" y="88" fill="#FF9500" fontSize="8" fontWeight="bold" textAnchor="middle">ARM CORTEX-M4</text>
-            </g>
-
-            {/* Node Left: LoRa Transceiver */}
-            <g transform="translate(30, 105)">
-              <rect width="70" height="50" rx="8" fill="#161E2E" stroke="rgba(255, 149, 0, 0.5)" strokeWidth="1.5" />
-              <text x="35" y="24" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">SX1276 LoRa</text>
-              <text x="35" y="38" fill="#94A3B8" fontSize="8" textAnchor="middle">868/915 MHz</text>
-            </g>
-
-            {/* Node Right: 5G mmWave RF */}
-            <g transform="translate(360, 105)">
-              <rect width="70" height="50" rx="8" fill="#161E2E" stroke="rgba(255, 149, 0, 0.5)" strokeWidth="1.5" />
-              <text x="35" y="24" fill="#FF9500" fontSize="9" fontWeight="bold" textAnchor="middle">5G mmWave</text>
-              <text x="35" y="38" fill="#94A3B8" fontSize="8" textAnchor="middle">28GHz Array</text>
-            </g>
-
-            {/* Real-time Oscilloscope Waveform at Bottom */}
-            <g transform="translate(40, 205)">
-              <rect width="380" height="34" rx="6" fill="#090D16" stroke="rgba(255, 149, 0, 0.2)" />
-              <path d="M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17" fill="none" stroke="#FF9500" strokeWidth="2">
-                <animate attributeName="d" 
-                  values="
-                    M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17;
-                    M 10 17 Q 30 30, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17;
-                    M 10 17 Q 30 2, 50 17 T 90 17 T 130 17 T 170 17 T 210 17 T 250 17 T 290 17 T 330 17 T 370 17
-                  " 
-                  dur="2s" 
-                  repeatCount="indefinite" 
-                />
-              </path>
-            </g>
-
-            {/* Glowing Signal Packets traveling in real time */}
-            <circle cx="100" cy="130" r="5" fill="#FF9500">
-              <animate attributeName="cx" values="100;190" dur="1.2s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.2;1;0.2" dur="1.2s" repeatCount="indefinite" />
-            </circle>
-
-            <circle cx="270" cy="130" r="5" fill="#FF7F00">
-              <animate attributeName="cx" values="270;360" dur="1.2s" repeatCount="indefinite" />
-              <animate attributeName="opacity" values="0.2;1;0.2" dur="1.2s" repeatCount="indefinite" />
-            </circle>
-
-            <circle cx="230" cy="50" r="4" fill="#10B981">
-              <animate attributeName="cy" values="50;90" dur="1.8s" repeatCount="indefinite" />
-            </circle>
-          </svg>
-        </div>
-
-        {/* Bottom Interactive HUD Footer */}
-        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0.25rem' }}>
-          <div style={{ display: 'flex', gap: '0.6rem' }}>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
-              KiCAD 8 4-Layer
-            </span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
-              DSP Filter CMSIS
-            </span>
-          </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: 600 }}>
-            Interactive 3D Circuit Matrix
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export const HeroSection = ({ onOpenAuthModal }) => {
+export const HeroSection = () => {
   const { data } = useApp();
   const { hero } = data;
 
   const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
-    <section id="hero" style={{
-      position: 'relative',
-      padding: 'clamp(3.5rem, 7vw, 6.75rem) 0 clamp(4rem, 8vw, 7rem)',
-      background: 'var(--primary-bg)',
-      overflow: 'hidden',
-      borderBottom: '1px solid var(--border-color)'
-    }}>
-      {/* Background Decorative Element */}
-      <div style={{
-        position: 'absolute',
-        top: '-120px',
-        right: '-120px',
-        width: '420px',
-        height: '500px',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(183,182,154,0.22) 0%, rgba(244,235,221,0) 72%)',
-        pointerEvents: 'none'
-      }} />
-
-      <div className="container">
-        <div className="hero-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-          gap: '3.5rem',
-          alignItems: 'center'
-        }}>
-          {/* Left Text Column */}
-          <div style={{ zIndex: 2 }}>
-            <div className="badge badge-orange animate-scale-pop" style={{ marginBottom: '1.25rem', fontSize: '0.875rem', padding: '0.4rem 1rem' }}>
-              <SparklesIcon size={16} />
-              <span>ProtoLabs Hardware & Telecom Innovations</span>
-            </div>
-
-            <h1 className="animate-fade-up" style={{
-              fontSize: 'clamp(2.75rem, 5vw, 5.2rem)',
-              letterSpacing: '-0.065em',
-              marginBottom: '1.25rem',
-              color: 'var(--text-dark)'
-            }}>
-              {hero.headline}
-            </h1>
-
-            <p className="animate-fade-up stagger-1" style={{
-              fontSize: '1.125rem',
-              color: 'var(--text-muted)',
-              marginBottom: '2rem',
-              maxWidth: '540px',
-              lineHeight: 1.65
-            }}>
-              {hero.subheading}
-            </p>
-
-            {/* CTAs */}
-            <div className="animate-fade-up stagger-2" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
-              <button 
-                onClick={() => scrollToSection('catalog')} 
-                className="btn btn-primary"
-                style={{ padding: '0.9rem 1.8rem', fontSize: '1rem' }}
-              >
-                <span>{hero.primaryCta}</span>
-                <ArrowRightIcon size={18} />
-              </button>
-
-              <button 
-                onClick={() => scrollToSection('contact')} 
-                className="btn btn-outline"
-                style={{ padding: '0.9rem 1.8rem', fontSize: '1rem' }}
-              >
-                <span>{hero.secondaryCta}</span>
-              </button>
-            </div>
-
-            {/* Trust Signals */}
-            <div className="animate-fade-up stagger-3" style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '1.5rem',
-              paddingTop: '1.5rem',
-              borderTop: '1px solid rgba(0,0,0,0.08)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <CheckCircleIcon size={18} color="var(--accent-orange)" />
-                <span>Verified Hardware Tested</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <CheckCircleIcon size={18} color="var(--accent-orange)" />
-                <span>KiCAD & Gerber BOM Files</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                <CheckCircleIcon size={18} color="var(--accent-orange)" />
-                <span>24h Technical Proposal</span>
-              </div>
-            </div>
+    <section id="hero" className="pl-hero">
+      <div className="pl-hero__image" aria-hidden="true" />
+      <div className="pl-hero__shade" aria-hidden="true" />
+      <div className="pl-hero__grid" aria-hidden="true" />
+      <div className="container pl-hero__inner">
+        <div className="pl-hero__copy">
+          <div className="pl-hero__eyebrow"><span /> INDUSTRIAL ELECTRONICS &amp; PRODUCT DEVELOPMENT</div>
+          <h1>Precision hardware.<br />Real-world <em>impact.</em></h1>
+          <p className="pl-hero__lead">{hero.subheading || 'We design and develop intelligent electronics, embedded systems and physical products built to solve real problems.'}</p>
+          <div className="pl-hero__actions">
+            <button onClick={() => scrollToSection('catalog')} className="pl-button pl-button--primary">
+              <span>{hero.primaryCta || 'Explore our work'}</span><ArrowRightIcon size={18} />
+            </button>
+            <button onClick={() => scrollToSection('why-us')} className="pl-button pl-button--quiet">
+              <span>Our capabilities</span><span className="pl-button__arrow">↗</span>
+            </button>
           </div>
-
-          {/* Right Hero Visual - 3D Interactive Circuit Shield */}
-          <div style={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-            <InteractiveCircuitShield />
+          <div className="pl-hero__proof">
+            <span><CheckCircleIcon size={16} /> Engineering-led</span>
+            <span><CheckCircleIcon size={16} /> Prototype to product</span>
+            <span><CheckCircleIcon size={16} /> Built for the real world</span>
           </div>
         </div>
+        <div className="pl-hero__visual">
+          <div className="pl-hero__visual-label"><span className="pl-live-dot" /> HARDWARE STUDY / 001</div>
+          <div className="pl-hero__callout pl-hero__callout--top"><span>01</span> PRECISION ENGINEERING</div>
+          <div className="pl-hero__callout pl-hero__callout--bottom">DESIGNED FOR PERFORMANCE <span>↗</span></div>
+          <div className="pl-hero__visual-index">01 <i /> 03</div>
+        </div>
       </div>
-
+      <div className="pl-hero__capabilities">
+        <div className="container pl-hero__capabilities-inner">
+          {capabilities.map((item) => (
+            <button className="pl-capability" key={item.number} onClick={() => scrollToSection('why-us')}>
+              <span className="pl-capability__number">{item.number}</span>
+              <span className="pl-capability__text"><strong>{item.title}</strong><small>{item.detail}</small></span>
+              <span className="pl-capability__arrow">↗</span>
+            </button>
+          ))}
+        </div>
+      </div>
       <style>{`
-        @media (min-width: 992px) {
-          .hero-grid {
-            grid-template-columns: 1.15fr 0.85fr !important;
-          }
-          h1 {
-            font-size: 3.25rem !important;
-          }
-        }
+        .pl-hero{--pl-ink:#f4f1eb;--pl-orange:#f06b3d;position:relative;isolation:isolate;overflow:hidden;background:#151714;color:var(--pl-ink);min-height:760px;padding:clamp(6rem,10vw,9.5rem) 0 0}
+        .pl-hero__image,.pl-hero__shade,.pl-hero__grid{position:absolute;inset:0;pointer-events:none}
+        .pl-hero__image{z-index:-3;left:28%;background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2200&q=90');background-position:center;background-size:cover;opacity:.76;transform:scale(1.035);animation:pl-hero-drift 22s ease-in-out infinite alternate}
+        .pl-hero__shade{z-index:-2;background:linear-gradient(90deg,#151714 0%,rgba(21,23,20,.98) 19%,rgba(21,23,20,.84) 39%,rgba(21,23,20,.28) 72%,rgba(21,23,20,.24) 100%),linear-gradient(0deg,rgba(21,23,20,.94) 0%,transparent 28%,rgba(21,23,20,.18) 100%)}
+        .pl-hero__grid{z-index:-1;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(90deg,black,transparent 85%)}
+        .pl-hero__inner{position:relative;display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);align-items:center;gap:2rem;min-height:480px}
+        .pl-hero__copy{position:relative;z-index:2;max-width:720px;padding:1rem 0 4.5rem}
+        .pl-hero__eyebrow{display:flex;align-items:center;gap:.7rem;margin-bottom:1.8rem;color:#f3a17f;font-size:.7rem;font-weight:750;letter-spacing:.2em;line-height:1.6}
+        .pl-hero__eyebrow span{display:block;width:34px;height:1px;background:var(--pl-orange);flex-shrink:0}
+        .pl-hero h1{max-width:800px;margin:0;color:#f5f2ed;font-size:clamp(3.4rem,6.4vw,6.6rem);font-weight:550;letter-spacing:-.075em;line-height:.94}
+        .pl-hero h1 em{font-style:normal;color:var(--pl-orange)}
+        .pl-hero__lead{max-width:470px;margin:1.8rem 0 0;color:rgba(245,242,237,.72);font-size:clamp(1rem,1.25vw,1.12rem);line-height:1.85}
+        .pl-hero__actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:2rem}
+        .pl-button{min-height:50px;display:inline-flex;align-items:center;justify-content:center;gap:1.4rem;padding:.9rem 1.25rem;border:1px solid transparent;border-radius:2px;font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .25s,background .25s,border-color .25s}
+        .pl-button:hover{transform:translateY(-2px)}
+        .pl-button--primary{background:var(--pl-orange);color:#171815}
+        .pl-button--primary:hover{background:#ff875b}
+        .pl-button--quiet{background:rgba(20,22,19,.2);border-color:rgba(245,242,237,.36);color:#f5f2ed}
+        .pl-button--quiet:hover{border-color:var(--pl-orange)}
+        .pl-button__arrow{font-size:1.1rem;color:var(--pl-orange)}
+        .pl-hero__proof{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:2.8rem;padding-top:1.25rem;border-top:1px solid rgba(245,242,237,.2);color:rgba(245,242,237,.67);font-size:.74rem}
+        .pl-hero__proof span{display:inline-flex;align-items:center;gap:.45rem}
+        .pl-hero__proof svg{color:var(--pl-orange)}
+        .pl-hero__visual{position:relative;min-height:440px;align-self:stretch}
+        .pl-hero__visual-label{position:absolute;right:0;top:1rem;display:flex;align-items:center;gap:.55rem;color:rgba(245,242,237,.72);font-size:.62rem;letter-spacing:.18em}
+        .pl-live-dot{width:7px;height:7px;border-radius:50%;background:var(--pl-orange);box-shadow:0 0 18px rgba(240,107,61,.8)}
+        .pl-hero__callout{position:absolute;display:flex;align-items:center;gap:.7rem;color:rgba(245,242,237,.7);font-size:.6rem;letter-spacing:.16em}
+        .pl-hero__callout:before{content:'';display:block;width:42px;height:1px;background:var(--pl-orange)}
+        .pl-hero__callout--top{top:22%;right:2%}
+        .pl-hero__callout--top span{color:var(--pl-orange);font-size:.85rem}
+        .pl-hero__callout--bottom{bottom:18%;right:0}
+        .pl-hero__callout--bottom span{color:var(--pl-orange);font-size:1rem}
+        .pl-hero__visual-index{position:absolute;right:0;top:48%;display:flex;align-items:center;gap:.5rem;color:var(--pl-orange);font-size:.75rem}
+        .pl-hero__visual-index i{width:28px;height:1px;background:rgba(245,242,237,.65)}
+        .pl-hero__capabilities{border-top:1px solid rgba(245,242,237,.17);background:rgba(12,14,12,.42);backdrop-filter:blur(10px)}
+        .pl-hero__capabilities-inner{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+        .pl-capability{display:flex;align-items:flex-start;gap:1rem;min-width:0;padding:1.6rem 1.4rem 1.8rem 0;text-align:left;border:0;border-right:1px solid rgba(245,242,237,.15);background:transparent;color:var(--pl-ink);cursor:pointer}
+        .pl-capability+.pl-capability{padding-left:1.4rem}
+        .pl-capability:last-child{border-right:0}
+        .pl-capability__number{padding-top:.15rem;color:var(--pl-orange);font-size:.68rem;letter-spacing:.15em}
+        .pl-capability__text{display:flex;flex-direction:column;gap:.45rem}
+        .pl-capability__text strong{font-size:.9rem;font-weight:650}
+        .pl-capability__text small{max-width:230px;color:rgba(245,242,237,.57);font-size:.74rem;line-height:1.6}
+        .pl-capability__arrow{margin-left:auto;color:rgba(245,242,237,.45);transition:color .2s,transform .2s}
+        .pl-capability:hover .pl-capability__arrow{color:var(--pl-orange);transform:translate(2px,-2px)}
+        @keyframes pl-hero-drift{from{transform:scale(1.035) translate3d(0,0,0)}to{transform:scale(1.09) translate3d(-1.2%,.6%,0)}}
+        @media(max-width:900px){.pl-hero{padding-top:5rem;min-height:unset}.pl-hero__inner{grid-template-columns:1fr;min-height:unset}.pl-hero__copy{padding:1rem 0 2rem}.pl-hero__visual{position:absolute;inset:0 0 auto 25%;min-height:540px;opacity:.58;z-index:-1}.pl-hero__image{left:0;background-position:58% center}.pl-hero__shade{background:linear-gradient(90deg,#151714 0%,rgba(21,23,20,.91) 48%,rgba(21,23,20,.45) 100%),linear-gradient(0deg,#151714 0%,transparent 60%)}.pl-hero__proof{gap:.8rem}.pl-hero__capabilities-inner{grid-template-columns:1fr}.pl-capability,.pl-capability+.pl-capability{padding:1.15rem 0;border-right:0;border-bottom:1px solid rgba(245,242,237,.14)}.pl-capability:last-child{border-bottom:0}.pl-capability__text small{max-width:unset}}
+        @media(max-width:560px){.pl-hero h1{font-size:clamp(3rem,13vw,4.5rem)}.pl-hero__eyebrow{font-size:.58rem;letter-spacing:.14em}.pl-hero__proof{display:grid;grid-template-columns:1fr 1fr;font-size:.68rem}.pl-hero__visual-label{right:0;top:0}.pl-hero__callout--top{top:30%;right:0}.pl-hero__callout--bottom{bottom:25%;right:0}.pl-hero__visual-index{display:none}}
+        @media(prefers-reduced-motion:reduce){.pl-hero__image{animation:none}.pl-button{transition:none}}
       `}</style>
     </section>
   );
