@@ -10,6 +10,7 @@ import { PortfolioSection } from './components/public/PortfolioSection';
 import { PortfolioPage } from './components/public/PortfolioPage';
 import { CapabilitiesPage } from './components/public/CapabilitiesPage';
 import { StudioPage } from './components/public/StudioPage';
+import { ProjectDetailPage } from './components/public/ProjectDetailPage';
 import { Footer } from './components/public/Footer';
 
 import { AdminLayout } from './components/admin/AdminLayout';
@@ -70,6 +71,18 @@ const MainAppContent = () => {
 
   if (isAdminView && isAdminLoggedIn) {
     return <><AdminLayout /><Toast /></>;
+  }
+
+  const projectDetailMatch = window.location.pathname.match(/^\/project\/([^/]+)\/?$/);
+  if (projectDetailMatch) {
+    return (
+      <>
+        <ProjectDetailPage projectId={decodeURIComponent(projectDetailMatch[1])} />
+        <LiveChatWidget />
+        <AdminAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        <Toast />
+      </>
+    );
   }
 
   if (window.location.pathname.replace(/\/$/, '') === '/studio') {
