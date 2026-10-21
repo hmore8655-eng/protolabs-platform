@@ -336,6 +336,13 @@ app.post('/api/chat/messages', limitChatWrites, (req, res) => {
       saveChatMessage(req, res);
     });
   }
+
+  // Legacy timestamp-based thread IDs are guessable. Public clients must not
+  // append messages to them; administrators can still manage these histories.
+  if (/^thr_\d+$/.test(threadId)) {
+    return res.status(403).json({ error: 'This chat thread requires administrator access. Please start a new conversation.' });
+  }
+
   return saveChatMessage(req, res);
 });
 
