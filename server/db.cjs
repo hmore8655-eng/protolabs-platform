@@ -11,8 +11,6 @@ const defaultData = {
       id: "usr-admin-harsh",
       name: "Harsh More (ProtoLabs Specialist)",
       email: "protolabs26@gmail.com",
-      // Password: PROTOLABS@123
-      passwordHash: "$2b$10$6RXExc1aga5SEQRgDmVm7uwTqhRUQTh1MGFErLHZNfv1R8a7B.9Pm",
       role: "admin",
       createdAt: "2026-09-01"
     }
