@@ -38,6 +38,12 @@ export const Hero3DStructure = () => {
         <div className="pl3d-trace pl3d-trace--f" />
         <div className="pl3d-contact pl3d-contact--left" />
         <div className="pl3d-contact pl3d-contact--right" />
+        <div className="pl3d-mount pl3d-mount--tl"><i /></div>
+        <div className="pl3d-mount pl3d-mount--tr"><i /></div>
+        <div className="pl3d-mount pl3d-mount--bl"><i /></div>
+        <div className="pl3d-mount pl3d-mount--br"><i /></div>
+        <div className="pl3d-pin-header"><i /><i /><i /><i /><i /><i /><i /><i /></div>
+        <div className="pl3d-antenna"><i /><i /><i /></div>
         <div className="pl3d-chip pl3d-chip--main"><span>PL</span><i /><b /></div>
         <div className="pl3d-chip pl3d-chip--memory"><i /><i /><i /><i /></div>
         <div className="pl3d-chip pl3d-chip--radio"><span>RF</span></div>
@@ -93,6 +99,13 @@ export const Hero3DStructure = () => {
       .pl3d-led--one{left:26%;top:25%}.pl3d-led--two{right:26%;bottom:23%;background:#e2c06e;box-shadow:0 0 8px 2px rgba(226,192,110,.28)}
       .pl3d-contact{position:absolute;top:8%;bottom:8%;width:7px;background:repeating-linear-gradient(180deg,#d8b66b 0 7px,transparent 7px 13px);opacity:.8;transform:translateZ(2px)}
       .pl3d-contact--left{left:3%}.pl3d-contact--right{right:3%}
+      .pl3d-mount{position:absolute;width:18px;height:18px;border-radius:50%;background:linear-gradient(145deg,#d9c995,#7e806b 55%,#373e32);border:2px solid #7f876d;box-shadow:0 3px 0 #0a1b12,0 5px 6px rgba(0,0,0,.35);transform:translateZ(5px);display:grid;place-items:center;z-index:2}
+      .pl3d-mount i{display:block;width:7px;height:7px;border-radius:50%;background:#17271c;border:1px solid rgba(235,219,166,.5);box-shadow:inset 0 1px 2px #050b07}
+      .pl3d-mount--tl{left:6%;top:7%}.pl3d-mount--tr{right:6%;top:7%}.pl3d-mount--bl{left:6%;bottom:7%}.pl3d-mount--br{right:6%;bottom:7%}
+      .pl3d-pin-header{position:absolute;left:48%;top:7%;display:flex;gap:5px;transform:translateZ(7px)}
+      .pl3d-pin-header i{width:4px;height:19px;background:linear-gradient(90deg,#7e806f,#d7cda7,#737b68);box-shadow:0 3px 0 #0b1710}
+      .pl3d-antenna{position:absolute;right:14%;top:41%;display:flex;gap:5px;transform:translateZ(6px) rotate(90deg);transform-origin:center}
+      .pl3d-antenna i{display:block;width:5px;height:23px;background:linear-gradient(90deg,#888b79,#e0d4b0,#777b68);box-shadow:0 2px 0 #0b1710}
       .pl3d-board-mark{position:absolute;left:9%;bottom:5%;font-size:clamp(6px,.65vw,9px);letter-spacing:.2em;color:rgba(230,222,184,.7);transform:translateZ(4px)}
       .pl3d-board-mark span{margin-left:12px;color:rgba(230,222,184,.42)}
       .pl3d-caption{position:absolute;z-index:2;display:flex;align-items:center;gap:.7rem;color:rgba(244,238,223,.65);font-size:.58rem;letter-spacing:.16em}
