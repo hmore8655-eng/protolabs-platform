@@ -138,8 +138,30 @@ const MainAppContent = () => {
       {isAdminLoggedIn && (
         <div style={{position:'fixed',top:'12px',right:'16px',zIndex:99999,backgroundColor:'rgba(17,24,20,.95)',backdropFilter:'blur(8px)',border:'1px solid var(--accent-orange)',borderRadius:'30px',padding:'.35rem .85rem',display:'flex',alignItems:'center',gap:'.6rem',boxShadow:'0 4px 15px rgba(0,0,0,.3)',fontSize:'.8rem',color:'#FFFFFF'}}>
           <span style={{fontWeight:700,color:'var(--accent-orange)'}}>Admin Active</span>
-          <button onClick={toggleView} style={{backgroundColor:'var(--accent-orange)',color:'#FFFFFF',padding:'.25rem .65rem',borderRadius:'20px',fontWeight:700,fontSize:'.75rem}}>Go to Admin Dashboard</button>
-          <button onClick={logoutAdmin} style={{backgroundColor:'transparent',color:'#EF4444',fontWeight:700,fontSize:'.75rem'}}>Logout</button>
+          <button
+            onClick={toggleView}
+            style={{
+              backgroundColor: "var(--accent-orange)",
+              color: "#FFFFFF",
+              padding: ".25rem .65rem",
+              borderRadius: "20px",
+              fontWeight: 700,
+              fontSize: ".75rem",
+            }}
+          >
+            Go to Admin Dashboard
+          </button>
+          <button
+            onClick={logoutAdmin}
+            style={{
+              backgroundColor: "transparent",
+              color: "#EF4444",
+              fontWeight: 700,
+              fontSize: ".75rem",
+            }}
+          >
+            Logout
+          </button>
         </div>
       )}
       <Header onOpenAuthModal={() => setIsAuthModalOpen(true)} onSelectProjectForInquiry={handleSelectProject} />
