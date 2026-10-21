@@ -34,7 +34,7 @@ export const LiveChatWidget = () => {
   const fetchMessages = async () => {
     if (!threadId) return;
     try {
-      const data = await api.getChatMessages(threadId);
+      const data = await api.getChatMessages(threadId, localStorage.getItem('protolabs_chat_access_token') || '');
       if (Array.isArray(data)) {
         setMessages(data);
       }
@@ -65,6 +65,15 @@ export const LiveChatWidget = () => {
           ? crypto.randomUUID()
           : Array.from({ length: 4 }, () => Math.random().toString(36).slice(2)).join('')
       );
+      const accessToken = (() => {
+        if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+          const bytes = new Uint8Array(32);
+          crypto.getRandomValues(bytes);
+          return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+        return Array.from({ length: 8 }, () => Math.random().toString(36).slice(2)).join('');
+      })();
+      localStorage.setItem('protolabs_chat_access_token', accessToken);
       localStorage.setItem('protolabs_chat_thread_id', newThreadId);
       localStorage.setItem('protolabs_chat_client_name', clientName);
       localStorage.setItem('protolabs_chat_client_email', clientEmail);
@@ -74,6 +83,7 @@ export const LiveChatWidget = () => {
       // Send initial welcome message
       const initMsg = await api.sendChatMessage({
         threadId: newThreadId,
+        accessToken,
         clientName,
         clientEmail,
         sender: 'client',
@@ -106,6 +116,7 @@ export const LiveChatWidget = () => {
 
       const newMsg = await api.sendChatMessage({
         threadId,
+        accessToken: localStorage.getItem('protolabs_chat_access_token') || '',
         clientName: activeName,
         clientEmail: activeEmail,
         sender: isAdminLoggedIn ? 'admin' : 'client',
