@@ -253,16 +253,19 @@ export const api = {
     return handleResponse(res);
   },
 
-  async getChatMessages(threadId) {
-    const res = await fetch(`${API_BASE}/chat/messages/${threadId}`);
+  async getChatMessages(threadId, accessToken = '') {
+    const res = await fetch(`${API_BASE}/chat/messages/${encodeURIComponent(threadId)}`, {
+      headers: { ...getAuthHeaders(), ...(accessToken ? { 'X-Chat-Token': accessToken } : {}) }
+    });
     return handleResponse(res);
   },
 
   async sendChatMessage(payload) {
+    const { accessToken, ...message } = payload;
     const res = await fetch(`${API_BASE}/chat/messages`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
-      body: JSON.stringify(payload)
+      headers: { 'Content-Type': 'application/json', ...getAuthHeaders(), ...(accessToken ? { 'X-Chat-Token': accessToken } : {}) },
+      body: JSON.stringify(message)
     });
     return handleResponse(res);
   },
