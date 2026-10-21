@@ -8,6 +8,7 @@ import { WhyChooseUsSection } from './components/public/WhyChooseUsSection';
 import { ContactSection } from './components/public/ContactSection';
 import { PortfolioSection } from './components/public/PortfolioSection';
 import { PortfolioPage } from './components/public/PortfolioPage';
+import { CapabilitiesPage } from './components/public/CapabilitiesPage';
 import { Footer } from './components/public/Footer';
 
 import { AdminLayout } from './components/admin/AdminLayout';
@@ -68,6 +69,22 @@ const MainAppContent = () => {
 
   if (isAdminView && isAdminLoggedIn) {
     return <><AdminLayout /><Toast /></>;
+  }
+
+  if (window.location.pathname.replace(/\/$/, '') === '/capabilities') {
+    return (
+      <>
+        {isAdminLoggedIn && <div style={{position:'fixed',top:12,right:16,zIndex:99999,display:'flex',gap:'.6rem',alignItems:'center',padding:'.5rem .8rem',background:'#292b29',color:'#f4eedf',border:'1px solid var(--accent-orange)'}}>
+          <span style={{fontSize:'.8rem',fontWeight:700}}>Admin Active</span>
+          <button onClick={toggleView} style={{color:'#f4eedf'}}>Dashboard</button>
+          <button onClick={logoutAdmin} style={{color:'#e87962'}}>Logout</button>
+        </div>}
+        <CapabilitiesPage />
+        <LiveChatWidget />
+        <AdminAuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+        <Toast />
+      </>
+    );
   }
 
   if (window.location.pathname.replace(/\/$/, '') === '/portfolio') {
