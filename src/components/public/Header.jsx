@@ -13,6 +13,10 @@ export const Header = () => {
       window.location.href = '/capabilities';
       return;
     }
+    if (id === 'studio') {
+      window.location.href = '/studio';
+      return;
+    }
     if (id === 'portfolio') {
       window.location.href = '/portfolio';
       return;
@@ -51,6 +55,7 @@ export const Header = () => {
           <button onClick={() => scrollToSection('why-us')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Services</button>
           <button onClick={() => scrollToSection('contact')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Contact</button>
           <button onClick={() => scrollToSection('portfolio')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Portfolio</button>
+          <button onClick={() => scrollToSection('studio')} style={{ fontWeight: 600, color: 'var(--text-dark)' }}>Studio</button>
         </nav>
 
         {/* Action Controls */}
@@ -95,6 +100,7 @@ export const Header = () => {
           <button onClick={() => scrollToSection('why-us')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Services</button>
           <button onClick={() => scrollToSection('contact')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Contact</button>
           <button onClick={() => scrollToSection('portfolio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Portfolio & Reviews</button>
+          <button onClick={() => scrollToSection('studio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Studio</button>
         </div>
       )}
 
