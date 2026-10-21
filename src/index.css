@@ -486,3 +486,51 @@ h1,h2,h3,h4,h5,h6 { letter-spacing: -.045em; line-height: 1.04; }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+
+/* Navigation and content surfaces */
+header {
+  background: rgba(244,238,223,.94) !important;
+  backdrop-filter: blur(18px) saturate(120%) !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid #d9d0c0 !important;
+}
+header .container { height: 76px !important; }
+header nav button {
+  font-size: .72rem !important;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+  transition: color .2s ease;
+}
+header nav button:hover { color: #d96c36 !important; }
+header .mobile-toggle { border: 1px solid #d9d0c0; border-radius: 3px; }
+section:not(#hero) { scroll-margin-top: 86px; }
+section:not(#hero) h2 {
+  font-size: clamp(2.2rem, 4.6vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -.065em;
+}
+#catalog { background: #ebe4d5 !important; }
+#catalog .container { padding-top: clamp(3.5rem, 7vw, 6.5rem); padding-bottom: clamp(3.5rem, 7vw, 6.5rem); }
+#catalog input, #catalog select { border-radius: 3px !important; }
+#catalog .card-hover {
+  background: #fffaf0 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 0 rgba(41,43,41,.05), 0 0 0 1px #d9d0c0 !important;
+}
+#catalog .card-hover:hover {
+  border-color: #d96c36 !important;
+  box-shadow: 0 14px 28px rgba(41,43,41,.1), 0 0 0 1px #d96c36 !important;
+}
+#catalog .card-hover > div:first-child > div:first-child > div:first-child {
+  border-radius: 3px !important;
+}
+#process, #why-us, #portfolio, #contact { background: #f4eedf; }
+#process, #why-us, #portfolio { border-bottom: 1px solid #d9d0c0; }
+footer { background: #292b29 !important; color: #f4eedf !important; }
+footer h1, footer h2, footer h3, footer h4, footer p, footer a, footer span { color: inherit; }
+footer a:hover { color: #e9a17d !important; }
+@media (max-width: 767px) {
+  header .container { height: 68px !important; }
+  #catalog .container { padding-top: 3.25rem; padding-bottom: 3.25rem; }
+}
