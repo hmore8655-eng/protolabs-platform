@@ -45,7 +45,7 @@ export const Header = () => {
       }}>
         {/* ProtoLabs Logo */}
         <a href="/" style={{ display: 'flex', alignItems: 'center' }}>
-          <ProtoLabsLogoHorizontal size={38} showTagline={true} />
+          <ProtoLabsLogoHorizontal size={38} theme="dark" showTagline={true} />
         </a>
 
         {/* Desktop Nav Links */}
