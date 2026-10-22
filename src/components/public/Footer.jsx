@@ -1,7 +1,16 @@
 import React from 'react';
-import { MailIcon, PhoneIcon, MapPinIcon, LockIcon, DollarSignIcon } from '../common/Icons';
+import { MailIcon, PhoneIcon, MapPinIcon } from '../common/Icons';
 import { ProtoLabsLogoHorizontal } from '../common/ProtoLabsLogo';
 import { useApp } from '../../context/AppContext';
+import './Footer.css';
+
+const NAV_LINKS = [
+  { id: 'hero', label: 'Home' },
+  { id: 'catalog', label: 'Projects Catalog' },
+  { id: 'why-us', label: 'Why Choose Us' },
+  { id: 'portfolio', label: 'Portfolio & Reviews' },
+  { id: 'contact', label: 'Request Custom Quote' }
+];
 
 export const Footer = ({ onOpenAuthModal }) => {
   const { data } = useApp();
@@ -12,118 +21,65 @@ export const Footer = ({ onOpenAuthModal }) => {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const phoneHref = settings.contactPhone ? `tel:${String(settings.contactPhone).replace(/[^\d+]/g, '')}` : undefined;
+
   return (
-    <footer style={{
-      backgroundColor: '#111827',
-      color: '#F9FAFB',
-      padding: '4rem 0 2rem 0',
-      borderTop: '4px solid var(--accent-orange)'
-    }}>
-      <div className="container">
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '3rem',
-          marginBottom: '3.5rem'
-        }}>
-          {/* Col 1: Brand */}
-          <div>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <ProtoLabsLogoHorizontal size={36} theme="dark" showTagline={false} />
-            </div>
+    <footer className="ft">
+      <div className="ft__wrap">
+        <div className="ft__cta">
+          <h2>Have a project <em>in mind?</em></h2>
+          <button type="button" className="ft__ctaLink" onClick={() => scrollToSection('contact')}>
+            Request a quote <span aria-hidden="true">↗</span>
+          </button>
+        </div>
 
-            <div style={{ fontSize: '0.75rem', color: 'var(--accent-orange)', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
-              ELECTRONICS • TELECOMMUNICATION • REAL SOLUTIONS
-            </div>
-
-            <p style={{ color: '#9CA3AF', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              {settings.tagline}
+        <div className="ft__grid">
+          <div className="ft__brand">
+            <ProtoLabsLogoHorizontal size={36} theme="dark" showTagline={false} />
+            <p className="ft__disciplines">Electronics • Telecommunication • Real solutions</p>
+            <p className="ft__tagline">{settings.tagline}</p>
+            <p className="ft__social">
+              <a href="https://github.com/hmore8655-eng" target="_blank" rel="noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/harsh-more-593a87300" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href={`mailto:${settings.contactEmail}`}>Email</a>
             </p>
-
-            <div style={{ display: 'flex', gap: '1.25rem' }}>
-              <a href="https://github.com/hmore8655-eng" target="_blank" rel="noreferrer" style={{ color: '#9CA3AF', fontWeight: 600, transition: 'color 0.2s' }}>GitHub</a>
-              <a href="https://www.linkedin.com/in/harsh-more-593a87300" target="_blank" rel="noreferrer" style={{ color: '#9CA3AF', fontWeight: 600, transition: 'color 0.2s' }}>LinkedIn</a>
-              <a href={`mailto:${settings.contactEmail}`} style={{ color: '#9CA3AF', fontWeight: 600, transition: 'color 0.2s' }}>Email</a>
-            </div>
           </div>
 
-          {/* Col 2: Quick Links */}
+          <nav aria-label="Footer">
+            <h3 className="ft__title">Quick navigation</h3>
+            <ul className="ft__list">
+              {NAV_LINKS.map((link) => (
+                <li key={link.id}>
+                  <button type="button" className="ft__link" onClick={() => scrollToSection(link.id)}>{link.label}</button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
           <div>
-            <h4 style={{ fontSize: '1rem', color: '#FFFFFF', marginBottom: '1.25rem', fontWeight: 700 }}>Quick Navigation</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem' }}>
-              <button onClick={() => scrollToSection('hero')} style={{ color: '#9CA3AF', textAlign: 'left' }}>Home</button>
-              <button onClick={() => scrollToSection('catalog')} style={{ color: '#9CA3AF', textAlign: 'left' }}>Projects Catalog</button>
-              <button onClick={() => scrollToSection('process')} style={{ color: '#9CA3AF', textAlign: 'left' }}>How It Works</button>
-              <button onClick={() => scrollToSection('why-us')} style={{ color: '#9CA3AF', textAlign: 'left' }}>Why Choose Us</button>
-              <button onClick={() => scrollToSection('portfolio')} style={{ color: '#9CA3AF', textAlign: 'left' }}>Portfolio & Reviews</button>
-              <button onClick={() => scrollToSection('contact')} style={{ color: '#9CA3AF', textAlign: 'left' }}>Request Custom Quote</button>
-            </div>
+            <h3 className="ft__title">Contact specialist</h3>
+            <ul className="ft__list ft__contact">
+              <li><MailIcon size={18} color="var(--ft-orange)" /><a href={`mailto:${settings.contactEmail}`}>{settings.contactEmail}</a></li>
+              <li><PhoneIcon size={18} color="var(--ft-orange)" />{phoneHref ? <a href={phoneHref}>{settings.contactPhone}</a> : <span>{settings.contactPhone}</span>}</li>
+              <li><MapPinIcon size={18} color="var(--ft-orange)" /><span>{settings.location}</span></li>
+            </ul>
           </div>
 
-          {/* Col 3: Contact Info */}
           <div>
-            <h4 style={{ fontSize: '1rem', color: '#FFFFFF', marginBottom: '1.25rem', fontWeight: 700 }}>Contact Specialist</h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem', fontSize: '0.9rem', color: '#9CA3AF' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-                <MailIcon size={18} color="var(--accent-orange)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>{settings.contactEmail}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <PhoneIcon size={18} color="var(--accent-orange)" />
-                <span>{settings.contactPhone}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
-                <MapPinIcon size={18} color="var(--accent-orange)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>{settings.location}</span>
-              </div>
+            <h3 className="ft__title">Accepted payments</h3>
+            <div className="ft__pay">
+              <p className="ft__upi">UPI ID: hmore8655@okicici</p>
+              <p>Payment accepted via Google Pay, PhonePe, Paytm, or direct Bank Transfer.</p>
             </div>
-          </div>
-
-          {/* Col 4: Payments & Admin */}
-          <div>
-            <h4 style={{ fontSize: '1rem', color: '#FFFFFF', marginBottom: '1.25rem', fontWeight: 700 }}>Accepted Payments</h4>
-            <div style={{
-              backgroundColor: '#1F2937',
-              padding: '1rem',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '0.85rem',
-              color: '#D1D5DB',
-              marginBottom: '1.25rem',
-              borderLeft: '3px solid var(--accent-orange)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.4rem' }}>
-                <DollarSignIcon size={16} color="var(--accent-orange)" />
-                <span>UPI ID: hmore8655@okicici</span>
-              </div>
-              <span>Payment accepted via Google Pay, PhonePe, Paytm, or direct Bank Transfer.</span>
-            </div>
-
-            <div style={{ fontSize: '0.8rem', color: '#9CA3AF' }}>
-              All project hardware designs, schematics, and simulation models are verified for physical fabrication.
-            </div>
+            <p className="ft__verified">All project hardware designs, schematics, and simulation models are verified for physical fabrication.</p>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div style={{
-          paddingTop: '2rem',
-          borderTop: '1px solid #1F2937',
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '1rem',
-          fontSize: '0.85rem',
-          color: '#6B7280'
-        }}>
-          <div 
-            onDoubleClick={onOpenAuthModal}
-            title="ProtoLabs Verified Platform"
-            style={{ cursor: 'default', userSelect: 'none' }}
-          >
+        <div className="ft__bottom">
+          <div onDoubleClick={onOpenAuthModal} title="ProtoLabs Verified Platform" className="ft__copy">
             © {new Date().getFullYear()} Harsh More — ProtoLabs Engineering. All rights reserved.
           </div>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <div className="ft__legal">
             <span>Privacy Policy</span>
             <span>Terms of Service</span>
             <span>Hardware Guarantee</span>
