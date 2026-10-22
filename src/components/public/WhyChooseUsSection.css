@@ -1,0 +1,35 @@
+/* Why ProtoLabs — charcoal surface, sticky heading, numbered hairline rows. */
+
+.wu {
+  --wu-bg: #10110f; --wu-paper: #f4eedf; --wu-muted: #a9a79c;
+  --wu-rule: rgba(244, 238, 223, .18); --wu-orange: #e36e36;
+  --wu-serif: 'Playfair Display', Georgia, serif;
+  background: var(--wu-bg); color: var(--wu-paper);
+  padding: clamp(72px, 9vw, 140px) 0;
+  font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.wu *, .wu *::before, .wu *::after { box-sizing: border-box; }
+.wu__wrap { max-width: 1360px; margin: 0 auto; padding: 0 clamp(22px, 5vw, 72px); display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 110px); align-items: start; }
+
+.wu__head { position: sticky; top: 108px; }
+.wu__eyebrow { margin: 0; font-size: 11px; letter-spacing: .17em; font-weight: 800; text-transform: uppercase; color: var(--wu-muted); }
+.wu__eyebrow span { color: var(--wu-orange); margin-right: 10px; }
+.wu .wu__head h2 { margin: 18px 0 0; font-family: var(--wu-serif); font-weight: 500; font-size: clamp(38px, 4.8vw, 74px); line-height: 1; letter-spacing: -.05em; color: var(--wu-paper); text-wrap: balance; }
+.wu .wu__head h2 em { font-style: italic; color: var(--wu-orange); }
+.wu__lede { margin: 26px 0 0; max-width: 400px; font-size: 15px; line-height: 1.8; color: var(--wu-muted); }
+
+.wu__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--wu-rule); }
+.wu__item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px clamp(20px, 3vw, 40px); align-items: start; padding: clamp(24px, 3vw, 38px) 0; border-bottom: 1px solid var(--wu-rule); }
+.wu__num { padding-top: .6em; font-size: 11px; font-weight: 800; letter-spacing: .14em; color: var(--wu-orange); }
+.wu .wu__item h3 { margin: 0 0 10px; font-family: var(--wu-serif); font-size: clamp(24px, 2.4vw, 34px); font-weight: 500; line-height: 1.1; letter-spacing: -.03em; color: var(--wu-paper); }
+.wu__item p { margin: 0; max-width: 520px; font-size: 14.5px; line-height: 1.75; color: var(--wu-muted); }
+.wu__icon { display: inline-flex; padding-top: .35em; color: var(--wu-orange); }
+
+@media (max-width: 860px) {
+  .wu__wrap { grid-template-columns: minmax(0, 1fr); }
+  .wu__head { position: static; }
+}
+@media (max-width: 480px) {
+  .wu__item { grid-template-columns: auto minmax(0, 1fr); }
+  .wu__icon { display: none; }
+}

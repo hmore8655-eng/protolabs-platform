@@ -1,329 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { SendIcon, CheckCircleIcon, DollarSignIcon, SparklesIcon, MailIcon, ShieldCheckIcon } from '../common/Icons';
+import React, { useEffect, useMemo, useState } from 'react';
+import { SendIcon, CheckCircleIcon, SparklesIcon } from '../common/Icons';
 import { useApp } from '../../context/AppContext';
+import './ContactSection.css';
 
 export const ContactSection = ({ selectedProjectTitle, onClearSelectedProject }) => {
-  const { data, addInquiry } = useApp();
-  const { projects, settings } = data;
-
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    projectType: 'Pre-defined',
-    selectedProject: '',
-    description: '',
-    agree: true
-  });
-
+  const { data, addInquiry, isAdminLoggedIn } = useApp();
+  const { projects = [], settings = {} } = data;
+  const visibleProjects = useMemo(() => projects.filter(p => p.published || isAdminLoggedIn), [projects, isAdminLoggedIn]);
+  const [form, setForm] = useState({ name:'', email:'', phone:'', projectType:'Pre-defined', selectedProject:'', description:'', agree:true });
   const [errors, setErrors] = useState({});
-  const [submittedInquiry, setSubmittedInquiry] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (selectedProjectTitle) {
-      setFormData(prev => ({
-        ...prev,
-        projectType: 'Pre-defined',
-        selectedProject: selectedProjectTitle
-      }));
-    } else if (projects.length > 0 && !formData.selectedProject) {
-      setFormData(prev => ({ ...prev, selectedProject: projects[0].title }));
-    }
-  }, [selectedProjectTitle, projects]);
+    if (selectedProjectTitle) setForm(p => ({ ...p, projectType:'Pre-defined', selectedProject:selectedProjectTitle }));
+    else if (!form.selectedProject && visibleProjects.length) setForm(p => ({ ...p, selectedProject:visibleProjects[0].title }));
+  }, [selectedProjectTitle, visibleProjects, form.selectedProject]);
 
-  const handleChange = (e) => {
+  const change = e => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: null }));
-    }
+    setForm(p => ({ ...p, [name]: type === 'checkbox' ? checked : value }));
+    setErrors(p => ({ ...p, [name]: undefined }));
   };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Full name is required';
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email address is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (formData.projectType === 'Custom') {
-      if (!formData.description.trim() || formData.description.length < 15) {
-        newErrors.description = 'Please describe your hardware/firmware project requirements (min 15 characters)';
-      }
-    }
-
-    if (!formData.agree) {
-      newErrors.agree = 'You must agree to be contacted for proposal review';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const submit = async e => {
     e.preventDefault();
-    if (!validate()) return;
-
-    const newInq = addInquiry({
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      projectType: formData.projectType,
-      selectedProject: formData.projectType === 'Pre-defined' ? formData.selectedProject : 'Custom Engineering Request',
-      description: formData.description
-    });
-
-    setSubmittedInquiry(newInq);
+    const next = {};
+    if (!form.name.trim()) next.name = 'Full name is required';
+    if (!form.email.trim()) next.email = 'Email address is required';
+    else if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = 'Enter a valid email address';
+    if (form.projectType === 'Custom' && form.description.trim().length < 15) next.description = 'Describe your requirements in at least 15 characters';
+    if (!form.agree) next.agree = 'Please agree to be contacted about your proposal';
+    setErrors(next);
+    if (Object.keys(next).length) return;
+    setBusy(true);
+    try {
+      await addInquiry({ name:form.name.trim(), email:form.email.trim(), phone:form.phone.trim(), projectType:form.projectType, selectedProject:form.projectType === 'Pre-defined' ? form.selectedProject : 'Custom Engineering Request', description:form.description.trim() });
+      setSubmitted(true);
+    } catch (err) {
+      setErrors({ submit:'Could not submit the inquiry. Please try again.' });
+    } finally { setBusy(false); }
   };
-
-  const handleResetForm = () => {
-    setSubmittedInquiry(null);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      projectType: 'Pre-defined',
-      selectedProject: projects[0]?.title || '',
-      description: '',
-      agree: true
-    });
-    if (onClearSelectedProject) onClearSelectedProject();
+  const reset = () => {
+    setSubmitted(false); setErrors({});
+    setForm({ name:'', email:'', phone:'', projectType:'Pre-defined', selectedProject:visibleProjects[0]?.title || '', description:'', agree:true });
+    onClearSelectedProject?.();
   };
-
-  return (
-    <section id="contact" style={{ padding: '5rem 0', backgroundColor: 'var(--secondary-bg)', borderTop: '1px solid var(--border-color)' }}>
-      <div className="container">
-        <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 3.5rem auto' }}>
-          <div className="badge badge-orange" style={{ marginBottom: '0.75rem' }}>
-            Direct Project Proposal
+  const custom = form.projectType === 'Custom';
+  return <section id="contact" className="ct" aria-labelledby="contact-title">
+    <div className="ct__wrap">
+      <header className="ct__intro">
+        <p className="ct__eyebrow"><span>04</span> Start a project</p>
+        <h2 id="contact-title">Tell us what you want to <em>build.</em></h2>
+        <p className="ct__lede">Share your project details. Scope, budget and delivery timelines can be finalized directly with the ProtoLabs engineering team.</p>
+        <p className="ct__note"><SparklesIcon size={16}/><span><strong>Budget &amp; deadline:</strong> discussed with our engineer once we understand your requirements.</span></p>
+      </header>
+      <div className="ct__panel">
+        {submitted ? <div className="ct-done" role="status">
+          <span className="ct-done__icon"><CheckCircleIcon size={40}/></span>
+          <h3>Inquiry submitted successfully.</h3>
+          <p>{settings.thankYouMessage || 'Thanks for reaching out. The ProtoLabs team will review your project details and follow up soon.'}</p>
+          <p className="ct-done__chat"><SparklesIcon size={18}/><span><strong>Want to discuss it sooner?</strong> Use the Live Chat widget at the bottom-right of the page.</span></p>
+          <button type="button" onClick={reset} className="ct-btn ct-btn--line">Submit another inquiry</button>
+        </div> : <form onSubmit={submit} noValidate>
+          <fieldset className="ct-type"><legend>Inquiry category</legend><div className="ct-switch">
+            <button type="button" aria-pressed={!custom} onClick={() => setForm(p => ({ ...p, projectType:'Pre-defined' }))}>1. Pre-defined project</button>
+            <button type="button" aria-pressed={custom} onClick={() => setForm(p => ({ ...p, projectType:'Custom' }))}>2. Custom hardware / firmware quote</button>
+          </div></fieldset>
+          {!custom && <div className="ct-field"><label htmlFor="ct-project">Select project from catalog</label><select id="ct-project" name="selectedProject" value={form.selectedProject} onChange={change}>
+            {visibleProjects.map(p => <option key={p.id} value={p.title}>{p.title} ({typeof p.price === 'number' ? '₹' + p.price.toLocaleString('en-IN') : p.price} — {p.category})</option>)}
+            {!visibleProjects.length && <option value="">Project details to be discussed</option>}
+          </select></div>}
+          <div className="ct-row">
+            <div className="ct-field"><label htmlFor="ct-name">Full name *</label><input id="ct-name" name="name" autoComplete="name" value={form.name} onChange={change} placeholder="e.g. Alex Mercer" aria-invalid={!!errors.name}/>{errors.name && <span className="ct-error" role="alert">{errors.name}</span>}</div>
+            <div className="ct-field"><label htmlFor="ct-email">Email address *</label><input id="ct-email" type="email" name="email" autoComplete="email" value={form.email} onChange={change} placeholder="alex@example.com" aria-invalid={!!errors.email}/>{errors.email && <span className="ct-error" role="alert">{errors.email}</span>}</div>
+            <div className="ct-field"><label htmlFor="ct-phone">Phone number (optional)</label><input id="ct-phone" type="tel" name="phone" autoComplete="tel" value={form.phone} onChange={change} placeholder="+91 88560 82411"/></div>
           </div>
-          <h2 style={{ fontSize: '2.25rem', marginBottom: '1rem' }}>Request Project Quote</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>
-            Submit your project details. Target budget and custom delivery timeline will be finalized directly with ProtoLabs Engineer via live chat or 24-hour proposal email.
-          </p>
-        </div>
-
-        <div style={{
-          maxWidth: '800px',
-          margin: '0 auto',
-          backgroundColor: '#FFFFFF',
-          borderRadius: 'var(--radius-lg)',
-          padding: '2.5rem',
-          boxShadow: 'var(--shadow-lg)',
-          border: '1px solid var(--border-color)'
-        }}>
-          {submittedInquiry ? (
-            <div style={{ textAlign: 'center', padding: '2rem 1rem', animation: 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-              <div style={{
-                width: '72px',
-                height: '72px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--accent-light-orange)',
-                color: 'var(--accent-orange)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 1.5rem auto',
-                boxShadow: '0 8px 24px rgba(255,149,0,0.25)'
-              }}>
-                <CheckCircleIcon size={40} />
-              </div>
-
-              <h3 style={{ fontSize: '1.75rem', marginBottom: '0.75rem' }}>Inquiry Submitted Successfully!</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem auto' }}>
-                {settings.thankYouMessage}
-              </p>
-
-              {/* Live Chat Prompt card */}
-              <div style={{
-                backgroundColor: 'var(--accent-light-orange)',
-                borderRadius: 'var(--radius-md)',
-                padding: '1.25rem',
-                textAlign: 'left',
-                marginBottom: '2rem',
-                border: '1px solid var(--accent-soft-orange)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-dark-orange)', fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.35rem' }}>
-                  <SparklesIcon size={18} />
-                  <span>Start Live Chat with ProtoLabs Engineer</span>
-                </div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--text-dark)', lineHeight: 1.5 }}>
-                  Click the orange 💬 Live Chat icon at the bottom right of your screen to discuss your target budget and deadline in real-time!
-                </div>
-              </div>
-
-              <button onClick={handleResetForm} className="btn btn-primary">
-                Submit Another Inquiry
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              {/* Category selector */}
-              <div style={{ marginBottom: '2rem' }}>
-                <label className="form-label" style={{ marginBottom: '0.75rem', display: 'block' }}>Inquiry Category</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, projectType: 'Pre-defined' }))}
-                    style={{
-                      padding: '0.85rem 1rem',
-                      borderRadius: 'var(--radius-sm)',
-                      fontWeight: 600,
-                      border: formData.projectType === 'Pre-defined' ? '2px solid var(--accent-orange)' : '1px solid var(--border-color)',
-                      backgroundColor: formData.projectType === 'Pre-defined' ? 'var(--accent-light-orange)' : '#FFFFFF',
-                      color: formData.projectType === 'Pre-defined' ? 'var(--accent-dark-orange)' : 'var(--text-dark)',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    1. Pre-Defined Project
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, projectType: 'Custom' }))}
-                    style={{
-                      padding: '0.85rem 1rem',
-                      borderRadius: 'var(--radius-sm)',
-                      fontWeight: 600,
-                      border: formData.projectType === 'Custom' ? '2px solid var(--accent-orange)' : '1px solid var(--border-color)',
-                      backgroundColor: formData.projectType === 'Custom' ? 'var(--accent-light-orange)' : '#FFFFFF',
-                      color: formData.projectType === 'Custom' ? 'var(--accent-dark-orange)' : 'var(--text-dark)',
-                      transition: 'all 0.2s'
-                    }}
-                  >
-                    2. Custom Hardware / Firmware Quote
-                  </button>
-                </div>
-              </div>
-
-              {/* Selected project dropdown */}
-              {formData.projectType === 'Pre-defined' && (
-                <div className="form-group">
-                  <label className="form-label">Select Project from Catalog</label>
-                  <select
-                    name="selectedProject"
-                    value={formData.selectedProject}
-                    onChange={handleChange}
-                    className="form-select"
-                  >
-                    {projects.map(p => (
-                      <option key={p.id} value={p.title}>
-                        {p.title} (₹{typeof p.price === 'number' ? p.price.toLocaleString('en-IN') : p.price} - {p.category})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Contact Info Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="e.g. Alex Mercer"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className={`form-input ${errors.name ? 'error' : ''}`}
-                  />
-                  {errors.name && <span className="error-text">{errors.name}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="alex@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`form-input ${errors.email ? 'error' : ''}`}
-                  />
-                  {errors.email && <span className="error-text">{errors.email}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Phone Number (Optional)</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="+91 8856082411"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="form-input"
-                  />
-                </div>
-              </div>
-
-              {/* Project Description */}
-              <div className="form-group">
-                <label className="form-label">
-                  {formData.projectType === 'Custom' ? 'Custom Hardware / Firmware Specifications *' : 'System Modifications / Custom Requirements (Optional)'}
-                </label>
-                <textarea
-                  name="description"
-                  rows="4"
-                  placeholder={formData.projectType === 'Custom' 
-                    ? 'Describe your hardware requirements, microcontroller chips (STM32/ESP32), LoRa/5G frequencies, sensors, and expected outputs...' 
-                    : 'Add any specific component preferences, custom sensors, or notes...'}
-                  value={formData.description}
-                  onChange={handleChange}
-                  className={`form-textarea ${errors.description ? 'error' : ''}`}
-                />
-                {errors.description && <span className="error-text">{errors.description}</span>}
-              </div>
-
-              {/* Live Chat & Proposal Note */}
-              <div style={{
-                backgroundColor: 'var(--secondary-bg)',
-                padding: '0.85rem 1rem',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '0.85rem',
-                color: 'var(--text-muted)',
-                marginBottom: '1.5rem',
-                border: '1px solid var(--border-color)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.6rem'
-              }}>
-                <SparklesIcon size={16} color="var(--accent-orange)" />
-                <span><strong>Budget & Deadline Note:</strong> Target budget and delivery timeframe will be discussed live with ProtoLabs Engineer via chat or proposal email.</span>
-              </div>
-
-              {/* Agreement Checkbox */}
-              <div style={{ marginBottom: '2rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--text-dark)' }}>
-                  <input
-                    type="checkbox"
-                    name="agree"
-                    checked={formData.agree}
-                    onChange={handleChange}
-                    style={{ width: '18px', height: '18px', accentColor: 'var(--accent-orange)' }}
-                  />
-                  <span>I agree to receive a technical proposal within 24 hours.</span>
-                </label>
-                {errors.agree && <span className="error-text" style={{ display: 'block', marginTop: '0.25rem' }}>{errors.agree}</span>}
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{ width: '100%', padding: '1rem', fontSize: '1.05rem', gap: '0.75rem' }}
-              >
-                <span>Submit Inquiry & Open Live Proposal</span>
-                <SendIcon size={20} />
-              </button>
-            </form>
-          )}
-        </div>
+          <div className="ct-field"><label htmlFor="ct-description">{custom ? 'Custom hardware / firmware specifications *' : 'System modifications / custom requirements (optional)'}</label><textarea id="ct-description" name="description" rows="4" value={form.description} onChange={change} placeholder={custom ? 'Describe hardware, MCU (STM32/ESP32), wireless links, sensors and expected outputs…' : 'Add component preferences, custom sensors or notes…'} aria-invalid={!!errors.description}/>{errors.description && <span className="ct-error" role="alert">{errors.description}</span>}</div>
+          <div className="ct-check"><label><input type="checkbox" name="agree" checked={form.agree} onChange={change}/><span>I agree to be contacted about this project proposal.</span></label>{errors.agree && <span className="ct-error" role="alert">{errors.agree}</span>}</div>
+          {errors.submit && <p className="ct-error" role="alert">{errors.submit}</p>}
+          <button type="submit" className="ct-btn ct-btn--solid" disabled={busy}><span>{busy ? 'Submitting inquiry…' : 'Submit inquiry & request proposal'}</span><SendIcon size={18}/></button>
+        </form>}
       </div>
-    </section>
-  );
+    </div>
+  </section>;
 };

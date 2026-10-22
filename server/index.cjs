@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const multer = require('multer');
 
 const db = require('./db.cjs');
@@ -10,7 +11,47 @@ const { loginUser, loginWithGoogle, verifyToken, AUTHORIZED_ADMIN_EMAILS } = req
 const { sendInquiryConfirmation, sendQuoteProposalEmail } = require('./services/email.cjs');
 
 const app = express();
+
+// Public, non-sensitive liveness endpoint for hosting-platform health checks.
+app.get('/health', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.status(200).json({ status: 'ok' });
+});
 const PORT = process.env.PORT || 5000;
+
+// Lightweight in-process rate limit for public chat writes.
+// This limits accidental floods; use a shared store for multi-instance deployments.
+const chatWriteWindows = new Map();
+const CHAT_WINDOW_MS = 60 * 1000;
+const CHAT_MAX_WRITES_PER_WINDOW = 20;
+function limitChatWrites(req, res, next) {
+  // Do not trust arbitrary X-Forwarded-For values: clients can spoof that header
+  // unless the deployment's proxy chain is configured and validated explicitly.
+  const clientKey = req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+
+  // Keep the in-memory limiter bounded when many distinct source addresses hit it.
+  if (chatWriteWindows.size > 10000) {
+    for (const [key, entry] of chatWriteWindows) {
+      if (now - entry.startedAt >= CHAT_WINDOW_MS) chatWriteWindows.delete(key);
+    }
+    if (chatWriteWindows.size > 10000) {
+      return res.status(503).json({ error: 'Chat is temporarily busy. Please try again shortly.' });
+    }
+  }
+
+  let window = chatWriteWindows.get(clientKey);
+  if (!window || now - window.startedAt >= CHAT_WINDOW_MS) {
+    window = { startedAt: now, count: 0 };
+    chatWriteWindows.set(clientKey, window);
+  }
+  window.count += 1;
+  if (window.count > CHAT_MAX_WRITES_PER_WINDOW) {
+    res.set('Retry-After', String(Math.ceil((CHAT_WINDOW_MS - (now - window.startedAt)) / 1000)));
+    return res.status(429).json({ error: 'Too many chat messages. Please wait a minute and try again.' });
+  }
+  next();
+}
 
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 if (!fs.existsSync(UPLOADS_DIR)) {
@@ -25,10 +66,46 @@ const storage = multer.diskStorage({
     cb(null, `${basename}_${Date.now()}${ext}`);
   }
 });
-const upload = multer({ storage });
+const ALLOWED_UPLOAD_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/gif',
+  'application/pdf'
+]);
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+    files: 1
+  },
+  fileFilter: (req, file, cb) => {
+    if (!ALLOWED_UPLOAD_TYPES.has(file.mimetype)) {
+      const error = new Error('Unsupported file type. Upload a JPG, PNG, WEBP, GIF, or PDF file.');
+      error.status = 415;
+      return cb(error);
+    }
+    cb(null, true);
+  }
+});
 
 app.use(cors());
 app.use(express.json());
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    const status = err.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
+    return res.status(status).json({
+      error: err.code === 'LIMIT_FILE_SIZE'
+        ? 'File too large. Maximum upload size is 10 MB.'
+        : 'Upload rejected. Please try a single file no larger than 10 MB.'
+    });
+  }
+  if (err && err.status === 415) {
+    return res.status(415).json({ error: err.message });
+  }
+  next(err);
+});
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 app.use((req, res, next) => {
@@ -192,17 +269,42 @@ app.delete('/api/inquiries/:id', verifyToken, (req, res) => {
 });
 
 // Live Chat API Endpoints (Client - Admin real-time thread messages)
-app.get('/api/chat/threads', (req, res) => {
+app.get('/api/chat/threads', verifyToken, (req, res) => {
   if (!db.data.chatThreads) db.data.chatThreads = [];
-  res.json(db.data.chatThreads);
+  res.json(db.data.chatThreads.map(({ clientAccessTokenHash, ...thread }) => thread));
 });
+
+function hashChatAccessToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function hasChatAccess(req, thread) {
+  if (req.isAuthenticatedAdmin) return true;
+  const token = req.get('X-Chat-Token');
+  if (!thread || !thread.clientAccessTokenHash || typeof token !== 'string' || token.length < 32 || token.length > 200) return false;
+  const expected = Buffer.from(thread.clientAccessTokenHash, 'hex');
+  const actual = Buffer.from(hashChatAccessToken(token), 'hex');
+  return expected.length === actual.length && crypto.timingSafeEqual(expected, actual);
+}
 
 app.get('/api/chat/messages/:threadId', (req, res) => {
   const { threadId } = req.params;
-  if (!db.data.chatMessages) db.data.chatMessages = [];
-  const messages = db.data.chatMessages.filter(m => m.threadId === threadId);
-  res.json(messages);
+  if (/^thr_\d+$/.test(threadId) || req.headers.authorization) {
+    return verifyToken(req, res, () => { req.isAuthenticatedAdmin = true; sendChatMessages(threadId, req, res); });
+  }
+  return sendChatMessages(threadId, req, res);
 });
+
+function sendChatMessages(threadId, req, res) {
+  if (!db.data.chatThreads) db.data.chatThreads = [];
+  if (!db.data.chatMessages) db.data.chatMessages = [];
+  const thread = db.data.chatThreads.find(item => item.id === threadId);
+  if (!thread) return res.status(404).json({ error: 'Chat thread not found.' });
+  if (!hasChatAccess(req, thread)) return res.status(403).json({ error: 'Chat access token is missing or invalid. Start a new conversation to continue.' });
+  const messages = db.data.chatMessages.filter(message => message.threadId === threadId);
+  res.set('Cache-Control', 'no-store');
+  res.json(messages);
+}
 
 app.put('/api/chat/threads/:id/seen', verifyToken, (req, res) => {
   const { id } = req.params;
@@ -232,9 +334,46 @@ app.delete('/api/chat/threads/:id', verifyToken, (req, res) => {
   res.json({ success: true, deleted: initialCount !== db.data.chatThreads.length });
 });
 
-app.post('/api/chat/messages', (req, res) => {
+app.post('/api/chat/messages', limitChatWrites, (req, res) => {
+  const { threadId, sender, text } = req.body || {};
+  if (typeof threadId !== 'string' || !/^[a-zA-Z0-9_-]{1,128}$/.test(threadId)) {
+    return res.status(400).json({ error: 'A valid threadId is required.' });
+  }
+  if (typeof text !== 'string' || !text.trim()) {
+    return res.status(400).json({ error: 'Message text is required.' });
+  }
+  if (text.length > 4000) {
+    return res.status(413).json({ error: 'Messages must be 4,000 characters or fewer.' });
+  }
+  if (sender !== undefined && sender !== 'client' && sender !== 'admin') {
+    return res.status(400).json({ error: 'Invalid message sender.' });
+  }
+  if (sender === 'admin') {
+    return verifyToken(req, res, () => {
+      req.isAuthenticatedAdmin = true;
+      saveChatMessage(req, res);
+    });
+  }
+
+  // Legacy timestamp-based thread IDs are guessable. Public clients must not
+  // append messages to them; administrators can still manage these histories.
+  if (/^thr_\d+$/.test(threadId)) {
+    return res.status(403).json({ error: 'This chat thread requires administrator access. Please start a new conversation.' });
+  }
+
+  const existingThread = (db.data.chatThreads || []).find(thread => thread.id === threadId);
+  const accessToken = req.get('X-Chat-Token');
+  if (existingThread) {
+    if (!hasChatAccess(req, existingThread)) return res.status(403).json({ error: 'Chat access token is missing or invalid. Start a new conversation to continue.' });
+  } else if (typeof accessToken !== 'string' || accessToken.length < 32 || accessToken.length > 200) {
+    return res.status(400).json({ error: 'A secure chat access token is required.' });
+  }
+
+  return saveChatMessage(req, res);
+});
+
+function saveChatMessage(req, res) {
   const { threadId, clientName, clientEmail, senderName, sender, text, priceQuote, timelineQuote } = req.body;
-  if (!threadId || !text) return res.status(400).json({ error: 'threadId and text required' });
 
   if (!db.data.chatThreads) db.data.chatThreads = [];
   if (!db.data.chatMessages) db.data.chatMessages = [];
@@ -246,6 +385,7 @@ app.post('/api/chat/messages', (req, res) => {
   if (!thread) {
     thread = {
       id: threadId,
+      clientAccessTokenHash: sender === 'admin' ? undefined : hashChatAccessToken(req.get('X-Chat-Token')),
       clientName: resolvedName,
       clientEmail: resolvedEmail,
       lastMessage: text,
@@ -256,8 +396,10 @@ app.post('/api/chat/messages', (req, res) => {
     };
     db.data.chatThreads.unshift(thread);
   } else {
-    if (clientName) thread.clientName = clientName;
-    if (clientEmail) thread.clientEmail = clientEmail;
+    // Public clients must not be able to rename or reassign an existing thread.
+    // Only authenticated admins may edit the contact identity stored on a thread.
+    if (req.isAuthenticatedAdmin && clientName) thread.clientName = clientName;
+    if (req.isAuthenticatedAdmin && clientEmail) thread.clientEmail = clientEmail;
     thread.lastMessage = text;
     thread.lastActivity = new Date().toISOString();
     thread.updatedAt = new Date().toISOString();
@@ -268,8 +410,8 @@ app.post('/api/chat/messages', (req, res) => {
       thread.unreadCount = 0;
       thread.isSeen = true;
     }
-    if (priceQuote) thread.agreedPrice = priceQuote;
-    if (timelineQuote) thread.agreedTimeline = timelineQuote;
+    if (req.isAuthenticatedAdmin && priceQuote) thread.agreedPrice = priceQuote;
+    if (req.isAuthenticatedAdmin && timelineQuote) thread.agreedTimeline = timelineQuote;
   }
 
   const newMessage = {
@@ -278,8 +420,8 @@ app.post('/api/chat/messages', (req, res) => {
     sender: sender || 'client', // 'client' or 'admin'
     senderName: senderName || (sender === 'admin' ? 'ProtoLabs Engineer' : resolvedName),
     text,
-    priceQuote,
-    timelineQuote,
+    priceQuote: req.isAuthenticatedAdmin ? priceQuote : undefined,
+    timelineQuote: req.isAuthenticatedAdmin ? timelineQuote : undefined,
     timestamp: new Date().toISOString()
   };
 
@@ -287,7 +429,7 @@ app.post('/api/chat/messages', (req, res) => {
   db.save();
 
   res.status(201).json(newMessage);
-});
+}
 
 // Portfolio & Testimonials API
 app.get('/api/portfolio', (req, res) => res.json(db.data.portfolio));
@@ -361,8 +503,34 @@ app.put('/api/settings', verifyToken, (req, res) => {
   res.json({ hero: db.data.hero, settings: db.data.settings });
 });
 
+function matchesAllowedFileSignature(filePath, mimetype) {
+  const fd = fs.openSync(filePath, 'r');
+  const header = Buffer.alloc(16);
+  let bytesRead;
+  try {
+    bytesRead = fs.readSync(fd, header, 0, header.length, 0);
+  } finally {
+    fs.closeSync(fd);
+  }
+  const bytes = header.subarray(0, bytesRead);
+
+  if (mimetype === 'image/jpeg') return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimetype === 'image/png') return bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  if (mimetype === 'image/gif') return bytes.length >= 6 && ['GIF87a', 'GIF89a'].includes(bytes.toString('ascii', 0, 6));
+  if (mimetype === 'image/webp') return bytes.length >= 12 && bytes.toString('ascii', 0, 4) === 'RIFF' && bytes.toString('ascii', 8, 12) === 'WEBP';
+  if (mimetype === 'application/pdf') return bytes.length >= 5 && bytes.toString('ascii', 0, 5) === '%PDF-';
+  return false;
+}
+
 app.post('/api/upload', verifyToken, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  // MIME type alone is user-controlled; confirm the uploaded bytes match it.
+  if (!matchesAllowedFileSignature(req.file.path, req.file.mimetype)) {
+    fs.unlink(req.file.path, () => {});
+    return res.status(415).json({ error: 'File contents do not match an allowed image or PDF type.' });
+  }
+
   const fileUrl = `/uploads/${req.file.filename}`;
   res.json({ success: true, fileUrl, filename: req.file.filename });
 });

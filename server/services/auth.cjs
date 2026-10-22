@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../db.cjs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'protolabs_secret_key_2026_super_secure';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be configured as an environment variable with at least 32 characters.');
+}
 
 const https = require('https');
 
@@ -81,17 +85,17 @@ const loginWithGoogle = async (idToken) => {
 const loginUser = (email, password) => {
   let user = null;
   if (email) {
-    user = db.data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const normalizedEmail = String(email).trim().toLowerCase();
+    user = db.data.users.find(u => String(u.email || '').trim().toLowerCase() === normalizedEmail);
   }
-  if (!user && db.data.users && db.data.users.length > 0) {
-    user = db.data.users[0];
-  }
-  if (!user) {
+  if (!user || user.role !== 'admin') {
     return { error: 'Admin account not configured' };
   }
 
-  const isMatch = bcrypt.compareSync(password, user.passwordHash) || 
-    (process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD);
+  const hasPasswordHash = typeof user.passwordHash === 'string' && user.passwordHash.length > 0;
+  const isHashMatch = hasPasswordHash && bcrypt.compareSync(password, user.passwordHash);
+  const isEnvironmentPasswordMatch = Boolean(process.env.ADMIN_PASSWORD) && password === process.env.ADMIN_PASSWORD;
+  const isMatch = isHashMatch || isEnvironmentPasswordMatch;
 
   if (!isMatch) {
     return { error: 'Invalid admin password' };
@@ -121,13 +125,11 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(' ')[1];
-  if (token === 'admin_offline_token') {
-    req.user = { role: 'admin', name: 'ProtoLabs Engineer' };
-    return next();
-  }
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded || decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Administrator access required.' });
+    }
     req.user = decoded;
     next();
   } catch (err) {

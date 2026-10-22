@@ -1,27 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
 
 :root {
-  --primary-bg: #FFFFFF;
-  --secondary-bg: #F9FAFB;
-  --card-bg: #FFFFFF;
-  --accent-orange: #FF9500;
-  --accent-dark-orange: #FF7F00;
-  --accent-light-orange: #FFF3E0;
-  --accent-soft-orange: #FFE4CC;
-  --accent-glow: rgba(255, 149, 0, 0.25);
-  --text-dark: #1A1A1A;
-  --text-muted: #555555;
-  --text-light: #777777;
-  --border-color: #E0E0E0;
-  --border-active: #FF9500;
+  --primary-bg: #F4EBDD;
+  --secondary-bg: #EDE5D8;
+  --card-bg: #FBF7F0;
+  --accent-orange: #D96C36;
+  --accent-dark-orange: #B95127;
+  --accent-light-orange: #E9D8C3;
+  --accent-soft-orange: #E5C7AE;
+  --accent-glow: rgba(217, 108, 54, 0.16);
+  --text-dark: #343638;
+  --text-muted: #55534E;
+  --text-light: #77736C;
+  --border-color: #D8CEC0;
+  --border-active: #D96C36;
   
-  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --shadow-orange: 0 8px 24px rgba(255, 149, 0, 0.2);
+  --shadow-orange: 0 12px 28px rgba(52, 54, 56, 0.12);
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -736,4 +736,366 @@ select:focus-visible, textarea:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+}
+
+
+/* ProtoLabs industrial editorial design system */
+body {
+  background: var(--primary-bg);
+}
+h1, h2, h3, h4, .section-title {
+  letter-spacing: -0.045em;
+}
+::selection {
+  color: #FBF7F0;
+  background: #343638;
+}
+:focus-visible {
+  outline: 3px solid #D96C36;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Third design pass — make the catalogue feel like an engineered product index */
+#catalog .container > div:nth-child(3) {
+  align-items: stretch;
+}
+#catalog .card-hover {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  border: 1px solid #d8cec0 !important;
+  border-radius: 4px !important;
+  background: #fbf7f0 !important;
+  box-shadow: 0 2px 0 rgba(52,54,56,.035) !important;
+  padding: clamp(1.2rem, 2vw, 1.75rem) !important;
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+}
+#catalog .card-hover:hover {
+  transform: translateY(-4px);
+  background: #fffaf3 !important;
+  border-color: #d96c36 !important;
+  box-shadow: 0 16px 34px rgba(52,54,56,.10) !important;
+}
+#catalog .card-hover > div:first-child > div:first-child {
+  background: #e8dfd0 !important;
+  border: 1px solid #d8cec0;
+}
+#catalog .card-hover > div:first-child > div:first-child svg {
+  color: #343638 !important;
+}
+#catalog .card-hover h3 {
+  color: #343638 !important;
+  text-wrap: balance;
+}
+#catalog .card-hover p {
+  color: #666158 !important;
+  line-height: 1.7 !important;
+}
+#catalog .card-hover .badge {
+  background: #e9d8c3 !important;
+  color: #75432d !important;
+  border: 1px solid #dfc2a8;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+#catalog .card-hover > div:last-child {
+  border-top: 1px solid #e3d9cb;
+  padding-top: 1.1rem;
+}
+#catalog .card-hover > div:last-child > div > div:first-child {
+  color: #77736c !important;
+  font-size: .67rem !important;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+#catalog .card-hover > div:last-child > div > div:nth-child(2) {
+  color: #343638 !important;
+}
+#catalog .card-hover button {
+  border-radius: 3px !important;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+#catalog .container > div:nth-child(2) input,
+#catalog .container > div:nth-child(2) select {
+  min-height: 46px;
+  background: #fbf7f0 !important;
+  border: 1px solid #d8cec0 !important;
+  color: #343638 !important;
+}
+#catalog .container > div:nth-child(2) input:focus,
+#catalog .container > div:nth-child(2) select:focus {
+  border-color: #d96c36 !important;
+  box-shadow: 0 0 0 3px rgba(217,108,54,.12);
+}
+@media (prefers-reduced-motion: reduce) {
+  #catalog .card-hover { transition: none; }
+  #catalog .card-hover:hover { transform: none; }
+}
+
+
+/* Fourth design pass — portfolio, process and inquiry experience */
+#process .container > div:nth-child(2) {
+  gap: clamp(1rem, 2.2vw, 1.6rem) !important;
+}
+#process .container > div:nth-child(2) > div {
+  position: relative;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 4px !important;
+  border: 1px solid #d8cec0 !important;
+  background: #fbf7f0 !important;
+}
+#process .container > div:nth-child(2) > div::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  bottom: -48px;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(217,108,54,.22);
+  border-radius: 50%;
+  pointer-events: none;
+}
+#process .container > div:nth-child(2) > div > div:first-child > span {
+  color: #d96c36 !important;
+  font-variant-numeric: tabular-nums;
+}
+#why-us .container > div:nth-child(2) {
+  gap: 0 !important;
+  border-top: 1px solid #d8cec0;
+  border-left: 1px solid #d8cec0;
+}
+#why-us .container > div:nth-child(2) > div {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-right: 1px solid #d8cec0 !important;
+  border-bottom: 1px solid #d8cec0 !important;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem) !important;
+}
+#portfolio .container > div:nth-child(2) {
+  justify-content: flex-start !important;
+  gap: .45rem !important;
+}
+#portfolio .container > div:nth-child(2) button {
+  min-height: 40px;
+  border: 1px solid #d8cec0 !important;
+  background: transparent !important;
+  color: #55534e !important;
+  padding: .65rem .9rem !important;
+}
+#portfolio .container > div:nth-child(2) button[aria-pressed="true"],
+#portfolio .container > div:nth-child(2) button.active {
+  background: #343638 !important;
+  color: #f4ebdd !important;
+  border-color: #343638 !important;
+}
+#portfolio .container > div:nth-child(3) {
+  gap: 1rem !important;
+}
+#portfolio .container > div:nth-child(3) > div {
+  overflow: hidden;
+}
+#portfolio .container > div:nth-child(3) img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+#portfolio .container > div:nth-child(3) > div > div:last-child {
+  padding: clamp(1rem, 2vw, 1.5rem) !important;
+}
+#contact .container > div:nth-child(2) {
+  border: 1px solid #d8cec0 !important;
+  border-radius: 4px !important;
+  background: #fbf7f0 !important;
+  box-shadow: 0 18px 50px rgba(52,54,56,.055);
+}
+#contact .container > div:nth-child(2) input,
+#contact .container > div:nth-child(2) textarea,
+#contact .container > div:nth-child(2) select {
+  border: 1px solid #d8cec0 !important;
+  border-radius: 3px !important;
+  background: #fffdf8 !important;
+  color: #343638 !important;
+  min-height: 46px;
+}
+#contact .container > div:nth-child(2) textarea {
+  min-height: 130px;
+}
+#contact .container > div:nth-child(2) input:focus,
+#contact .container > div:nth-child(2) textarea:focus,
+#contact .container > div:nth-child(2) select:focus {
+  border-color: #d96c36 !important;
+  box-shadow: 0 0 0 3px rgba(217,108,54,.12);
+}
+#contact .container > div:nth-child(2) label {
+  color: #55534e;
+  font-size: .82rem;
+  font-weight: 600;
+}
+@media (max-width: 767px) {
+  #why-us .container > div:nth-child(2) {
+    grid-template-columns: 1fr !important;
+  }
+  #portfolio .container > div:nth-child(2) {
+    justify-content: flex-start !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #portfolio .container > div:nth-child(3) img { transition: none; }
+  #portfolio .container > div:nth-child(3) > div:hover img { transform: none; }
+}
+
+
+/* Fifth design pass — visual hierarchy and accessible portfolio controls */
+#portfolio .container > div:nth-child(2) button[aria-pressed="true"] {
+  background: #343638 !important;
+  color: #f4ebdd !important;
+  border-color: #343638 !important;
+}
+#portfolio .container > div:nth-child(2) button[aria-pressed="false"]:hover {
+  background: #e9d8c3 !important;
+  color: #343638 !important;
+  border-color: #d96c36 !important;
+}
+header {
+  background: rgba(244, 235, 221, .94) !important;
+  border-bottom-color: #d8cec0 !important;
+  box-shadow: 0 1px 0 rgba(52,54,56,.025) !important;
+}
+header a, header button {
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+header a:hover {
+  color: #b95127 !important;
+}
+header .btn, header button {
+  border-radius: 3px;
+}
+footer {
+  border-top: 4px solid #d96c36;
+}
+#hero .badge {
+  border-radius: 3px !important;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+#hero .btn-primary {
+  background: #d96c36 !important;
+  border-color: #d96c36 !important;
+  color: #fffaf3 !important;
+}
+#hero .btn-primary:hover {
+  background: #b95127 !important;
+  border-color: #b95127 !important;
+}
+#hero .btn-outline {
+  background: transparent !important;
+  border: 1px solid #a79c8b !important;
+  color: #343638 !important;
+}
+#hero .btn-outline:hover {
+  background: #e9d8c3 !important;
+  border-color: #d96c36 !important;
+}
+@media (max-width: 767px) {
+  header { backdrop-filter: blur(10px); }
+  #portfolio .container > div:nth-child(2) button {
+    flex: 0 0 auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  header a, header button { transition: none; }
+}
+
+
+/* Motion pass: reveal content as it enters the viewport, not just hover/color changes */
+@keyframes sectionReveal {
+  from { opacity: 0; transform: translate3d(0, 34px, 0) scale(.992); filter: blur(3px); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+@keyframes hardwareFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -10px; }
+}
+@keyframes orbitSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+main.reveal-ready > .scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0) scale(.992);
+}
+main.reveal-ready > .scroll-reveal.is-visible {
+  animation: sectionReveal .78s cubic-bezier(.2,.75,.25,1) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+#hero svg {
+  overflow: visible;
+}
+#hero svg circle[fill="#FF9500"] {
+  filter: drop-shadow(0 0 5px rgba(255,149,0,.85));
+}
+#hero svg rect[fill="#292B2D"] {
+  stroke: rgba(217,108,54,.28);
+}
+#hero .animate-pulse-radar {
+  box-shadow: 0 0 0 4px rgba(16,185,129,.08), 0 0 16px rgba(16,185,129,.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  main.reveal-ready > .scroll-reveal,
+  main.reveal-ready > .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+}
+
+
+/* Forma T1-inspired site-wide art direction — dark, cinematic, restrained */
+header {
+  background: rgba(8, 9, 8, .94) !important;
+  color: #f4eedf !important;
+  border-bottom: 1px solid rgba(244,238,223,.16) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(18px) saturate(90%) !important;
+}
+header .container { height: 76px !important; }
+header nav button { color: rgba(244,238,223,.78) !important; }
+header nav button:hover { color: #e36e36 !important; }
+header .mobile-toggle { color: #f4eedf !important; border-color: rgba(244,238,223,.24) !important; }
+header .mobile-toggle svg { color: #f4eedf !important; }
+header > div + div {
+  background: #111210 !important;
+  color: #f4eedf !important;
+  border-color: rgba(244,238,223,.16) !important;
+}
+#hero.forma-home .forma-home__copy h1 {
+  font-size: clamp(82px, 11.5vw, 176px) !important;
+  line-height: .78 !important;
+  letter-spacing: -.09em !important;
+  font-weight: 400 !important;
+  color: #f4f1e9 !important;
+}
+#hero.forma-home .forma-home__copy h1 em { color: #e36e36 !important; }
+#hero.forma-home .forma-home__summary { max-width: 390px !important; }
+#hero.forma-home .forma-home__product {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+@media (max-width: 760px) {
+  header .container { height: 68px !important; }
+  #hero.forma-home .forma-home__copy h1 { font-size: clamp(74px, 17vw, 118px) !important; }
 }
