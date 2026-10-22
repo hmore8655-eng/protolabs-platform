@@ -72,7 +72,7 @@ export const ProtoLabsLogoHorizontal = ({ size = 36, theme = 'light', showTaglin
 
   return (
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', userSelect: 'none' }}>
-      <ProtoLabsIcon size={size} variant={theme === 'dark' ? 'dark-bg' : 'orange'} />
+      <ProtoLabsIcon size={size} variant="orange" />
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1 }}>
         <div style={{
           fontFamily: "'Poppins', sans-serif",
