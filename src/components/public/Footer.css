@@ -1,0 +1,56 @@
+/* Footer — charcoal surface, large closing CTA, hairline columns. Scoped under .ft. */
+
+.ft {
+  --ft-bg: #10110f; --ft-paper: #f4eedf; --ft-muted: #a9a79c;
+  --ft-rule: rgba(244, 238, 223, .18); --ft-orange: #e36e36;
+  --ft-serif: 'Playfair Display', Georgia, serif;
+  background: var(--ft-bg); color: var(--ft-paper);
+  padding: clamp(64px, 8vw, 120px) 0 28px;
+  border-top: 1px solid var(--ft-rule);
+  font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.ft *, .ft *::before, .ft *::after { box-sizing: border-box; }
+.ft__wrap { max-width: 1360px; margin: 0 auto; padding: 0 clamp(22px, 5vw, 72px); }
+.ft a:focus-visible, .ft button:focus-visible { outline: 2px solid var(--ft-orange); outline-offset: 3px; }
+
+.ft__cta { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 28px 48px; padding-bottom: clamp(48px, 6vw, 88px); }
+.ft .ft__cta h2 { margin: 0; max-width: 900px; font-family: var(--ft-serif); font-weight: 500; font-size: clamp(42px, 6.4vw, 104px); line-height: .96; letter-spacing: -.05em; color: var(--ft-paper); text-wrap: balance; }
+.ft .ft__cta h2 em { font-style: italic; color: var(--ft-orange); }
+.ft .ft__ctaLink { display: inline-flex; align-items: center; gap: 14px; min-height: 44px; padding: 0 0 10px; border: 0; border-bottom: 1px solid var(--ft-orange); border-radius: 0; background: transparent; box-shadow: none; transform: none; font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ft-paper); cursor: pointer; transition: color .2s; }
+.ft .ft__ctaLink:hover { color: var(--ft-orange); }
+.ft__ctaLink span { color: var(--ft-orange); font-size: 18px; }
+
+.ft__grid { display: grid; grid-template-columns: 1.3fr .9fr 1.1fr 1.2fr; gap: clamp(28px, 4vw, 64px); padding: 44px 0 56px; border-top: 1px solid var(--ft-rule); }
+.ft__disciplines { margin: 22px 0 12px; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ft-orange); }
+.ft__tagline { margin: 0 0 22px; max-width: 340px; font-size: 14.5px; line-height: 1.7; color: var(--ft-muted); }
+.ft__social { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; padding: 0; }
+.ft__social a { display: inline-flex; align-items: center; min-height: 36px; font-size: 14px; font-weight: 700; color: var(--ft-paper); text-decoration: none; border-bottom: 1px solid transparent; }
+.ft__social a:hover { color: var(--ft-orange); }
+
+.ft .ft__title { margin: 0 0 20px; font-family: inherit; font-size: 11px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; color: var(--ft-muted); }
+.ft__list { list-style: none; margin: 0; padding: 0; }
+.ft .ft__link { display: inline-flex; align-items: center; min-height: 40px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; transform: none; font: inherit; font-size: 15px; color: var(--ft-paper); text-align: left; cursor: pointer; transition: color .2s; }
+.ft .ft__link:hover { color: var(--ft-orange); }
+.ft__contact li { display: flex; align-items: flex-start; gap: 12px; padding: 7px 0; font-size: 14.5px; line-height: 1.55; color: var(--ft-muted); }
+.ft__contact svg { flex: none; margin-top: 2px; }
+.ft__contact a { color: var(--ft-paper); text-decoration: none; overflow-wrap: anywhere; }
+.ft__contact a:hover { color: var(--ft-orange); }
+
+.ft__pay { padding: 14px 0 14px 16px; border-left: 2px solid var(--ft-orange); font-size: 13.5px; line-height: 1.65; color: var(--ft-muted); }
+.ft__pay p { margin: 0; }
+.ft .ft__upi { margin-bottom: 6px; font-weight: 800; color: var(--ft-paper); overflow-wrap: anywhere; }
+.ft__verified { margin: 18px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--ft-muted); }
+
+.ft__bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; padding-top: 24px; border-top: 1px solid var(--ft-rule); font-size: 13px; color: var(--ft-muted); }
+.ft__copy { cursor: default; user-select: none; }
+.ft__legal { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+
+@media (max-width: 1000px) {
+  .ft__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .ft__grid { grid-template-columns: minmax(0, 1fr); padding-bottom: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ft .ft__ctaLink, .ft .ft__link { transition: none; }
+}
