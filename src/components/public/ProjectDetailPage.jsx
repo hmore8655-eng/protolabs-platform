@@ -35,8 +35,8 @@ export const ProjectDetailPage = ({ projectId }) => {
   }
 
   const hasPrice = (typeof project.price === 'number' && Number.isFinite(project.price)) || (typeof project.price === 'string' && project.price.trim().length > 0);
-  const price = typeof project.price === "number" ? `₹${project.price.toLocaleString("en-IN")}` : (hasPrice ? project.price : "Request a quote");
-  const image = project.image || project.imageUrl || project.coverImage || `https://images.unsplash.com/${sceneFor(project)}?auto=format&fit=crop&w=1800&q=75`;
+  const price = typeof project.price === "number" ? "₭) + project.price.toLocaleString('en-In') : (hasPrice ? project.price : 'Request a quote');
+  const image = project.image || project.imageUrl || project.coverImage || `https://images.unsplash.com/${sceneFor(project)}?auto=format&fit=crop&w=1800&q=75``;
   const inquiryUrl = '/?project=' + encodeURIComponent(project.title) + '#contact';
   const features = project.features || [];
 
