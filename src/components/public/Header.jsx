@@ -77,7 +77,9 @@ export const Header = () => {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
             style={{ padding: '0.5rem', color: 'var(--text-dark)' }}
             className="mobile-toggle"
-            aria-label="Toggle Navigation"
+            aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {isMobileMenuOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
           </button>
@@ -86,8 +88,8 @@ export const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div style={{
-          padding: '1.5rem',
+        <nav id="mobile-navigation" aria-label="Mobile navigation" style={{
+          padding: '1.25rem 1.5rem',
           backgroundColor: '#FFFFFF',
           borderBottom: '1px solid var(--border-color)',
           display: 'flex',
@@ -101,7 +103,7 @@ export const Header = () => {
           <button onClick={() => scrollToSection('contact')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Contact</button>
           <button onClick={() => scrollToSection('portfolio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Portfolio & Reviews</button>
           <button onClick={() => scrollToSection('studio')} style={{ textAlign: 'left', fontWeight: 600, padding: '0.5rem 0' }}>Studio</button>
-        </div>
+        </nav>
       )}
 
       <style>{`
