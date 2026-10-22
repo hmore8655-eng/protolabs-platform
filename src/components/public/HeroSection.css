@@ -120,3 +120,72 @@
   .forma-home__visual { transition: none; }
   .forma-home__primary, .forma-home__capabilities > div { transition: none; }
 }
+
+
+/* Mobile usability and performance pass */
+@media (max-width: 760px) {
+  /* Keep the hero readable without forcing a long pinned scroll animation. */
+  #hero.forma-home { --hdr: 68px; }
+  .forma-home__track { height: auto !important; }
+  .forma-home__stage {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: max(660px, calc(100svh - var(--hdr)));
+    padding-bottom: 56px;
+  }
+  .forma-home__visual { will-change: auto; transition: none; }
+  .forma-home__visual--circuit {
+    background-image: linear-gradient(rgba(7,8,7,.62), rgba(7,8,7,.62)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=65');
+  }
+  .forma-home__visual--workbench,
+  .forma-home__visual--robotics { display: none; }
+  .forma-home__copy {
+    top: 52%;
+    width: calc(100% - 36px);
+  }
+  .forma-home__copy h1 {
+    font-size: clamp(56px, 15.5vw, 96px) !important;
+    line-height: .86 !important;
+    letter-spacing: -.07em !important;
+    overflow-wrap: normal;
+  }
+  .forma-home__summary { max-width: 34ch !important; font-size: 14px; line-height: 1.65; }
+  .forma-home__actions { width: 100%; gap: 10px; }
+  .forma-home__primary { min-height: 48px; }
+  .forma-home__text-link { min-height: 48px; }
+  .forma-home__top { gap: 10px; }
+  .forma-home__index { white-space: normal; line-height: 1.5; }
+  .forma-home__discipline { max-width: 42%; font-size: 6px; overflow-wrap: anywhere; }
+  .forma-home__baseline { min-height: 46px; grid-template-columns: minmax(0,1fr) auto; }
+  .forma-home__progress { display: none; }
+  .forma-home__grain { opacity: .045; }
+  .forma-home__manifesto,
+  .forma-home__capabilities { background-attachment: scroll; }
+  .pc__wrap { padding-inline: 18px; }
+  .pc { padding-block: 56px; }
+  .pc__head { margin-bottom: 30px; }
+  .pc__grid { grid-template-columns: minmax(0,1fr); margin-top: 20px; }
+  .pc-card { padding: 22px 18px; gap: 24px; }
+  .pc__tabs { overflow-x: auto; flex-wrap: nowrap; gap: 0 18px; padding-bottom: 4px; scrollbar-width: thin; }
+  .pc .pc__tab { flex: 0 0 auto; }
+  .pc-card__actions { display: grid; grid-template-columns: 1fr; }
+  .pc .pc-btn { width: 100%; min-height: 48px; }
+  .ct, .ft { overflow-wrap: anywhere; }
+}
+@media (max-width: 420px) {
+  .forma-home__top { padding-inline: 12px; }
+  .forma-home__index { max-width: 58%; font-size: 6px; }
+  .forma-home__discipline { max-width: 36%; }
+  .forma-home__copy { width: calc(100% - 28px); }
+  .forma-home__copy h1 { font-size: clamp(52px, 15vw, 70px) !important; }
+  .forma-home__actions { flex-direction: column; align-items: stretch; }
+  .forma-home__primary, .forma-home__text-link { width: 100%; justify-content: center; }
+  .forma-home__baseline { padding-inline: 12px; font-size: 6px; }
+  .pc__sort { justify-content: space-between; }
+  .pc .pc__sort select { max-width: 62%; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .pc-card:hover { background: transparent; }
+  .pc-card h3 a:hover span { transform: none; }
+}
