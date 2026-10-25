@@ -41,6 +41,7 @@ export const Footer = ({ onOpenAuthModal }) => {
             <p className="ft__social">
               <a href="https://github.com/hmore8655-eng" target="_blank" rel="noreferrer">GitHub</a>
               <a href="https://www.linkedin.com/in/harsh-more-593a87300" target="_blank" rel="noreferrer">LinkedIn</a>
+              <a href="https://www.instagram.com/protolabs_engineering/" target="_blank" rel="noreferrer">Instagram</a>
               <a href={`mailto:${settings.contactEmail}`}>Email</a>
             </p>
           </div>
