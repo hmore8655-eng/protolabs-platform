@@ -1,5 +1,5 @@
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,17 +7,31 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependencies and build output
+node_modules/
+dist/
+dist-ssr/
 *.local
+
+# Secrets and local environment files
 .env
 .env.*
+!.env.example
+!.env.*.example
 
-# Editor directories and files
+# Local databases, backups, and generated uploads
+*.sqlite
+*.sqlite3
+*.db
+*.backup
+*.bak
+server/uploads/
+server/data/database.local.json
+
+# Editor and OS files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
