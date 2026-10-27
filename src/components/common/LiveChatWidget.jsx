@@ -144,12 +144,12 @@ export const LiveChatWidget = () => {
   };
 
   return (
-    <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 9999 }}>
+    <div className="lc" style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 9999 }}>
       {/* Floating Chat Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="animate-float"
+          className="lc__fab animate-float"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -190,14 +190,14 @@ export const LiveChatWidget = () => {
               }} 
             />
           </div>
-          <span>Discuss Budget & Timeline Live</span>
+          <span className="lc__fabLabel">Discuss Budget & Timeline Live</span>
         </button>
       )}
 
       {/* Live Chat Box Window */}
       {isOpen && (
         <div 
-          className="animate-scale-pop"
+          className="lc__window animate-scale-pop"
           style={{
             width: '380px',
             maxWidth: '92vw',
@@ -247,6 +247,8 @@ export const LiveChatWidget = () => {
 
             <button
               onClick={() => setIsOpen(false)}
+              className="lc__close"
+              aria-label="Close live chat"
               style={{ color: '#9CA3AF', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
             >
               <XIcon size={20} />
